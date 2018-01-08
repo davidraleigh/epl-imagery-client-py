@@ -25,8 +25,12 @@ class TestMetaDataSQL(unittest.TestCase):
 
         sql_filters = ['scene_id="LC80390332016208LGN00"']
         metadata_service = MetadataService()
-        rows = metadata_service.search(SpacecraftID.LANDSAT_8, sql_filters=sql_filters)
-        self.assertEqual(len(rows), 1)
+        metadata_results = metadata_service.search(SpacecraftID.LANDSAT_8, sql_filters=sql_filters)
+        count = 0
+        for metadata_result in metadata_results:
+            print(metadata_result.product_id)
+            count += 1
+        self.assertEqual(count, 1)
 
 #     def test_start_date(self):
 #         # gs://gcp-public-data-landsat/LC08/PRE/044/034/LC80440342016259LGN00/

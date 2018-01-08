@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='epl_imagery_api.proto',
   package='geometry',
   syntax='proto3',
-  serialized_pb=_b('\n\x15\x65pl_imagery_api.proto\x12\x08geometry\"\xcd\x01\n\x0fMetadataRequest\x12,\n\x0csatellite_id\x18\x01 \x01(\x0e\x32\x16.geometry.SpacecraftID\x12\x31\n\x0c\x62ounding_box\x18\x02 \x01(\x0b\x32\x1b.geometry.ServiceEnvelope2D\x12\x12\n\nstart_date\x18\x03 \x01(\t\x12\x10\n\x08\x65nd_date\x18\x04 \x01(\t\x12\x0f\n\x07sort_by\x18\x05 \x01(\t\x12\r\n\x05limit\x18\x06 \x01(\x05\x12\x13\n\x0bsql_filters\x18\x07 \x03(\t\"\xcc\x03\n\x0eMetadataResult\x12\x10\n\x08scene_id\x18\x01 \x01(\t\x12\x12\n\nproduct_id\x18\x02 \x01(\t\x12-\n\rspacecraft_id\x18\x03 \x01(\x0e\x32\x16.geometry.SpacecraftID\x12\x11\n\tsensor_id\x18\x04 \x01(\t\x12\x15\n\rdate_acquired\x18\x05 \x01(\t\x12\x14\n\x0csensing_time\x18\x06 \x01(\t\x12\x19\n\x11\x63ollection_number\x18\x07 \x01(\t\x12\x1b\n\x13\x63ollection_category\x18\x08 \x01(\t\x12\x11\n\tdata_type\x18\t \x01(\t\x12\x10\n\x08wrs_path\x18\n \x01(\x05\x12\x0f\n\x07wrs_row\x18\x0b \x01(\x05\x12\x13\n\x0b\x63loud_cover\x18\x0c \x01(\x02\x12\x11\n\tnorth_lat\x18\r \x01(\x02\x12\x11\n\tsouth_lat\x18\x0e \x01(\x02\x12\x10\n\x08west_lon\x18\x0f \x01(\x02\x12\x10\n\x08\x65\x61st_lon\x18\x10 \x01(\x02\x12\x12\n\ntotal_size\x18\x11 \x01(\x05\x12\x10\n\x08\x62\x61se_url\x18\x12 \x01(\t\x12\x0b\n\x03\x64oy\x18\x13 \x01(\x05\x12\x15\n\rutm_epsg_code\x18\x14 \x01(\x05\x12\x0e\n\x06\x62ounds\x18\x15 \x03(\x02\"\xca\x01\n\x0fServiceGeometry\x12\x13\n\x0bgeometry_id\x18\x01 \x03(\x03\x12\x32\n\x16geometry_encoding_type\x18\x02 \x01(\x0e\x32\x12.geometry.DataType\x12\x17\n\x0fgeometry_string\x18\x03 \x03(\t\x12\x17\n\x0fgeometry_binary\x18\x04 \x03(\x0c\x12<\n\x11spatial_reference\x18\x05 \x01(\x0b\x32!.geometry.ServiceSpatialReference\"H\n\x17ServiceSpatialReference\x12\r\n\x05proj4\x18\x04 \x01(\t\x12\x10\n\x08\x65sri_wkt\x18\x05 \x01(\t\x12\x0c\n\x04wkid\x18\x06 \x01(\x05\"\xdc\x01\n\x0eOperatorResult\x12+\n\x08geometry\x18\x01 \x01(\x0b\x32\x19.geometry.ServiceGeometry\x12\x1c\n\x14spatial_relationship\x18\x02 \x01(\x08\x12\x10\n\x08\x64istance\x18\x03 \x01(\x01\x12;\n\nrelate_map\x18\x04 \x03(\x0b\x32\'.geometry.OperatorResult.RelateMapEntry\x1a\x30\n\x0eRelateMapEntry\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12\r\n\x05value\x18\x02 \x01(\x08:\x02\x38\x01\"\xb8\x08\n\x0fOperatorRequest\x12\x30\n\rleft_geometry\x18\x01 \x01(\x0b\x32\x19.geometry.ServiceGeometry\x12\x31\n\x0eright_geometry\x18\x02 \x01(\x0b\x32\x19.geometry.ServiceGeometry\x12.\n\x0bleft_cursor\x18\x03 \x01(\x0b\x32\x19.geometry.OperatorRequest\x12/\n\x0cright_cursor\x18\x04 \x01(\x0b\x32\x19.geometry.OperatorRequest\x12\x34\n\roperator_type\x18\x05 \x01(\x0e\x32\x1d.geometry.ServiceOperatorType\x12\x31\n\x15results_encoding_type\x18\x06 \x01(\x0e\x32\x12.geometry.DataType\x12\x46\n\x1boperation_spatial_reference\x18\x07 \x01(\x0b\x32!.geometry.ServiceSpatialReference\x12\x43\n\x18result_spatial_reference\x18\x08 \x01(\x0b\x32!.geometry.ServiceSpatialReference\x12\x19\n\x11\x63onvex_hull_merge\x18\t \x01(\x08\x12\x18\n\x10\x62uffer_distances\x18\n \x03(\x01\x12\x1d\n\x15\x62uffer_max_deviations\x18\x1c \x03(\x01\x12\x1b\n\x13\x62uffer_union_result\x18\x0b \x01(\x08\x12#\n\x1bintersection_dimension_mask\x18\x0c \x01(\x05\x12\x32\n\rclip_envelope\x18\r \x01(\x0b\x32\x1b.geometry.ServiceEnvelope2D\x12\x1a\n\x12\x63ut_consider_touch\x18\x0e \x01(\x08\x12\x1a\n\x12\x64\x65nsify_max_length\x18\x0f \x01(\x01\x12\x16\n\x0esimplify_force\x18\x10 \x01(\x08\x12\x17\n\x0foffset_distance\x18\x11 \x01(\x01\x12\x18\n\x10offset_join_type\x18\x12 \x01(\t\x12\x1a\n\x12offset_bevel_ratio\x18\x13 \x01(\x01\x12\x1c\n\x14offset_flatten_error\x18\x14 \x01(\x01\x12 \n\x18generalize_max_deviation\x18\x15 \x01(\x01\x12%\n\x1dgeneralize_remove_degenerates\x18\x16 \x01(\x08\x12#\n\x1bmax_vertices_in_full_circle\x18\x17 \x01(\x05\x12\x18\n\x10generic_booleans\x18\x18 \x03(\x08\x12\x17\n\x0fgeneric_doubles\x18\x19 \x03(\x01\x12\x18\n\x10generic_integers\x18\x1a \x03(\x05\x12\x17\n\x0fgeneric_strings\x18\x1b \x03(\t\x12\x0e\n\x06\x64\x65_9im\x18\x1d \x01(\t\"K\n\x11ServiceEnvelope2D\x12\x0c\n\x04xmin\x18\x01 \x01(\x01\x12\x0c\n\x04ymin\x18\x02 \x01(\x01\x12\x0c\n\x04xmax\x18\x03 \x01(\x01\x12\x0c\n\x04ymax\x18\x04 \x01(\x01*x\n\x08\x44\x61taType\x12\x08\n\x04\x42YTE\x10\x00\x12\t\n\x05INT16\x10\x01\x12\n\n\x06UINT16\x10\x02\x12\t\n\x05INT32\x10\x03\x12\n\n\x06UINT32\x10\x04\x12\x0b\n\x07\x46LOAT32\x10\x05\x12\x0b\n\x07\x46LOAT64\x10\x06\x12\x0c\n\x08\x43\x46LOAT32\x10\x07\x12\x0c\n\x08\x43\x46LOAT64\x10\x08*\xde\x01\n\x04\x42\x61nd\x12\x10\n\x0cUNKNOWN_BAND\x10\x00\x12\x0f\n\nULTRA_BLUE\x10\xe9\x07\x12\t\n\x04\x42LUE\x10\xea\x07\x12\n\n\x05GREEN\x10\xeb\x07\x12\x08\n\x03RED\x10\xec\x07\x12\x08\n\x03NIR\x10\xed\x07\x12\n\n\x05SWIR1\x10\xee\x07\x12\x0c\n\x07THERMAL\x10\xef\x07\x12\n\n\x05SWIR2\x10\xf0\x07\x12\x11\n\x0cPANCHROMATIC\x10\xf1\x07\x12\x0b\n\x06\x43IRRUS\x10\xf2\x07\x12\n\n\x05TIRS1\x10\xf3\x07\x12\n\n\x05TIRS2\x10\xf4\x07\x12\x0e\n\tINFRARED2\x10\xf5\x07\x12\x0e\n\tINFRARED1\x10\xf6\x07\x12\n\n\x05\x41LPHA\x10\xf7\x07*\x86\x02\n\x0cSpacecraftID\x12\x16\n\x12UNKNOWN_SPACECRAFT\x10\x00\x12\x11\n\rLANDSAT_1_MSS\x10\x01\x12\x11\n\rLANDSAT_2_MSS\x10\x02\x12\x11\n\rLANDSAT_3_MSS\x10\x04\x12\x13\n\x0fLANDSAT_123_MSS\x10\x07\x12\x11\n\rLANDSAT_4_MSS\x10\x08\x12\x11\n\rLANDSAT_5_MSS\x10\x10\x12\x12\n\x0eLANDSAT_45_MSS\x10\x18\x12\r\n\tLANDSAT_4\x10 \x12\r\n\tLANDSAT_5\x10@\x12\x0e\n\nLANDSAT_45\x10`\x12\x0e\n\tLANDSAT_7\x10\x80\x01\x12\x0e\n\tLANDSAT_8\x10\x80\x02\x12\x08\n\x03\x41LL\x10\x80\x04*\xc9\x06\n\x13ServiceOperatorType\x12\x0b\n\x07Project\x10\x00\x12\x10\n\x0c\x45xportToJson\x10\x01\x12\x12\n\x0eImportFromJson\x10\x02\x12\x1d\n\x19ImportMapGeometryFromJson\x10\x03\x12\x15\n\x11\x45xportToESRIShape\x10\x04\x12\x17\n\x13ImportFromESRIShape\x10\x05\x12\t\n\x05Union\x10\x06\x12\x0e\n\nDifference\x10\x07\x12\x0f\n\x0bProximity2D\x10\x08\x12\n\n\x06Relate\x10\t\x12\n\n\x06\x45quals\x10\n\x12\x0c\n\x08\x44isjoint\x10\x0b\x12\x0e\n\nIntersects\x10\x0c\x12\n\n\x06Within\x10\r\x12\x0c\n\x08\x43ontains\x10\x0e\x12\x0b\n\x07\x43rosses\x10\x0f\x12\x0b\n\x07Touches\x10\x10\x12\x0c\n\x08Overlaps\x10\x11\x12\n\n\x06\x42uffer\x10\x12\x12\x0c\n\x08\x44istance\x10\x13\x12\x10\n\x0cIntersection\x10\x14\x12\x08\n\x04\x43lip\x10\x15\x12\x07\n\x03\x43ut\x10\x16\x12\x13\n\x0f\x44\x65nsifyByLength\x10\x17\x12\x12\n\x0e\x44\x65nsifyByAngle\x10\x18\x12\x0e\n\nLabelPoint\x10\x19\x12\x12\n\x0eGeodesicBuffer\x10\x1a\x12\x1b\n\x17GeodeticDensifyByLength\x10\x1b\x12\x1a\n\x16ShapePreservingDensify\x10\x1c\x12\x12\n\x0eGeodeticLength\x10\x1d\x12\x10\n\x0cGeodeticArea\x10\x1e\x12\x0c\n\x08Simplify\x10\x1f\x12\x0f\n\x0bSimplifyOGC\x10 \x12\n\n\x06Offset\x10!\x12\x0e\n\nGeneralize\x10\"\x12\x14\n\x10GeneralizeByArea\x10#\x12\x0f\n\x0b\x45xportToWkb\x10$\x12\x11\n\rImportFromWkb\x10%\x12\x0f\n\x0b\x45xportToWkt\x10&\x12\x11\n\rImportFromWkt\x10\'\x12\x15\n\x11ImportFromGeoJson\x10(\x12\x13\n\x0f\x45xportToGeoJson\x10)\x12\x17\n\x13SymmetricDifference\x10*\x12\x0e\n\nConvexHull\x10+\x12\x0c\n\x08\x42oundary\x10,\x12\x10\n\x0cRandomPoints\x10-\x12\x13\n\x0f\x45nclosingCircle\x10.2[\n\x10ImageryOperators\x12G\n\x0eMetadataSearch\x12\x19.geometry.MetadataRequest\x1a\x18.geometry.MetadataResult\"\x00\x42%\n\x0f\x63om.epl.imageryB\nEPLImageryP\x01\xa2\x02\x03RTGb\x06proto3')
+  serialized_pb=_b('\n\x15\x65pl_imagery_api.proto\x12\x08geometry\"\xcd\x01\n\x0fMetadataRequest\x12,\n\x0csatellite_id\x18\x01 \x01(\x0e\x32\x16.geometry.SpacecraftID\x12\x31\n\x0c\x62ounding_box\x18\x02 \x01(\x0b\x32\x1b.geometry.ServiceEnvelope2D\x12\x12\n\nstart_date\x18\x03 \x01(\t\x12\x10\n\x08\x65nd_date\x18\x04 \x01(\t\x12\x0f\n\x07sort_by\x18\x05 \x01(\t\x12\r\n\x05limit\x18\x06 \x01(\x05\x12\x13\n\x0bsql_filters\x18\x07 \x03(\t\"\xe9\x03\n\x0eMetadataResult\x12\x10\n\x08scene_id\x18\x01 \x01(\t\x12\x12\n\nproduct_id\x18\x02 \x01(\t\x12-\n\rspacecraft_id\x18\x03 \x01(\x0e\x32\x16.geometry.SpacecraftID\x12\x11\n\tsensor_id\x18\x04 \x01(\t\x12\x15\n\rdate_acquired\x18\x05 \x01(\t\x12\x14\n\x0csensing_time\x18\x06 \x01(\t\x12\x19\n\x11\x63ollection_number\x18\x07 \x01(\t\x12\x1b\n\x13\x63ollection_category\x18\x08 \x01(\t\x12\x11\n\tdata_type\x18\t \x01(\t\x12\x10\n\x08wrs_path\x18\n \x01(\x05\x12\x0f\n\x07wrs_row\x18\x0b \x01(\x05\x12\x13\n\x0b\x63loud_cover\x18\x0c \x01(\x02\x12\x11\n\tnorth_lat\x18\r \x01(\x02\x12\x11\n\tsouth_lat\x18\x0e \x01(\x02\x12\x10\n\x08west_lon\x18\x0f \x01(\x02\x12\x10\n\x08\x65\x61st_lon\x18\x10 \x01(\x02\x12\x12\n\ntotal_size\x18\x11 \x01(\x05\x12\x10\n\x08\x62\x61se_url\x18\x12 \x01(\t\x12\x0b\n\x03\x64oy\x18\x13 \x01(\x05\x12\x15\n\rutm_epsg_code\x18\x14 \x01(\x05\x12+\n\x06\x62ounds\x18\x15 \x01(\x0b\x32\x1b.geometry.ServiceEnvelope2D\"\xca\x01\n\x0fServiceGeometry\x12\x13\n\x0bgeometry_id\x18\x01 \x03(\x03\x12\x32\n\x16geometry_encoding_type\x18\x02 \x01(\x0e\x32\x12.geometry.DataType\x12\x17\n\x0fgeometry_string\x18\x03 \x03(\t\x12\x17\n\x0fgeometry_binary\x18\x04 \x03(\x0c\x12<\n\x11spatial_reference\x18\x05 \x01(\x0b\x32!.geometry.ServiceSpatialReference\"H\n\x17ServiceSpatialReference\x12\r\n\x05proj4\x18\x04 \x01(\t\x12\x10\n\x08\x65sri_wkt\x18\x05 \x01(\t\x12\x0c\n\x04wkid\x18\x06 \x01(\x05\"\xdc\x01\n\x0eOperatorResult\x12+\n\x08geometry\x18\x01 \x01(\x0b\x32\x19.geometry.ServiceGeometry\x12\x1c\n\x14spatial_relationship\x18\x02 \x01(\x08\x12\x10\n\x08\x64istance\x18\x03 \x01(\x01\x12;\n\nrelate_map\x18\x04 \x03(\x0b\x32\'.geometry.OperatorResult.RelateMapEntry\x1a\x30\n\x0eRelateMapEntry\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12\r\n\x05value\x18\x02 \x01(\x08:\x02\x38\x01\"\xb8\x08\n\x0fOperatorRequest\x12\x30\n\rleft_geometry\x18\x01 \x01(\x0b\x32\x19.geometry.ServiceGeometry\x12\x31\n\x0eright_geometry\x18\x02 \x01(\x0b\x32\x19.geometry.ServiceGeometry\x12.\n\x0bleft_cursor\x18\x03 \x01(\x0b\x32\x19.geometry.OperatorRequest\x12/\n\x0cright_cursor\x18\x04 \x01(\x0b\x32\x19.geometry.OperatorRequest\x12\x34\n\roperator_type\x18\x05 \x01(\x0e\x32\x1d.geometry.ServiceOperatorType\x12\x31\n\x15results_encoding_type\x18\x06 \x01(\x0e\x32\x12.geometry.DataType\x12\x46\n\x1boperation_spatial_reference\x18\x07 \x01(\x0b\x32!.geometry.ServiceSpatialReference\x12\x43\n\x18result_spatial_reference\x18\x08 \x01(\x0b\x32!.geometry.ServiceSpatialReference\x12\x19\n\x11\x63onvex_hull_merge\x18\t \x01(\x08\x12\x18\n\x10\x62uffer_distances\x18\n \x03(\x01\x12\x1d\n\x15\x62uffer_max_deviations\x18\x1c \x03(\x01\x12\x1b\n\x13\x62uffer_union_result\x18\x0b \x01(\x08\x12#\n\x1bintersection_dimension_mask\x18\x0c \x01(\x05\x12\x32\n\rclip_envelope\x18\r \x01(\x0b\x32\x1b.geometry.ServiceEnvelope2D\x12\x1a\n\x12\x63ut_consider_touch\x18\x0e \x01(\x08\x12\x1a\n\x12\x64\x65nsify_max_length\x18\x0f \x01(\x01\x12\x16\n\x0esimplify_force\x18\x10 \x01(\x08\x12\x17\n\x0foffset_distance\x18\x11 \x01(\x01\x12\x18\n\x10offset_join_type\x18\x12 \x01(\t\x12\x1a\n\x12offset_bevel_ratio\x18\x13 \x01(\x01\x12\x1c\n\x14offset_flatten_error\x18\x14 \x01(\x01\x12 \n\x18generalize_max_deviation\x18\x15 \x01(\x01\x12%\n\x1dgeneralize_remove_degenerates\x18\x16 \x01(\x08\x12#\n\x1bmax_vertices_in_full_circle\x18\x17 \x01(\x05\x12\x18\n\x10generic_booleans\x18\x18 \x03(\x08\x12\x17\n\x0fgeneric_doubles\x18\x19 \x03(\x01\x12\x18\n\x10generic_integers\x18\x1a \x03(\x05\x12\x17\n\x0fgeneric_strings\x18\x1b \x03(\t\x12\x0e\n\x06\x64\x65_9im\x18\x1d \x01(\t\"K\n\x11ServiceEnvelope2D\x12\x0c\n\x04xmin\x18\x01 \x01(\x01\x12\x0c\n\x04ymin\x18\x02 \x01(\x01\x12\x0c\n\x04xmax\x18\x03 \x01(\x01\x12\x0c\n\x04ymax\x18\x04 \x01(\x01*x\n\x08\x44\x61taType\x12\x08\n\x04\x42YTE\x10\x00\x12\t\n\x05INT16\x10\x01\x12\n\n\x06UINT16\x10\x02\x12\t\n\x05INT32\x10\x03\x12\n\n\x06UINT32\x10\x04\x12\x0b\n\x07\x46LOAT32\x10\x05\x12\x0b\n\x07\x46LOAT64\x10\x06\x12\x0c\n\x08\x43\x46LOAT32\x10\x07\x12\x0c\n\x08\x43\x46LOAT64\x10\x08*\xde\x01\n\x04\x42\x61nd\x12\x10\n\x0cUNKNOWN_BAND\x10\x00\x12\x0f\n\nULTRA_BLUE\x10\xe9\x07\x12\t\n\x04\x42LUE\x10\xea\x07\x12\n\n\x05GREEN\x10\xeb\x07\x12\x08\n\x03RED\x10\xec\x07\x12\x08\n\x03NIR\x10\xed\x07\x12\n\n\x05SWIR1\x10\xee\x07\x12\x0c\n\x07THERMAL\x10\xef\x07\x12\n\n\x05SWIR2\x10\xf0\x07\x12\x11\n\x0cPANCHROMATIC\x10\xf1\x07\x12\x0b\n\x06\x43IRRUS\x10\xf2\x07\x12\n\n\x05TIRS1\x10\xf3\x07\x12\n\n\x05TIRS2\x10\xf4\x07\x12\x0e\n\tINFRARED2\x10\xf5\x07\x12\x0e\n\tINFRARED1\x10\xf6\x07\x12\n\n\x05\x41LPHA\x10\xf7\x07*\x86\x02\n\x0cSpacecraftID\x12\x16\n\x12UNKNOWN_SPACECRAFT\x10\x00\x12\x11\n\rLANDSAT_1_MSS\x10\x01\x12\x11\n\rLANDSAT_2_MSS\x10\x02\x12\x11\n\rLANDSAT_3_MSS\x10\x04\x12\x13\n\x0fLANDSAT_123_MSS\x10\x07\x12\x11\n\rLANDSAT_4_MSS\x10\x08\x12\x11\n\rLANDSAT_5_MSS\x10\x10\x12\x12\n\x0eLANDSAT_45_MSS\x10\x18\x12\r\n\tLANDSAT_4\x10 \x12\r\n\tLANDSAT_5\x10@\x12\x0e\n\nLANDSAT_45\x10`\x12\x0e\n\tLANDSAT_7\x10\x80\x01\x12\x0e\n\tLANDSAT_8\x10\x80\x02\x12\x08\n\x03\x41LL\x10\x80\x04*\xc9\x06\n\x13ServiceOperatorType\x12\x0b\n\x07Project\x10\x00\x12\x10\n\x0c\x45xportToJson\x10\x01\x12\x12\n\x0eImportFromJson\x10\x02\x12\x1d\n\x19ImportMapGeometryFromJson\x10\x03\x12\x15\n\x11\x45xportToESRIShape\x10\x04\x12\x17\n\x13ImportFromESRIShape\x10\x05\x12\t\n\x05Union\x10\x06\x12\x0e\n\nDifference\x10\x07\x12\x0f\n\x0bProximity2D\x10\x08\x12\n\n\x06Relate\x10\t\x12\n\n\x06\x45quals\x10\n\x12\x0c\n\x08\x44isjoint\x10\x0b\x12\x0e\n\nIntersects\x10\x0c\x12\n\n\x06Within\x10\r\x12\x0c\n\x08\x43ontains\x10\x0e\x12\x0b\n\x07\x43rosses\x10\x0f\x12\x0b\n\x07Touches\x10\x10\x12\x0c\n\x08Overlaps\x10\x11\x12\n\n\x06\x42uffer\x10\x12\x12\x0c\n\x08\x44istance\x10\x13\x12\x10\n\x0cIntersection\x10\x14\x12\x08\n\x04\x43lip\x10\x15\x12\x07\n\x03\x43ut\x10\x16\x12\x13\n\x0f\x44\x65nsifyByLength\x10\x17\x12\x12\n\x0e\x44\x65nsifyByAngle\x10\x18\x12\x0e\n\nLabelPoint\x10\x19\x12\x12\n\x0eGeodesicBuffer\x10\x1a\x12\x1b\n\x17GeodeticDensifyByLength\x10\x1b\x12\x1a\n\x16ShapePreservingDensify\x10\x1c\x12\x12\n\x0eGeodeticLength\x10\x1d\x12\x10\n\x0cGeodeticArea\x10\x1e\x12\x0c\n\x08Simplify\x10\x1f\x12\x0f\n\x0bSimplifyOGC\x10 \x12\n\n\x06Offset\x10!\x12\x0e\n\nGeneralize\x10\"\x12\x14\n\x10GeneralizeByArea\x10#\x12\x0f\n\x0b\x45xportToWkb\x10$\x12\x11\n\rImportFromWkb\x10%\x12\x0f\n\x0b\x45xportToWkt\x10&\x12\x11\n\rImportFromWkt\x10\'\x12\x15\n\x11ImportFromGeoJson\x10(\x12\x13\n\x0f\x45xportToGeoJson\x10)\x12\x17\n\x13SymmetricDifference\x10*\x12\x0e\n\nConvexHull\x10+\x12\x0c\n\x08\x42oundary\x10,\x12\x10\n\x0cRandomPoints\x10-\x12\x13\n\x0f\x45nclosingCircle\x10.2]\n\x10ImageryOperators\x12I\n\x0eMetadataSearch\x12\x19.geometry.MetadataRequest\x1a\x18.geometry.MetadataResult\"\x00\x30\x01\x42%\n\x0f\x63om.epl.imageryB\nEPLImageryP\x01\xa2\x02\x03RTGb\x06proto3')
 )
 
 _DATATYPE = _descriptor.EnumDescriptor(
@@ -68,8 +68,8 @@ _DATATYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=2368,
-  serialized_end=2488,
+  serialized_start=2397,
+  serialized_end=2517,
 )
 _sym_db.RegisterEnumDescriptor(_DATATYPE)
 
@@ -147,8 +147,8 @@ _BAND = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=2491,
-  serialized_end=2713,
+  serialized_start=2520,
+  serialized_end=2742,
 )
 _sym_db.RegisterEnumDescriptor(_BAND)
 
@@ -218,8 +218,8 @@ _SPACECRAFTID = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=2716,
-  serialized_end=2978,
+  serialized_start=2745,
+  serialized_end=3007,
 )
 _sym_db.RegisterEnumDescriptor(_SPACECRAFTID)
 
@@ -421,8 +421,8 @@ _SERVICEOPERATORTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=2981,
-  serialized_end=3822,
+  serialized_start=3010,
+  serialized_end=3851,
 )
 _sym_db.RegisterEnumDescriptor(_SERVICEOPERATORTYPE)
 
@@ -738,8 +738,8 @@ _METADATARESULT = _descriptor.Descriptor(
       options=None),
     _descriptor.FieldDescriptor(
       name='bounds', full_name='geometry.MetadataResult.bounds', index=20,
-      number=21, type=2, cpp_type=6, label=3,
-      has_default_value=False, default_value=[],
+      number=21, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
@@ -756,7 +756,7 @@ _METADATARESULT = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=244,
-  serialized_end=704,
+  serialized_end=733,
 )
 
 
@@ -814,8 +814,8 @@ _SERVICEGEOMETRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=707,
-  serialized_end=909,
+  serialized_start=736,
+  serialized_end=938,
 )
 
 
@@ -859,8 +859,8 @@ _SERVICESPATIALREFERENCE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=911,
-  serialized_end=983,
+  serialized_start=940,
+  serialized_end=1012,
 )
 
 
@@ -897,8 +897,8 @@ _OPERATORRESULT_RELATEMAPENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1158,
-  serialized_end=1206,
+  serialized_start=1187,
+  serialized_end=1235,
 )
 
 _OPERATORRESULT = _descriptor.Descriptor(
@@ -948,8 +948,8 @@ _OPERATORRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=986,
-  serialized_end=1206,
+  serialized_start=1015,
+  serialized_end=1235,
 )
 
 
@@ -1175,8 +1175,8 @@ _OPERATORREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1209,
-  serialized_end=2289,
+  serialized_start=1238,
+  serialized_end=2318,
 )
 
 
@@ -1227,13 +1227,14 @@ _SERVICEENVELOPE2D = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2291,
-  serialized_end=2366,
+  serialized_start=2320,
+  serialized_end=2395,
 )
 
 _METADATAREQUEST.fields_by_name['satellite_id'].enum_type = _SPACECRAFTID
 _METADATAREQUEST.fields_by_name['bounding_box'].message_type = _SERVICEENVELOPE2D
 _METADATARESULT.fields_by_name['spacecraft_id'].enum_type = _SPACECRAFTID
+_METADATARESULT.fields_by_name['bounds'].message_type = _SERVICEENVELOPE2D
 _SERVICEGEOMETRY.fields_by_name['geometry_encoding_type'].enum_type = _DATATYPE
 _SERVICEGEOMETRY.fields_by_name['spatial_reference'].message_type = _SERVICESPATIALREFERENCE
 _OPERATORRESULT_RELATEMAPENTRY.containing_type = _OPERATORRESULT
@@ -1330,8 +1331,8 @@ _IMAGERYOPERATORS = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   options=None,
-  serialized_start=3824,
-  serialized_end=3915,
+  serialized_start=3853,
+  serialized_end=3946,
   methods=[
   _descriptor.MethodDescriptor(
     name='MetadataSearch',
@@ -1368,7 +1369,7 @@ try:
       Args:
         channel: A grpc.Channel.
       """
-      self.MetadataSearch = channel.unary_unary(
+      self.MetadataSearch = channel.unary_stream(
           '/geometry.ImageryOperators/MetadataSearch',
           request_serializer=MetadataRequest.SerializeToString,
           response_deserializer=MetadataResult.FromString,
@@ -1390,7 +1391,7 @@ try:
 
   def add_ImageryOperatorsServicer_to_server(servicer, server):
     rpc_method_handlers = {
-        'MetadataSearch': grpc.unary_unary_rpc_method_handler(
+        'MetadataSearch': grpc.unary_stream_rpc_method_handler(
             servicer.MetadataSearch,
             request_deserializer=MetadataRequest.FromString,
             response_serializer=MetadataResult.SerializeToString,
@@ -1429,7 +1430,6 @@ try:
       """Execute a single geometry operation
       """
       raise NotImplementedError()
-    MetadataSearch.future = None
 
 
   def beta_create_ImageryOperators_server(servicer, pool=None, pool_size=None, default_timeout=None, maximum_timeout=None):
@@ -1445,7 +1445,7 @@ try:
       ('geometry.ImageryOperators', 'MetadataSearch'): MetadataResult.SerializeToString,
     }
     method_implementations = {
-      ('geometry.ImageryOperators', 'MetadataSearch'): face_utilities.unary_unary_inline(servicer.MetadataSearch),
+      ('geometry.ImageryOperators', 'MetadataSearch'): face_utilities.unary_stream_inline(servicer.MetadataSearch),
     }
     server_options = beta_implementations.server_options(request_deserializers=request_deserializers, response_serializers=response_serializers, thread_pool=pool, thread_pool_size=pool_size, default_timeout=default_timeout, maximum_timeout=maximum_timeout)
     return beta_implementations.server(method_implementations, options=server_options)
@@ -1464,7 +1464,7 @@ try:
       ('geometry.ImageryOperators', 'MetadataSearch'): MetadataResult.FromString,
     }
     cardinalities = {
-      'MetadataSearch': cardinality.Cardinality.UNARY_UNARY,
+      'MetadataSearch': cardinality.Cardinality.UNARY_STREAM,
     }
     stub_options = beta_implementations.stub_options(host=host, metadata_transformer=metadata_transformer, request_serializers=request_serializers, response_deserializers=response_deserializers, thread_pool=pool, thread_pool_size=pool_size)
     return beta_implementations.dynamic_stub(channel, 'geometry.ImageryOperators', cardinalities, options=stub_options)

@@ -15,7 +15,7 @@ class ImageryOperatorsStub(object):
     Args:
       channel: A grpc.Channel.
     """
-    self.MetadataSearch = channel.unary_unary(
+    self.MetadataSearch = channel.unary_stream(
         '/geometry.ImageryOperators/MetadataSearch',
         request_serializer=epl__imagery__api__pb2.MetadataRequest.SerializeToString,
         response_deserializer=epl__imagery__api__pb2.MetadataResult.FromString,
@@ -37,7 +37,7 @@ class ImageryOperatorsServicer(object):
 
 def add_ImageryOperatorsServicer_to_server(servicer, server):
   rpc_method_handlers = {
-      'MetadataSearch': grpc.unary_unary_rpc_method_handler(
+      'MetadataSearch': grpc.unary_stream_rpc_method_handler(
           servicer.MetadataSearch,
           request_deserializer=epl__imagery__api__pb2.MetadataRequest.FromString,
           response_serializer=epl__imagery__api__pb2.MetadataResult.SerializeToString,
