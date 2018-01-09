@@ -14,18 +14,20 @@ from google.protobuf import descriptor_pb2
 _sym_db = _symbol_database.Default()
 
 
+from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='epl_imagery_api.proto',
-  package='geometry',
+  package='imagery',
   syntax='proto3',
-  serialized_pb=_b('\n\x15\x65pl_imagery_api.proto\x12\x08geometry\"\xcd\x01\n\x0fMetadataRequest\x12,\n\x0csatellite_id\x18\x01 \x01(\x0e\x32\x16.geometry.SpacecraftID\x12\x31\n\x0c\x62ounding_box\x18\x02 \x01(\x0b\x32\x1b.geometry.ServiceEnvelope2D\x12\x12\n\nstart_date\x18\x03 \x01(\t\x12\x10\n\x08\x65nd_date\x18\x04 \x01(\t\x12\x0f\n\x07sort_by\x18\x05 \x01(\t\x12\r\n\x05limit\x18\x06 \x01(\x05\x12\x13\n\x0bsql_filters\x18\x07 \x03(\t\"\xe9\x03\n\x0eMetadataResult\x12\x10\n\x08scene_id\x18\x01 \x01(\t\x12\x12\n\nproduct_id\x18\x02 \x01(\t\x12-\n\rspacecraft_id\x18\x03 \x01(\x0e\x32\x16.geometry.SpacecraftID\x12\x11\n\tsensor_id\x18\x04 \x01(\t\x12\x15\n\rdate_acquired\x18\x05 \x01(\t\x12\x14\n\x0csensing_time\x18\x06 \x01(\t\x12\x19\n\x11\x63ollection_number\x18\x07 \x01(\t\x12\x1b\n\x13\x63ollection_category\x18\x08 \x01(\t\x12\x11\n\tdata_type\x18\t \x01(\t\x12\x10\n\x08wrs_path\x18\n \x01(\x05\x12\x0f\n\x07wrs_row\x18\x0b \x01(\x05\x12\x13\n\x0b\x63loud_cover\x18\x0c \x01(\x02\x12\x11\n\tnorth_lat\x18\r \x01(\x02\x12\x11\n\tsouth_lat\x18\x0e \x01(\x02\x12\x10\n\x08west_lon\x18\x0f \x01(\x02\x12\x10\n\x08\x65\x61st_lon\x18\x10 \x01(\x02\x12\x12\n\ntotal_size\x18\x11 \x01(\x05\x12\x10\n\x08\x62\x61se_url\x18\x12 \x01(\t\x12\x0b\n\x03\x64oy\x18\x13 \x01(\x05\x12\x15\n\rutm_epsg_code\x18\x14 \x01(\x05\x12+\n\x06\x62ounds\x18\x15 \x01(\x0b\x32\x1b.geometry.ServiceEnvelope2D\"\xca\x01\n\x0fServiceGeometry\x12\x13\n\x0bgeometry_id\x18\x01 \x03(\x03\x12\x32\n\x16geometry_encoding_type\x18\x02 \x01(\x0e\x32\x12.geometry.DataType\x12\x17\n\x0fgeometry_string\x18\x03 \x03(\t\x12\x17\n\x0fgeometry_binary\x18\x04 \x03(\x0c\x12<\n\x11spatial_reference\x18\x05 \x01(\x0b\x32!.geometry.ServiceSpatialReference\"H\n\x17ServiceSpatialReference\x12\r\n\x05proj4\x18\x04 \x01(\t\x12\x10\n\x08\x65sri_wkt\x18\x05 \x01(\t\x12\x0c\n\x04wkid\x18\x06 \x01(\x05\"\xdc\x01\n\x0eOperatorResult\x12+\n\x08geometry\x18\x01 \x01(\x0b\x32\x19.geometry.ServiceGeometry\x12\x1c\n\x14spatial_relationship\x18\x02 \x01(\x08\x12\x10\n\x08\x64istance\x18\x03 \x01(\x01\x12;\n\nrelate_map\x18\x04 \x03(\x0b\x32\'.geometry.OperatorResult.RelateMapEntry\x1a\x30\n\x0eRelateMapEntry\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12\r\n\x05value\x18\x02 \x01(\x08:\x02\x38\x01\"\xb8\x08\n\x0fOperatorRequest\x12\x30\n\rleft_geometry\x18\x01 \x01(\x0b\x32\x19.geometry.ServiceGeometry\x12\x31\n\x0eright_geometry\x18\x02 \x01(\x0b\x32\x19.geometry.ServiceGeometry\x12.\n\x0bleft_cursor\x18\x03 \x01(\x0b\x32\x19.geometry.OperatorRequest\x12/\n\x0cright_cursor\x18\x04 \x01(\x0b\x32\x19.geometry.OperatorRequest\x12\x34\n\roperator_type\x18\x05 \x01(\x0e\x32\x1d.geometry.ServiceOperatorType\x12\x31\n\x15results_encoding_type\x18\x06 \x01(\x0e\x32\x12.geometry.DataType\x12\x46\n\x1boperation_spatial_reference\x18\x07 \x01(\x0b\x32!.geometry.ServiceSpatialReference\x12\x43\n\x18result_spatial_reference\x18\x08 \x01(\x0b\x32!.geometry.ServiceSpatialReference\x12\x19\n\x11\x63onvex_hull_merge\x18\t \x01(\x08\x12\x18\n\x10\x62uffer_distances\x18\n \x03(\x01\x12\x1d\n\x15\x62uffer_max_deviations\x18\x1c \x03(\x01\x12\x1b\n\x13\x62uffer_union_result\x18\x0b \x01(\x08\x12#\n\x1bintersection_dimension_mask\x18\x0c \x01(\x05\x12\x32\n\rclip_envelope\x18\r \x01(\x0b\x32\x1b.geometry.ServiceEnvelope2D\x12\x1a\n\x12\x63ut_consider_touch\x18\x0e \x01(\x08\x12\x1a\n\x12\x64\x65nsify_max_length\x18\x0f \x01(\x01\x12\x16\n\x0esimplify_force\x18\x10 \x01(\x08\x12\x17\n\x0foffset_distance\x18\x11 \x01(\x01\x12\x18\n\x10offset_join_type\x18\x12 \x01(\t\x12\x1a\n\x12offset_bevel_ratio\x18\x13 \x01(\x01\x12\x1c\n\x14offset_flatten_error\x18\x14 \x01(\x01\x12 \n\x18generalize_max_deviation\x18\x15 \x01(\x01\x12%\n\x1dgeneralize_remove_degenerates\x18\x16 \x01(\x08\x12#\n\x1bmax_vertices_in_full_circle\x18\x17 \x01(\x05\x12\x18\n\x10generic_booleans\x18\x18 \x03(\x08\x12\x17\n\x0fgeneric_doubles\x18\x19 \x03(\x01\x12\x18\n\x10generic_integers\x18\x1a \x03(\x05\x12\x17\n\x0fgeneric_strings\x18\x1b \x03(\t\x12\x0e\n\x06\x64\x65_9im\x18\x1d \x01(\t\"K\n\x11ServiceEnvelope2D\x12\x0c\n\x04xmin\x18\x01 \x01(\x01\x12\x0c\n\x04ymin\x18\x02 \x01(\x01\x12\x0c\n\x04xmax\x18\x03 \x01(\x01\x12\x0c\n\x04ymax\x18\x04 \x01(\x01*x\n\x08\x44\x61taType\x12\x08\n\x04\x42YTE\x10\x00\x12\t\n\x05INT16\x10\x01\x12\n\n\x06UINT16\x10\x02\x12\t\n\x05INT32\x10\x03\x12\n\n\x06UINT32\x10\x04\x12\x0b\n\x07\x46LOAT32\x10\x05\x12\x0b\n\x07\x46LOAT64\x10\x06\x12\x0c\n\x08\x43\x46LOAT32\x10\x07\x12\x0c\n\x08\x43\x46LOAT64\x10\x08*\xde\x01\n\x04\x42\x61nd\x12\x10\n\x0cUNKNOWN_BAND\x10\x00\x12\x0f\n\nULTRA_BLUE\x10\xe9\x07\x12\t\n\x04\x42LUE\x10\xea\x07\x12\n\n\x05GREEN\x10\xeb\x07\x12\x08\n\x03RED\x10\xec\x07\x12\x08\n\x03NIR\x10\xed\x07\x12\n\n\x05SWIR1\x10\xee\x07\x12\x0c\n\x07THERMAL\x10\xef\x07\x12\n\n\x05SWIR2\x10\xf0\x07\x12\x11\n\x0cPANCHROMATIC\x10\xf1\x07\x12\x0b\n\x06\x43IRRUS\x10\xf2\x07\x12\n\n\x05TIRS1\x10\xf3\x07\x12\n\n\x05TIRS2\x10\xf4\x07\x12\x0e\n\tINFRARED2\x10\xf5\x07\x12\x0e\n\tINFRARED1\x10\xf6\x07\x12\n\n\x05\x41LPHA\x10\xf7\x07*\x86\x02\n\x0cSpacecraftID\x12\x16\n\x12UNKNOWN_SPACECRAFT\x10\x00\x12\x11\n\rLANDSAT_1_MSS\x10\x01\x12\x11\n\rLANDSAT_2_MSS\x10\x02\x12\x11\n\rLANDSAT_3_MSS\x10\x04\x12\x13\n\x0fLANDSAT_123_MSS\x10\x07\x12\x11\n\rLANDSAT_4_MSS\x10\x08\x12\x11\n\rLANDSAT_5_MSS\x10\x10\x12\x12\n\x0eLANDSAT_45_MSS\x10\x18\x12\r\n\tLANDSAT_4\x10 \x12\r\n\tLANDSAT_5\x10@\x12\x0e\n\nLANDSAT_45\x10`\x12\x0e\n\tLANDSAT_7\x10\x80\x01\x12\x0e\n\tLANDSAT_8\x10\x80\x02\x12\x08\n\x03\x41LL\x10\x80\x04*\xc9\x06\n\x13ServiceOperatorType\x12\x0b\n\x07Project\x10\x00\x12\x10\n\x0c\x45xportToJson\x10\x01\x12\x12\n\x0eImportFromJson\x10\x02\x12\x1d\n\x19ImportMapGeometryFromJson\x10\x03\x12\x15\n\x11\x45xportToESRIShape\x10\x04\x12\x17\n\x13ImportFromESRIShape\x10\x05\x12\t\n\x05Union\x10\x06\x12\x0e\n\nDifference\x10\x07\x12\x0f\n\x0bProximity2D\x10\x08\x12\n\n\x06Relate\x10\t\x12\n\n\x06\x45quals\x10\n\x12\x0c\n\x08\x44isjoint\x10\x0b\x12\x0e\n\nIntersects\x10\x0c\x12\n\n\x06Within\x10\r\x12\x0c\n\x08\x43ontains\x10\x0e\x12\x0b\n\x07\x43rosses\x10\x0f\x12\x0b\n\x07Touches\x10\x10\x12\x0c\n\x08Overlaps\x10\x11\x12\n\n\x06\x42uffer\x10\x12\x12\x0c\n\x08\x44istance\x10\x13\x12\x10\n\x0cIntersection\x10\x14\x12\x08\n\x04\x43lip\x10\x15\x12\x07\n\x03\x43ut\x10\x16\x12\x13\n\x0f\x44\x65nsifyByLength\x10\x17\x12\x12\n\x0e\x44\x65nsifyByAngle\x10\x18\x12\x0e\n\nLabelPoint\x10\x19\x12\x12\n\x0eGeodesicBuffer\x10\x1a\x12\x1b\n\x17GeodeticDensifyByLength\x10\x1b\x12\x1a\n\x16ShapePreservingDensify\x10\x1c\x12\x12\n\x0eGeodeticLength\x10\x1d\x12\x10\n\x0cGeodeticArea\x10\x1e\x12\x0c\n\x08Simplify\x10\x1f\x12\x0f\n\x0bSimplifyOGC\x10 \x12\n\n\x06Offset\x10!\x12\x0e\n\nGeneralize\x10\"\x12\x14\n\x10GeneralizeByArea\x10#\x12\x0f\n\x0b\x45xportToWkb\x10$\x12\x11\n\rImportFromWkb\x10%\x12\x0f\n\x0b\x45xportToWkt\x10&\x12\x11\n\rImportFromWkt\x10\'\x12\x15\n\x11ImportFromGeoJson\x10(\x12\x13\n\x0f\x45xportToGeoJson\x10)\x12\x17\n\x13SymmetricDifference\x10*\x12\x0e\n\nConvexHull\x10+\x12\x0c\n\x08\x42oundary\x10,\x12\x10\n\x0cRandomPoints\x10-\x12\x13\n\x0f\x45nclosingCircle\x10.2]\n\x10ImageryOperators\x12I\n\x0eMetadataSearch\x12\x19.geometry.MetadataRequest\x1a\x18.geometry.MetadataResult\"\x00\x30\x01\x42%\n\x0f\x63om.epl.imageryB\nEPLImageryP\x01\xa2\x02\x03RTGb\x06proto3')
-)
+  serialized_pb=_b('\n\x15\x65pl_imagery_api.proto\x12\x07imagery\x1a\x1fgoogle/protobuf/timestamp.proto\"\xe7\x01\n\x0fMetadataRequest\x12+\n\x0csatellite_id\x18\x01 \x01(\x0e\x32\x15.imagery.SpacecraftID\x12\x14\n\x0c\x62ounding_box\x18\x02 \x03(\x02\x12.\n\nstart_date\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12,\n\x08\x65nd_date\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0f\n\x07sort_by\x18\x05 \x01(\t\x12\r\n\x05limit\x18\x06 \x01(\x05\x12\x13\n\x0bsql_filters\x18\x07 \x03(\t\"\xcb\x03\n\x0eMetadataResult\x12\x10\n\x08scene_id\x18\x01 \x01(\t\x12\x12\n\nproduct_id\x18\x02 \x01(\t\x12,\n\rspacecraft_id\x18\x03 \x01(\x0e\x32\x15.imagery.SpacecraftID\x12\x11\n\tsensor_id\x18\x04 \x01(\t\x12\x15\n\rdate_acquired\x18\x05 \x01(\t\x12\x14\n\x0csensing_time\x18\x06 \x01(\t\x12\x19\n\x11\x63ollection_number\x18\x07 \x01(\t\x12\x1b\n\x13\x63ollection_category\x18\x08 \x01(\t\x12\x11\n\tdata_type\x18\t \x01(\t\x12\x10\n\x08wrs_path\x18\n \x01(\x05\x12\x0f\n\x07wrs_row\x18\x0b \x01(\x05\x12\x13\n\x0b\x63loud_cover\x18\x0c \x01(\x02\x12\x11\n\tnorth_lat\x18\r \x01(\x02\x12\x11\n\tsouth_lat\x18\x0e \x01(\x02\x12\x10\n\x08west_lon\x18\x0f \x01(\x02\x12\x10\n\x08\x65\x61st_lon\x18\x10 \x01(\x02\x12\x12\n\ntotal_size\x18\x11 \x01(\x05\x12\x10\n\x08\x62\x61se_url\x18\x12 \x01(\t\x12\x0b\n\x03\x64oy\x18\x13 \x01(\x05\x12\x15\n\rutm_epsg_code\x18\x14 \x01(\x05\x12\x0e\n\x06\x62ounds\x18\x15 \x03(\x02\"\xc8\x01\n\x0fServiceGeometry\x12\x13\n\x0bgeometry_id\x18\x01 \x03(\x03\x12\x31\n\x16geometry_encoding_type\x18\x02 \x01(\x0e\x32\x11.imagery.DataType\x12\x17\n\x0fgeometry_string\x18\x03 \x03(\t\x12\x17\n\x0fgeometry_binary\x18\x04 \x03(\x0c\x12;\n\x11spatial_reference\x18\x05 \x01(\x0b\x32 .imagery.ServiceSpatialReference\"H\n\x17ServiceSpatialReference\x12\r\n\x05proj4\x18\x04 \x01(\t\x12\x10\n\x08\x65sri_wkt\x18\x05 \x01(\t\x12\x0c\n\x04wkid\x18\x06 \x01(\x05\"\xda\x01\n\x0eOperatorResult\x12*\n\x08geometry\x18\x01 \x01(\x0b\x32\x18.imagery.ServiceGeometry\x12\x1c\n\x14spatial_relationship\x18\x02 \x01(\x08\x12\x10\n\x08\x64istance\x18\x03 \x01(\x01\x12:\n\nrelate_map\x18\x04 \x03(\x0b\x32&.imagery.OperatorResult.RelateMapEntry\x1a\x30\n\x0eRelateMapEntry\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12\r\n\x05value\x18\x02 \x01(\x08:\x02\x38\x01\"\xaf\x08\n\x0fOperatorRequest\x12/\n\rleft_geometry\x18\x01 \x01(\x0b\x32\x18.imagery.ServiceGeometry\x12\x30\n\x0eright_geometry\x18\x02 \x01(\x0b\x32\x18.imagery.ServiceGeometry\x12-\n\x0bleft_cursor\x18\x03 \x01(\x0b\x32\x18.imagery.OperatorRequest\x12.\n\x0cright_cursor\x18\x04 \x01(\x0b\x32\x18.imagery.OperatorRequest\x12\x33\n\roperator_type\x18\x05 \x01(\x0e\x32\x1c.imagery.ServiceOperatorType\x12\x30\n\x15results_encoding_type\x18\x06 \x01(\x0e\x32\x11.imagery.DataType\x12\x45\n\x1boperation_spatial_reference\x18\x07 \x01(\x0b\x32 .imagery.ServiceSpatialReference\x12\x42\n\x18result_spatial_reference\x18\x08 \x01(\x0b\x32 .imagery.ServiceSpatialReference\x12\x19\n\x11\x63onvex_hull_merge\x18\t \x01(\x08\x12\x18\n\x10\x62uffer_distances\x18\n \x03(\x01\x12\x1d\n\x15\x62uffer_max_deviations\x18\x1c \x03(\x01\x12\x1b\n\x13\x62uffer_union_result\x18\x0b \x01(\x08\x12#\n\x1bintersection_dimension_mask\x18\x0c \x01(\x05\x12\x31\n\rclip_envelope\x18\r \x01(\x0b\x32\x1a.imagery.ServiceEnvelope2D\x12\x1a\n\x12\x63ut_consider_touch\x18\x0e \x01(\x08\x12\x1a\n\x12\x64\x65nsify_max_length\x18\x0f \x01(\x01\x12\x16\n\x0esimplify_force\x18\x10 \x01(\x08\x12\x17\n\x0foffset_distance\x18\x11 \x01(\x01\x12\x18\n\x10offset_join_type\x18\x12 \x01(\t\x12\x1a\n\x12offset_bevel_ratio\x18\x13 \x01(\x01\x12\x1c\n\x14offset_flatten_error\x18\x14 \x01(\x01\x12 \n\x18generalize_max_deviation\x18\x15 \x01(\x01\x12%\n\x1dgeneralize_remove_degenerates\x18\x16 \x01(\x08\x12#\n\x1bmax_vertices_in_full_circle\x18\x17 \x01(\x05\x12\x18\n\x10generic_booleans\x18\x18 \x03(\x08\x12\x17\n\x0fgeneric_doubles\x18\x19 \x03(\x01\x12\x18\n\x10generic_integers\x18\x1a \x03(\x05\x12\x17\n\x0fgeneric_strings\x18\x1b \x03(\t\x12\x0e\n\x06\x64\x65_9im\x18\x1d \x01(\t\"K\n\x11ServiceEnvelope2D\x12\x0c\n\x04xmin\x18\x01 \x01(\x01\x12\x0c\n\x04ymin\x18\x02 \x01(\x01\x12\x0c\n\x04xmax\x18\x03 \x01(\x01\x12\x0c\n\x04ymax\x18\x04 \x01(\x01*x\n\x08\x44\x61taType\x12\x08\n\x04\x42YTE\x10\x00\x12\t\n\x05INT16\x10\x01\x12\n\n\x06UINT16\x10\x02\x12\t\n\x05INT32\x10\x03\x12\n\n\x06UINT32\x10\x04\x12\x0b\n\x07\x46LOAT32\x10\x05\x12\x0b\n\x07\x46LOAT64\x10\x06\x12\x0c\n\x08\x43\x46LOAT32\x10\x07\x12\x0c\n\x08\x43\x46LOAT64\x10\x08*\xde\x01\n\x04\x42\x61nd\x12\x10\n\x0cUNKNOWN_BAND\x10\x00\x12\x0f\n\nULTRA_BLUE\x10\xe9\x07\x12\t\n\x04\x42LUE\x10\xea\x07\x12\n\n\x05GREEN\x10\xeb\x07\x12\x08\n\x03RED\x10\xec\x07\x12\x08\n\x03NIR\x10\xed\x07\x12\n\n\x05SWIR1\x10\xee\x07\x12\x0c\n\x07THERMAL\x10\xef\x07\x12\n\n\x05SWIR2\x10\xf0\x07\x12\x11\n\x0cPANCHROMATIC\x10\xf1\x07\x12\x0b\n\x06\x43IRRUS\x10\xf2\x07\x12\n\n\x05TIRS1\x10\xf3\x07\x12\n\n\x05TIRS2\x10\xf4\x07\x12\x0e\n\tINFRARED2\x10\xf5\x07\x12\x0e\n\tINFRARED1\x10\xf6\x07\x12\n\n\x05\x41LPHA\x10\xf7\x07*\x86\x02\n\x0cSpacecraftID\x12\x16\n\x12UNKNOWN_SPACECRAFT\x10\x00\x12\x11\n\rLANDSAT_1_MSS\x10\x01\x12\x11\n\rLANDSAT_2_MSS\x10\x02\x12\x11\n\rLANDSAT_3_MSS\x10\x04\x12\x13\n\x0fLANDSAT_123_MSS\x10\x07\x12\x11\n\rLANDSAT_4_MSS\x10\x08\x12\x11\n\rLANDSAT_5_MSS\x10\x10\x12\x12\n\x0eLANDSAT_45_MSS\x10\x18\x12\r\n\tLANDSAT_4\x10 \x12\r\n\tLANDSAT_5\x10@\x12\x0e\n\nLANDSAT_45\x10`\x12\x0e\n\tLANDSAT_7\x10\x80\x01\x12\x0e\n\tLANDSAT_8\x10\x80\x02\x12\x08\n\x03\x41LL\x10\x80\x04*\xc9\x06\n\x13ServiceOperatorType\x12\x0b\n\x07Project\x10\x00\x12\x10\n\x0c\x45xportToJson\x10\x01\x12\x12\n\x0eImportFromJson\x10\x02\x12\x1d\n\x19ImportMapGeometryFromJson\x10\x03\x12\x15\n\x11\x45xportToESRIShape\x10\x04\x12\x17\n\x13ImportFromESRIShape\x10\x05\x12\t\n\x05Union\x10\x06\x12\x0e\n\nDifference\x10\x07\x12\x0f\n\x0bProximity2D\x10\x08\x12\n\n\x06Relate\x10\t\x12\n\n\x06\x45quals\x10\n\x12\x0c\n\x08\x44isjoint\x10\x0b\x12\x0e\n\nIntersects\x10\x0c\x12\n\n\x06Within\x10\r\x12\x0c\n\x08\x43ontains\x10\x0e\x12\x0b\n\x07\x43rosses\x10\x0f\x12\x0b\n\x07Touches\x10\x10\x12\x0c\n\x08Overlaps\x10\x11\x12\n\n\x06\x42uffer\x10\x12\x12\x0c\n\x08\x44istance\x10\x13\x12\x10\n\x0cIntersection\x10\x14\x12\x08\n\x04\x43lip\x10\x15\x12\x07\n\x03\x43ut\x10\x16\x12\x13\n\x0f\x44\x65nsifyByLength\x10\x17\x12\x12\n\x0e\x44\x65nsifyByAngle\x10\x18\x12\x0e\n\nLabelPoint\x10\x19\x12\x12\n\x0eGeodesicBuffer\x10\x1a\x12\x1b\n\x17GeodeticDensifyByLength\x10\x1b\x12\x1a\n\x16ShapePreservingDensify\x10\x1c\x12\x12\n\x0eGeodeticLength\x10\x1d\x12\x10\n\x0cGeodeticArea\x10\x1e\x12\x0c\n\x08Simplify\x10\x1f\x12\x0f\n\x0bSimplifyOGC\x10 \x12\n\n\x06Offset\x10!\x12\x0e\n\nGeneralize\x10\"\x12\x14\n\x10GeneralizeByArea\x10#\x12\x0f\n\x0b\x45xportToWkb\x10$\x12\x11\n\rImportFromWkb\x10%\x12\x0f\n\x0b\x45xportToWkt\x10&\x12\x11\n\rImportFromWkt\x10\'\x12\x15\n\x11ImportFromGeoJson\x10(\x12\x13\n\x0f\x45xportToGeoJson\x10)\x12\x17\n\x13SymmetricDifference\x10*\x12\x0e\n\nConvexHull\x10+\x12\x0c\n\x08\x42oundary\x10,\x12\x10\n\x0cRandomPoints\x10-\x12\x13\n\x0f\x45nclosingCircle\x10.2[\n\x10ImageryOperators\x12G\n\x0eMetadataSearch\x12\x18.imagery.MetadataRequest\x1a\x17.imagery.MetadataResult\"\x00\x30\x01\x42%\n\x0f\x63om.epl.imageryB\nEPLImageryP\x01\xa2\x02\x03RTGb\x06proto3')
+  ,
+  dependencies=[google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,])
 
 _DATATYPE = _descriptor.EnumDescriptor(
   name='DataType',
-  full_name='geometry.DataType',
+  full_name='imagery.DataType',
   filename=None,
   file=DESCRIPTOR,
   values=[
@@ -68,15 +70,15 @@ _DATATYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=2397,
-  serialized_end=2517,
+  serialized_start=2412,
+  serialized_end=2532,
 )
 _sym_db.RegisterEnumDescriptor(_DATATYPE)
 
 DataType = enum_type_wrapper.EnumTypeWrapper(_DATATYPE)
 _BAND = _descriptor.EnumDescriptor(
   name='Band',
-  full_name='geometry.Band',
+  full_name='imagery.Band',
   filename=None,
   file=DESCRIPTOR,
   values=[
@@ -147,15 +149,15 @@ _BAND = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=2520,
-  serialized_end=2742,
+  serialized_start=2535,
+  serialized_end=2757,
 )
 _sym_db.RegisterEnumDescriptor(_BAND)
 
 Band = enum_type_wrapper.EnumTypeWrapper(_BAND)
 _SPACECRAFTID = _descriptor.EnumDescriptor(
   name='SpacecraftID',
-  full_name='geometry.SpacecraftID',
+  full_name='imagery.SpacecraftID',
   filename=None,
   file=DESCRIPTOR,
   values=[
@@ -218,15 +220,15 @@ _SPACECRAFTID = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=2745,
-  serialized_end=3007,
+  serialized_start=2760,
+  serialized_end=3022,
 )
 _sym_db.RegisterEnumDescriptor(_SPACECRAFTID)
 
 SpacecraftID = enum_type_wrapper.EnumTypeWrapper(_SPACECRAFTID)
 _SERVICEOPERATORTYPE = _descriptor.EnumDescriptor(
   name='ServiceOperatorType',
-  full_name='geometry.ServiceOperatorType',
+  full_name='imagery.ServiceOperatorType',
   filename=None,
   file=DESCRIPTOR,
   values=[
@@ -421,8 +423,8 @@ _SERVICEOPERATORTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=3010,
-  serialized_end=3851,
+  serialized_start=3025,
+  serialized_end=3866,
 )
 _sym_db.RegisterEnumDescriptor(_SERVICEOPERATORTYPE)
 
@@ -518,55 +520,55 @@ EnclosingCircle = 46
 
 _METADATAREQUEST = _descriptor.Descriptor(
   name='MetadataRequest',
-  full_name='geometry.MetadataRequest',
+  full_name='imagery.MetadataRequest',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='satellite_id', full_name='geometry.MetadataRequest.satellite_id', index=0,
+      name='satellite_id', full_name='imagery.MetadataRequest.satellite_id', index=0,
       number=1, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='bounding_box', full_name='geometry.MetadataRequest.bounding_box', index=1,
-      number=2, type=11, cpp_type=10, label=1,
+      name='bounding_box', full_name='imagery.MetadataRequest.bounding_box', index=1,
+      number=2, type=2, cpp_type=6, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='start_date', full_name='imagery.MetadataRequest.start_date', index=2,
+      number=3, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='start_date', full_name='geometry.MetadataRequest.start_date', index=2,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
+      name='end_date', full_name='imagery.MetadataRequest.end_date', index=3,
+      number=4, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='end_date', full_name='geometry.MetadataRequest.end_date', index=3,
-      number=4, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='sort_by', full_name='geometry.MetadataRequest.sort_by', index=4,
+      name='sort_by', full_name='imagery.MetadataRequest.sort_by', index=4,
       number=5, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='limit', full_name='geometry.MetadataRequest.limit', index=5,
+      name='limit', full_name='imagery.MetadataRequest.limit', index=5,
       number=6, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='sql_filters', full_name='geometry.MetadataRequest.sql_filters', index=6,
+      name='sql_filters', full_name='imagery.MetadataRequest.sql_filters', index=6,
       number=7, type=9, cpp_type=9, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -584,162 +586,162 @@ _METADATAREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=36,
-  serialized_end=241,
+  serialized_start=68,
+  serialized_end=299,
 )
 
 
 _METADATARESULT = _descriptor.Descriptor(
   name='MetadataResult',
-  full_name='geometry.MetadataResult',
+  full_name='imagery.MetadataResult',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='scene_id', full_name='geometry.MetadataResult.scene_id', index=0,
+      name='scene_id', full_name='imagery.MetadataResult.scene_id', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='product_id', full_name='geometry.MetadataResult.product_id', index=1,
+      name='product_id', full_name='imagery.MetadataResult.product_id', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='spacecraft_id', full_name='geometry.MetadataResult.spacecraft_id', index=2,
+      name='spacecraft_id', full_name='imagery.MetadataResult.spacecraft_id', index=2,
       number=3, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='sensor_id', full_name='geometry.MetadataResult.sensor_id', index=3,
+      name='sensor_id', full_name='imagery.MetadataResult.sensor_id', index=3,
       number=4, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='date_acquired', full_name='geometry.MetadataResult.date_acquired', index=4,
+      name='date_acquired', full_name='imagery.MetadataResult.date_acquired', index=4,
       number=5, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='sensing_time', full_name='geometry.MetadataResult.sensing_time', index=5,
+      name='sensing_time', full_name='imagery.MetadataResult.sensing_time', index=5,
       number=6, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='collection_number', full_name='geometry.MetadataResult.collection_number', index=6,
+      name='collection_number', full_name='imagery.MetadataResult.collection_number', index=6,
       number=7, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='collection_category', full_name='geometry.MetadataResult.collection_category', index=7,
+      name='collection_category', full_name='imagery.MetadataResult.collection_category', index=7,
       number=8, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='data_type', full_name='geometry.MetadataResult.data_type', index=8,
+      name='data_type', full_name='imagery.MetadataResult.data_type', index=8,
       number=9, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='wrs_path', full_name='geometry.MetadataResult.wrs_path', index=9,
+      name='wrs_path', full_name='imagery.MetadataResult.wrs_path', index=9,
       number=10, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='wrs_row', full_name='geometry.MetadataResult.wrs_row', index=10,
+      name='wrs_row', full_name='imagery.MetadataResult.wrs_row', index=10,
       number=11, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='cloud_cover', full_name='geometry.MetadataResult.cloud_cover', index=11,
+      name='cloud_cover', full_name='imagery.MetadataResult.cloud_cover', index=11,
       number=12, type=2, cpp_type=6, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='north_lat', full_name='geometry.MetadataResult.north_lat', index=12,
+      name='north_lat', full_name='imagery.MetadataResult.north_lat', index=12,
       number=13, type=2, cpp_type=6, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='south_lat', full_name='geometry.MetadataResult.south_lat', index=13,
+      name='south_lat', full_name='imagery.MetadataResult.south_lat', index=13,
       number=14, type=2, cpp_type=6, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='west_lon', full_name='geometry.MetadataResult.west_lon', index=14,
+      name='west_lon', full_name='imagery.MetadataResult.west_lon', index=14,
       number=15, type=2, cpp_type=6, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='east_lon', full_name='geometry.MetadataResult.east_lon', index=15,
+      name='east_lon', full_name='imagery.MetadataResult.east_lon', index=15,
       number=16, type=2, cpp_type=6, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='total_size', full_name='geometry.MetadataResult.total_size', index=16,
+      name='total_size', full_name='imagery.MetadataResult.total_size', index=16,
       number=17, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='base_url', full_name='geometry.MetadataResult.base_url', index=17,
+      name='base_url', full_name='imagery.MetadataResult.base_url', index=17,
       number=18, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='doy', full_name='geometry.MetadataResult.doy', index=18,
+      name='doy', full_name='imagery.MetadataResult.doy', index=18,
       number=19, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='utm_epsg_code', full_name='geometry.MetadataResult.utm_epsg_code', index=19,
+      name='utm_epsg_code', full_name='imagery.MetadataResult.utm_epsg_code', index=19,
       number=20, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='bounds', full_name='geometry.MetadataResult.bounds', index=20,
-      number=21, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
+      name='bounds', full_name='imagery.MetadataResult.bounds', index=20,
+      number=21, type=2, cpp_type=6, label=3,
+      has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
@@ -755,48 +757,48 @@ _METADATARESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=244,
-  serialized_end=733,
+  serialized_start=302,
+  serialized_end=761,
 )
 
 
 _SERVICEGEOMETRY = _descriptor.Descriptor(
   name='ServiceGeometry',
-  full_name='geometry.ServiceGeometry',
+  full_name='imagery.ServiceGeometry',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='geometry_id', full_name='geometry.ServiceGeometry.geometry_id', index=0,
+      name='geometry_id', full_name='imagery.ServiceGeometry.geometry_id', index=0,
       number=1, type=3, cpp_type=2, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='geometry_encoding_type', full_name='geometry.ServiceGeometry.geometry_encoding_type', index=1,
+      name='geometry_encoding_type', full_name='imagery.ServiceGeometry.geometry_encoding_type', index=1,
       number=2, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='geometry_string', full_name='geometry.ServiceGeometry.geometry_string', index=2,
+      name='geometry_string', full_name='imagery.ServiceGeometry.geometry_string', index=2,
       number=3, type=9, cpp_type=9, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='geometry_binary', full_name='geometry.ServiceGeometry.geometry_binary', index=3,
+      name='geometry_binary', full_name='imagery.ServiceGeometry.geometry_binary', index=3,
       number=4, type=12, cpp_type=9, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='spatial_reference', full_name='geometry.ServiceGeometry.spatial_reference', index=4,
+      name='spatial_reference', full_name='imagery.ServiceGeometry.spatial_reference', index=4,
       number=5, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
@@ -814,34 +816,34 @@ _SERVICEGEOMETRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=736,
-  serialized_end=938,
+  serialized_start=764,
+  serialized_end=964,
 )
 
 
 _SERVICESPATIALREFERENCE = _descriptor.Descriptor(
   name='ServiceSpatialReference',
-  full_name='geometry.ServiceSpatialReference',
+  full_name='imagery.ServiceSpatialReference',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='proj4', full_name='geometry.ServiceSpatialReference.proj4', index=0,
+      name='proj4', full_name='imagery.ServiceSpatialReference.proj4', index=0,
       number=4, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='esri_wkt', full_name='geometry.ServiceSpatialReference.esri_wkt', index=1,
+      name='esri_wkt', full_name='imagery.ServiceSpatialReference.esri_wkt', index=1,
       number=5, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='wkid', full_name='geometry.ServiceSpatialReference.wkid', index=2,
+      name='wkid', full_name='imagery.ServiceSpatialReference.wkid', index=2,
       number=6, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -859,27 +861,27 @@ _SERVICESPATIALREFERENCE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=940,
-  serialized_end=1012,
+  serialized_start=966,
+  serialized_end=1038,
 )
 
 
 _OPERATORRESULT_RELATEMAPENTRY = _descriptor.Descriptor(
   name='RelateMapEntry',
-  full_name='geometry.OperatorResult.RelateMapEntry',
+  full_name='imagery.OperatorResult.RelateMapEntry',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='key', full_name='geometry.OperatorResult.RelateMapEntry.key', index=0,
+      name='key', full_name='imagery.OperatorResult.RelateMapEntry.key', index=0,
       number=1, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='value', full_name='geometry.OperatorResult.RelateMapEntry.value', index=1,
+      name='value', full_name='imagery.OperatorResult.RelateMapEntry.value', index=1,
       number=2, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
@@ -897,40 +899,40 @@ _OPERATORRESULT_RELATEMAPENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1187,
-  serialized_end=1235,
+  serialized_start=1211,
+  serialized_end=1259,
 )
 
 _OPERATORRESULT = _descriptor.Descriptor(
   name='OperatorResult',
-  full_name='geometry.OperatorResult',
+  full_name='imagery.OperatorResult',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='geometry', full_name='geometry.OperatorResult.geometry', index=0,
+      name='geometry', full_name='imagery.OperatorResult.geometry', index=0,
       number=1, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='spatial_relationship', full_name='geometry.OperatorResult.spatial_relationship', index=1,
+      name='spatial_relationship', full_name='imagery.OperatorResult.spatial_relationship', index=1,
       number=2, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='distance', full_name='geometry.OperatorResult.distance', index=2,
+      name='distance', full_name='imagery.OperatorResult.distance', index=2,
       number=3, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='relate_map', full_name='geometry.OperatorResult.relate_map', index=3,
+      name='relate_map', full_name='imagery.OperatorResult.relate_map', index=3,
       number=4, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -948,216 +950,216 @@ _OPERATORRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1015,
-  serialized_end=1235,
+  serialized_start=1041,
+  serialized_end=1259,
 )
 
 
 _OPERATORREQUEST = _descriptor.Descriptor(
   name='OperatorRequest',
-  full_name='geometry.OperatorRequest',
+  full_name='imagery.OperatorRequest',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='left_geometry', full_name='geometry.OperatorRequest.left_geometry', index=0,
+      name='left_geometry', full_name='imagery.OperatorRequest.left_geometry', index=0,
       number=1, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='right_geometry', full_name='geometry.OperatorRequest.right_geometry', index=1,
+      name='right_geometry', full_name='imagery.OperatorRequest.right_geometry', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='left_cursor', full_name='geometry.OperatorRequest.left_cursor', index=2,
+      name='left_cursor', full_name='imagery.OperatorRequest.left_cursor', index=2,
       number=3, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='right_cursor', full_name='geometry.OperatorRequest.right_cursor', index=3,
+      name='right_cursor', full_name='imagery.OperatorRequest.right_cursor', index=3,
       number=4, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='operator_type', full_name='geometry.OperatorRequest.operator_type', index=4,
+      name='operator_type', full_name='imagery.OperatorRequest.operator_type', index=4,
       number=5, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='results_encoding_type', full_name='geometry.OperatorRequest.results_encoding_type', index=5,
+      name='results_encoding_type', full_name='imagery.OperatorRequest.results_encoding_type', index=5,
       number=6, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='operation_spatial_reference', full_name='geometry.OperatorRequest.operation_spatial_reference', index=6,
+      name='operation_spatial_reference', full_name='imagery.OperatorRequest.operation_spatial_reference', index=6,
       number=7, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='result_spatial_reference', full_name='geometry.OperatorRequest.result_spatial_reference', index=7,
+      name='result_spatial_reference', full_name='imagery.OperatorRequest.result_spatial_reference', index=7,
       number=8, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='convex_hull_merge', full_name='geometry.OperatorRequest.convex_hull_merge', index=8,
+      name='convex_hull_merge', full_name='imagery.OperatorRequest.convex_hull_merge', index=8,
       number=9, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='buffer_distances', full_name='geometry.OperatorRequest.buffer_distances', index=9,
+      name='buffer_distances', full_name='imagery.OperatorRequest.buffer_distances', index=9,
       number=10, type=1, cpp_type=5, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='buffer_max_deviations', full_name='geometry.OperatorRequest.buffer_max_deviations', index=10,
+      name='buffer_max_deviations', full_name='imagery.OperatorRequest.buffer_max_deviations', index=10,
       number=28, type=1, cpp_type=5, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='buffer_union_result', full_name='geometry.OperatorRequest.buffer_union_result', index=11,
+      name='buffer_union_result', full_name='imagery.OperatorRequest.buffer_union_result', index=11,
       number=11, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='intersection_dimension_mask', full_name='geometry.OperatorRequest.intersection_dimension_mask', index=12,
+      name='intersection_dimension_mask', full_name='imagery.OperatorRequest.intersection_dimension_mask', index=12,
       number=12, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='clip_envelope', full_name='geometry.OperatorRequest.clip_envelope', index=13,
+      name='clip_envelope', full_name='imagery.OperatorRequest.clip_envelope', index=13,
       number=13, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='cut_consider_touch', full_name='geometry.OperatorRequest.cut_consider_touch', index=14,
+      name='cut_consider_touch', full_name='imagery.OperatorRequest.cut_consider_touch', index=14,
       number=14, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='densify_max_length', full_name='geometry.OperatorRequest.densify_max_length', index=15,
+      name='densify_max_length', full_name='imagery.OperatorRequest.densify_max_length', index=15,
       number=15, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='simplify_force', full_name='geometry.OperatorRequest.simplify_force', index=16,
+      name='simplify_force', full_name='imagery.OperatorRequest.simplify_force', index=16,
       number=16, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='offset_distance', full_name='geometry.OperatorRequest.offset_distance', index=17,
+      name='offset_distance', full_name='imagery.OperatorRequest.offset_distance', index=17,
       number=17, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='offset_join_type', full_name='geometry.OperatorRequest.offset_join_type', index=18,
+      name='offset_join_type', full_name='imagery.OperatorRequest.offset_join_type', index=18,
       number=18, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='offset_bevel_ratio', full_name='geometry.OperatorRequest.offset_bevel_ratio', index=19,
+      name='offset_bevel_ratio', full_name='imagery.OperatorRequest.offset_bevel_ratio', index=19,
       number=19, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='offset_flatten_error', full_name='geometry.OperatorRequest.offset_flatten_error', index=20,
+      name='offset_flatten_error', full_name='imagery.OperatorRequest.offset_flatten_error', index=20,
       number=20, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='generalize_max_deviation', full_name='geometry.OperatorRequest.generalize_max_deviation', index=21,
+      name='generalize_max_deviation', full_name='imagery.OperatorRequest.generalize_max_deviation', index=21,
       number=21, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='generalize_remove_degenerates', full_name='geometry.OperatorRequest.generalize_remove_degenerates', index=22,
+      name='generalize_remove_degenerates', full_name='imagery.OperatorRequest.generalize_remove_degenerates', index=22,
       number=22, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='max_vertices_in_full_circle', full_name='geometry.OperatorRequest.max_vertices_in_full_circle', index=23,
+      name='max_vertices_in_full_circle', full_name='imagery.OperatorRequest.max_vertices_in_full_circle', index=23,
       number=23, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='generic_booleans', full_name='geometry.OperatorRequest.generic_booleans', index=24,
+      name='generic_booleans', full_name='imagery.OperatorRequest.generic_booleans', index=24,
       number=24, type=8, cpp_type=7, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='generic_doubles', full_name='geometry.OperatorRequest.generic_doubles', index=25,
+      name='generic_doubles', full_name='imagery.OperatorRequest.generic_doubles', index=25,
       number=25, type=1, cpp_type=5, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='generic_integers', full_name='geometry.OperatorRequest.generic_integers', index=26,
+      name='generic_integers', full_name='imagery.OperatorRequest.generic_integers', index=26,
       number=26, type=5, cpp_type=1, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='generic_strings', full_name='geometry.OperatorRequest.generic_strings', index=27,
+      name='generic_strings', full_name='imagery.OperatorRequest.generic_strings', index=27,
       number=27, type=9, cpp_type=9, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='de_9im', full_name='geometry.OperatorRequest.de_9im', index=28,
+      name='de_9im', full_name='imagery.OperatorRequest.de_9im', index=28,
       number=29, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -1175,41 +1177,41 @@ _OPERATORREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1238,
-  serialized_end=2318,
+  serialized_start=1262,
+  serialized_end=2333,
 )
 
 
 _SERVICEENVELOPE2D = _descriptor.Descriptor(
   name='ServiceEnvelope2D',
-  full_name='geometry.ServiceEnvelope2D',
+  full_name='imagery.ServiceEnvelope2D',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='xmin', full_name='geometry.ServiceEnvelope2D.xmin', index=0,
+      name='xmin', full_name='imagery.ServiceEnvelope2D.xmin', index=0,
       number=1, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='ymin', full_name='geometry.ServiceEnvelope2D.ymin', index=1,
+      name='ymin', full_name='imagery.ServiceEnvelope2D.ymin', index=1,
       number=2, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='xmax', full_name='geometry.ServiceEnvelope2D.xmax', index=2,
+      name='xmax', full_name='imagery.ServiceEnvelope2D.xmax', index=2,
       number=3, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='ymax', full_name='geometry.ServiceEnvelope2D.ymax', index=3,
+      name='ymax', full_name='imagery.ServiceEnvelope2D.ymax', index=3,
       number=4, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
@@ -1227,14 +1229,14 @@ _SERVICEENVELOPE2D = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2320,
-  serialized_end=2395,
+  serialized_start=2335,
+  serialized_end=2410,
 )
 
 _METADATAREQUEST.fields_by_name['satellite_id'].enum_type = _SPACECRAFTID
-_METADATAREQUEST.fields_by_name['bounding_box'].message_type = _SERVICEENVELOPE2D
+_METADATAREQUEST.fields_by_name['start_date'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
+_METADATAREQUEST.fields_by_name['end_date'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
 _METADATARESULT.fields_by_name['spacecraft_id'].enum_type = _SPACECRAFTID
-_METADATARESULT.fields_by_name['bounds'].message_type = _SERVICEENVELOPE2D
 _SERVICEGEOMETRY.fields_by_name['geometry_encoding_type'].enum_type = _DATATYPE
 _SERVICEGEOMETRY.fields_by_name['spatial_reference'].message_type = _SERVICESPATIALREFERENCE
 _OPERATORRESULT_RELATEMAPENTRY.containing_type = _OPERATORRESULT
@@ -1265,28 +1267,28 @@ _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 MetadataRequest = _reflection.GeneratedProtocolMessageType('MetadataRequest', (_message.Message,), dict(
   DESCRIPTOR = _METADATAREQUEST,
   __module__ = 'epl_imagery_api_pb2'
-  # @@protoc_insertion_point(class_scope:geometry.MetadataRequest)
+  # @@protoc_insertion_point(class_scope:imagery.MetadataRequest)
   ))
 _sym_db.RegisterMessage(MetadataRequest)
 
 MetadataResult = _reflection.GeneratedProtocolMessageType('MetadataResult', (_message.Message,), dict(
   DESCRIPTOR = _METADATARESULT,
   __module__ = 'epl_imagery_api_pb2'
-  # @@protoc_insertion_point(class_scope:geometry.MetadataResult)
+  # @@protoc_insertion_point(class_scope:imagery.MetadataResult)
   ))
 _sym_db.RegisterMessage(MetadataResult)
 
 ServiceGeometry = _reflection.GeneratedProtocolMessageType('ServiceGeometry', (_message.Message,), dict(
   DESCRIPTOR = _SERVICEGEOMETRY,
   __module__ = 'epl_imagery_api_pb2'
-  # @@protoc_insertion_point(class_scope:geometry.ServiceGeometry)
+  # @@protoc_insertion_point(class_scope:imagery.ServiceGeometry)
   ))
 _sym_db.RegisterMessage(ServiceGeometry)
 
 ServiceSpatialReference = _reflection.GeneratedProtocolMessageType('ServiceSpatialReference', (_message.Message,), dict(
   DESCRIPTOR = _SERVICESPATIALREFERENCE,
   __module__ = 'epl_imagery_api_pb2'
-  # @@protoc_insertion_point(class_scope:geometry.ServiceSpatialReference)
+  # @@protoc_insertion_point(class_scope:imagery.ServiceSpatialReference)
   ))
 _sym_db.RegisterMessage(ServiceSpatialReference)
 
@@ -1295,12 +1297,12 @@ OperatorResult = _reflection.GeneratedProtocolMessageType('OperatorResult', (_me
   RelateMapEntry = _reflection.GeneratedProtocolMessageType('RelateMapEntry', (_message.Message,), dict(
     DESCRIPTOR = _OPERATORRESULT_RELATEMAPENTRY,
     __module__ = 'epl_imagery_api_pb2'
-    # @@protoc_insertion_point(class_scope:geometry.OperatorResult.RelateMapEntry)
+    # @@protoc_insertion_point(class_scope:imagery.OperatorResult.RelateMapEntry)
     ))
   ,
   DESCRIPTOR = _OPERATORRESULT,
   __module__ = 'epl_imagery_api_pb2'
-  # @@protoc_insertion_point(class_scope:geometry.OperatorResult)
+  # @@protoc_insertion_point(class_scope:imagery.OperatorResult)
   ))
 _sym_db.RegisterMessage(OperatorResult)
 _sym_db.RegisterMessage(OperatorResult.RelateMapEntry)
@@ -1308,14 +1310,14 @@ _sym_db.RegisterMessage(OperatorResult.RelateMapEntry)
 OperatorRequest = _reflection.GeneratedProtocolMessageType('OperatorRequest', (_message.Message,), dict(
   DESCRIPTOR = _OPERATORREQUEST,
   __module__ = 'epl_imagery_api_pb2'
-  # @@protoc_insertion_point(class_scope:geometry.OperatorRequest)
+  # @@protoc_insertion_point(class_scope:imagery.OperatorRequest)
   ))
 _sym_db.RegisterMessage(OperatorRequest)
 
 ServiceEnvelope2D = _reflection.GeneratedProtocolMessageType('ServiceEnvelope2D', (_message.Message,), dict(
   DESCRIPTOR = _SERVICEENVELOPE2D,
   __module__ = 'epl_imagery_api_pb2'
-  # @@protoc_insertion_point(class_scope:geometry.ServiceEnvelope2D)
+  # @@protoc_insertion_point(class_scope:imagery.ServiceEnvelope2D)
   ))
 _sym_db.RegisterMessage(ServiceEnvelope2D)
 
@@ -1327,16 +1329,16 @@ _OPERATORRESULT_RELATEMAPENTRY._options = _descriptor._ParseOptions(descriptor_p
 
 _IMAGERYOPERATORS = _descriptor.ServiceDescriptor(
   name='ImageryOperators',
-  full_name='geometry.ImageryOperators',
+  full_name='imagery.ImageryOperators',
   file=DESCRIPTOR,
   index=0,
   options=None,
-  serialized_start=3853,
-  serialized_end=3946,
+  serialized_start=3868,
+  serialized_end=3959,
   methods=[
   _descriptor.MethodDescriptor(
     name='MetadataSearch',
-    full_name='geometry.ImageryOperators.MetadataSearch',
+    full_name='imagery.ImageryOperators.MetadataSearch',
     index=0,
     containing_service=None,
     input_type=_METADATAREQUEST,
@@ -1370,7 +1372,7 @@ try:
         channel: A grpc.Channel.
       """
       self.MetadataSearch = channel.unary_stream(
-          '/geometry.ImageryOperators/MetadataSearch',
+          '/imagery.ImageryOperators/MetadataSearch',
           request_serializer=MetadataRequest.SerializeToString,
           response_deserializer=MetadataResult.FromString,
           )
@@ -1398,7 +1400,7 @@ try:
         ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-        'geometry.ImageryOperators', rpc_method_handlers)
+        'imagery.ImageryOperators', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -1439,13 +1441,13 @@ try:
     file not marked beta) for all further purposes. This function was
     generated only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0"""
     request_deserializers = {
-      ('geometry.ImageryOperators', 'MetadataSearch'): MetadataRequest.FromString,
+      ('imagery.ImageryOperators', 'MetadataSearch'): MetadataRequest.FromString,
     }
     response_serializers = {
-      ('geometry.ImageryOperators', 'MetadataSearch'): MetadataResult.SerializeToString,
+      ('imagery.ImageryOperators', 'MetadataSearch'): MetadataResult.SerializeToString,
     }
     method_implementations = {
-      ('geometry.ImageryOperators', 'MetadataSearch'): face_utilities.unary_stream_inline(servicer.MetadataSearch),
+      ('imagery.ImageryOperators', 'MetadataSearch'): face_utilities.unary_stream_inline(servicer.MetadataSearch),
     }
     server_options = beta_implementations.server_options(request_deserializers=request_deserializers, response_serializers=response_serializers, thread_pool=pool, thread_pool_size=pool_size, default_timeout=default_timeout, maximum_timeout=maximum_timeout)
     return beta_implementations.server(method_implementations, options=server_options)
@@ -1458,16 +1460,16 @@ try:
     file not marked beta) for all further purposes. This function was
     generated only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0"""
     request_serializers = {
-      ('geometry.ImageryOperators', 'MetadataSearch'): MetadataRequest.SerializeToString,
+      ('imagery.ImageryOperators', 'MetadataSearch'): MetadataRequest.SerializeToString,
     }
     response_deserializers = {
-      ('geometry.ImageryOperators', 'MetadataSearch'): MetadataResult.FromString,
+      ('imagery.ImageryOperators', 'MetadataSearch'): MetadataResult.FromString,
     }
     cardinalities = {
       'MetadataSearch': cardinality.Cardinality.UNARY_STREAM,
     }
     stub_options = beta_implementations.stub_options(host=host, metadata_transformer=metadata_transformer, request_serializers=request_serializers, response_deserializers=response_deserializers, thread_pool=pool, thread_pool_size=pool_size)
-    return beta_implementations.dynamic_stub(channel, 'geometry.ImageryOperators', cardinalities, options=stub_options)
+    return beta_implementations.dynamic_stub(channel, 'imagery.ImageryOperators', cardinalities, options=stub_options)
 except ImportError:
   pass
 # @@protoc_insertion_point(module_scope)
