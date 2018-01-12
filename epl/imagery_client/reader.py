@@ -42,10 +42,6 @@ class _DateType(Enum):
     END_DATE = 1
 
 
-class Metadata:
-    temp = None
-
-
 class MetadataService:
     @staticmethod
     def __prep_date(date_input, date_type: _DateType) -> timestamp_pb2.Timestamp:
@@ -84,7 +80,7 @@ class MetadataService:
             end_date: datetime=None,
             sort_by=None,
             limit=10,
-            sql_filters=None) -> List[Metadata]:
+            sql_filters=None):
         channel = grpc.insecure_channel('localhost:50051')
         stub = epl_imagery_api_pb2_grpc.ImageryOperatorsStub(channel)
 
@@ -105,6 +101,14 @@ class MetadataService:
 
 
 class Landsat:
+    __metadata = None
+
+    def __init__(self, metadata):
+        if isinstance(metadata, list):
+            self.__metadata = metadata
+        else:
+            self.__metadata = [metadata]
+
     def fetch_imagery_array(self,
                             band_definitions,
                             scale_params=None,
@@ -114,7 +118,31 @@ class Landsat:
                             output_type: epl_imagery_api_pb2.DataType = None,
                             xRes=60,
                             yRes=60) -> np.ndarray:
-        return None
+        MB = 1024 * 1024
+        GRPC_CHANNEL_OPTIONS = [('grpc.max_message_length', 64 * MB), ('grpc.max_receive_message_length', 64 * MB)]
+        channel = grpc.insecure_channel('localhost:50051', options=GRPC_CHANNEL_OPTIONS)
+        stub = epl_imagery_api_pb2_grpc.ImageryOperatorsStub(channel)
+        request = epl_imagery_api_pb2.ImageryRequest(xRes=xRes,
+                                                     yRes=yRes)
+        grpc_band_definitions = []
+        for index, band_def in enumerate(band_definitions):
+            if isinstance(band_def, IntEnum):
+                grpc_band_def = epl_imagery_api_pb2.BandDefinition(band_type=band_def)
+            elif isinstance(band_def, int):
+                grpc_band_def = epl_imagery_api_pb2.BandDefinition(band_number=band_def)
+            elif isinstance(band_def, FunctionDetails):
+                print("this is becoming problematic")
+            if scale_params and len(scale_params) > index:
+                grpc_band_def.scale_params.extend(scale_params[index])
+            grpc_band_definitions.append(grpc_band_def)
+
+        request.band_definitions.extend(grpc_band_definitions)
+        request.metadata.extend(self.__metadata)
+        if cutline_wkb:
+            request.cutline_wkb.extend(cutline_wkb)
+        result = stub.ImagerySearchNArray(request)
+        nd_array = np.ndarray(shape=result.shape, dtype=np.uint8, order='C')
+        return nd_array
 
     def get_dataset(self,
                     band_definitions,
@@ -131,13 +159,27 @@ class Storage:
     temp = None
 
 
-
+class Band(IntEnum):
+    # Crazy Values so that the Band.<ENUM>.value isn't used for anything
+    UNKNOWN_BAND = 0
+    ULTRA_BLUE = 1001
+    BLUE = 1002
+    GREEN = 1003
+    RED = 1004
+    NIR = 1005
+    SWIR1 = 1006
+    THERMAL = 1007
+    SWIR2 = 1008
+    PANCHROMATIC = 1009
+    CIRRUS = 1010
+    TIRS1 = 1011
+    TIRS2 = 1012
+    INFRARED2 = 1013
+    INFRARED1 = 1014
+    ALPHA = 1015
 
 
 class BandMap:
-    temp = None
-
-class Band:
     temp = None
 
 class WRSGeometries:

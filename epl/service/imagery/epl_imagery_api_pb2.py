@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='epl_imagery_api.proto',
   package='imagery',
   syntax='proto3',
-  serialized_pb=_b('\n\x15\x65pl_imagery_api.proto\x12\x07imagery\x1a\x1fgoogle/protobuf/timestamp.proto\"\xe7\x01\n\x0fMetadataRequest\x12+\n\x0csatellite_id\x18\x01 \x01(\x0e\x32\x15.imagery.SpacecraftID\x12\x14\n\x0c\x62ounding_box\x18\x02 \x03(\x02\x12.\n\nstart_date\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12,\n\x08\x65nd_date\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0f\n\x07sort_by\x18\x05 \x01(\t\x12\r\n\x05limit\x18\x06 \x01(\x05\x12\x13\n\x0bsql_filters\x18\x07 \x03(\t\"\xcb\x03\n\x0eMetadataResult\x12\x10\n\x08scene_id\x18\x01 \x01(\t\x12\x12\n\nproduct_id\x18\x02 \x01(\t\x12,\n\rspacecraft_id\x18\x03 \x01(\x0e\x32\x15.imagery.SpacecraftID\x12\x11\n\tsensor_id\x18\x04 \x01(\t\x12\x15\n\rdate_acquired\x18\x05 \x01(\t\x12\x14\n\x0csensing_time\x18\x06 \x01(\t\x12\x19\n\x11\x63ollection_number\x18\x07 \x01(\t\x12\x1b\n\x13\x63ollection_category\x18\x08 \x01(\t\x12\x11\n\tdata_type\x18\t \x01(\t\x12\x10\n\x08wrs_path\x18\n \x01(\x05\x12\x0f\n\x07wrs_row\x18\x0b \x01(\x05\x12\x13\n\x0b\x63loud_cover\x18\x0c \x01(\x02\x12\x11\n\tnorth_lat\x18\r \x01(\x02\x12\x11\n\tsouth_lat\x18\x0e \x01(\x02\x12\x10\n\x08west_lon\x18\x0f \x01(\x02\x12\x10\n\x08\x65\x61st_lon\x18\x10 \x01(\x02\x12\x12\n\ntotal_size\x18\x11 \x01(\x05\x12\x10\n\x08\x62\x61se_url\x18\x12 \x01(\t\x12\x0b\n\x03\x64oy\x18\x13 \x01(\x05\x12\x15\n\rutm_epsg_code\x18\x14 \x01(\x05\x12\x0e\n\x06\x62ounds\x18\x15 \x03(\x02\"\xc8\x01\n\x0fServiceGeometry\x12\x13\n\x0bgeometry_id\x18\x01 \x03(\x03\x12\x31\n\x16geometry_encoding_type\x18\x02 \x01(\x0e\x32\x11.imagery.DataType\x12\x17\n\x0fgeometry_string\x18\x03 \x03(\t\x12\x17\n\x0fgeometry_binary\x18\x04 \x03(\x0c\x12;\n\x11spatial_reference\x18\x05 \x01(\x0b\x32 .imagery.ServiceSpatialReference\"H\n\x17ServiceSpatialReference\x12\r\n\x05proj4\x18\x04 \x01(\t\x12\x10\n\x08\x65sri_wkt\x18\x05 \x01(\t\x12\x0c\n\x04wkid\x18\x06 \x01(\x05\"\xda\x01\n\x0eOperatorResult\x12*\n\x08geometry\x18\x01 \x01(\x0b\x32\x18.imagery.ServiceGeometry\x12\x1c\n\x14spatial_relationship\x18\x02 \x01(\x08\x12\x10\n\x08\x64istance\x18\x03 \x01(\x01\x12:\n\nrelate_map\x18\x04 \x03(\x0b\x32&.imagery.OperatorResult.RelateMapEntry\x1a\x30\n\x0eRelateMapEntry\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12\r\n\x05value\x18\x02 \x01(\x08:\x02\x38\x01\"\xaf\x08\n\x0fOperatorRequest\x12/\n\rleft_geometry\x18\x01 \x01(\x0b\x32\x18.imagery.ServiceGeometry\x12\x30\n\x0eright_geometry\x18\x02 \x01(\x0b\x32\x18.imagery.ServiceGeometry\x12-\n\x0bleft_cursor\x18\x03 \x01(\x0b\x32\x18.imagery.OperatorRequest\x12.\n\x0cright_cursor\x18\x04 \x01(\x0b\x32\x18.imagery.OperatorRequest\x12\x33\n\roperator_type\x18\x05 \x01(\x0e\x32\x1c.imagery.ServiceOperatorType\x12\x30\n\x15results_encoding_type\x18\x06 \x01(\x0e\x32\x11.imagery.DataType\x12\x45\n\x1boperation_spatial_reference\x18\x07 \x01(\x0b\x32 .imagery.ServiceSpatialReference\x12\x42\n\x18result_spatial_reference\x18\x08 \x01(\x0b\x32 .imagery.ServiceSpatialReference\x12\x19\n\x11\x63onvex_hull_merge\x18\t \x01(\x08\x12\x18\n\x10\x62uffer_distances\x18\n \x03(\x01\x12\x1d\n\x15\x62uffer_max_deviations\x18\x1c \x03(\x01\x12\x1b\n\x13\x62uffer_union_result\x18\x0b \x01(\x08\x12#\n\x1bintersection_dimension_mask\x18\x0c \x01(\x05\x12\x31\n\rclip_envelope\x18\r \x01(\x0b\x32\x1a.imagery.ServiceEnvelope2D\x12\x1a\n\x12\x63ut_consider_touch\x18\x0e \x01(\x08\x12\x1a\n\x12\x64\x65nsify_max_length\x18\x0f \x01(\x01\x12\x16\n\x0esimplify_force\x18\x10 \x01(\x08\x12\x17\n\x0foffset_distance\x18\x11 \x01(\x01\x12\x18\n\x10offset_join_type\x18\x12 \x01(\t\x12\x1a\n\x12offset_bevel_ratio\x18\x13 \x01(\x01\x12\x1c\n\x14offset_flatten_error\x18\x14 \x01(\x01\x12 \n\x18generalize_max_deviation\x18\x15 \x01(\x01\x12%\n\x1dgeneralize_remove_degenerates\x18\x16 \x01(\x08\x12#\n\x1bmax_vertices_in_full_circle\x18\x17 \x01(\x05\x12\x18\n\x10generic_booleans\x18\x18 \x03(\x08\x12\x17\n\x0fgeneric_doubles\x18\x19 \x03(\x01\x12\x18\n\x10generic_integers\x18\x1a \x03(\x05\x12\x17\n\x0fgeneric_strings\x18\x1b \x03(\t\x12\x0e\n\x06\x64\x65_9im\x18\x1d \x01(\t\"K\n\x11ServiceEnvelope2D\x12\x0c\n\x04xmin\x18\x01 \x01(\x01\x12\x0c\n\x04ymin\x18\x02 \x01(\x01\x12\x0c\n\x04xmax\x18\x03 \x01(\x01\x12\x0c\n\x04ymax\x18\x04 \x01(\x01*x\n\x08\x44\x61taType\x12\x08\n\x04\x42YTE\x10\x00\x12\t\n\x05INT16\x10\x01\x12\n\n\x06UINT16\x10\x02\x12\t\n\x05INT32\x10\x03\x12\n\n\x06UINT32\x10\x04\x12\x0b\n\x07\x46LOAT32\x10\x05\x12\x0b\n\x07\x46LOAT64\x10\x06\x12\x0c\n\x08\x43\x46LOAT32\x10\x07\x12\x0c\n\x08\x43\x46LOAT64\x10\x08*\xde\x01\n\x04\x42\x61nd\x12\x10\n\x0cUNKNOWN_BAND\x10\x00\x12\x0f\n\nULTRA_BLUE\x10\xe9\x07\x12\t\n\x04\x42LUE\x10\xea\x07\x12\n\n\x05GREEN\x10\xeb\x07\x12\x08\n\x03RED\x10\xec\x07\x12\x08\n\x03NIR\x10\xed\x07\x12\n\n\x05SWIR1\x10\xee\x07\x12\x0c\n\x07THERMAL\x10\xef\x07\x12\n\n\x05SWIR2\x10\xf0\x07\x12\x11\n\x0cPANCHROMATIC\x10\xf1\x07\x12\x0b\n\x06\x43IRRUS\x10\xf2\x07\x12\n\n\x05TIRS1\x10\xf3\x07\x12\n\n\x05TIRS2\x10\xf4\x07\x12\x0e\n\tINFRARED2\x10\xf5\x07\x12\x0e\n\tINFRARED1\x10\xf6\x07\x12\n\n\x05\x41LPHA\x10\xf7\x07*\x86\x02\n\x0cSpacecraftID\x12\x16\n\x12UNKNOWN_SPACECRAFT\x10\x00\x12\x11\n\rLANDSAT_1_MSS\x10\x01\x12\x11\n\rLANDSAT_2_MSS\x10\x02\x12\x11\n\rLANDSAT_3_MSS\x10\x04\x12\x13\n\x0fLANDSAT_123_MSS\x10\x07\x12\x11\n\rLANDSAT_4_MSS\x10\x08\x12\x11\n\rLANDSAT_5_MSS\x10\x10\x12\x12\n\x0eLANDSAT_45_MSS\x10\x18\x12\r\n\tLANDSAT_4\x10 \x12\r\n\tLANDSAT_5\x10@\x12\x0e\n\nLANDSAT_45\x10`\x12\x0e\n\tLANDSAT_7\x10\x80\x01\x12\x0e\n\tLANDSAT_8\x10\x80\x02\x12\x08\n\x03\x41LL\x10\x80\x04*\xc9\x06\n\x13ServiceOperatorType\x12\x0b\n\x07Project\x10\x00\x12\x10\n\x0c\x45xportToJson\x10\x01\x12\x12\n\x0eImportFromJson\x10\x02\x12\x1d\n\x19ImportMapGeometryFromJson\x10\x03\x12\x15\n\x11\x45xportToESRIShape\x10\x04\x12\x17\n\x13ImportFromESRIShape\x10\x05\x12\t\n\x05Union\x10\x06\x12\x0e\n\nDifference\x10\x07\x12\x0f\n\x0bProximity2D\x10\x08\x12\n\n\x06Relate\x10\t\x12\n\n\x06\x45quals\x10\n\x12\x0c\n\x08\x44isjoint\x10\x0b\x12\x0e\n\nIntersects\x10\x0c\x12\n\n\x06Within\x10\r\x12\x0c\n\x08\x43ontains\x10\x0e\x12\x0b\n\x07\x43rosses\x10\x0f\x12\x0b\n\x07Touches\x10\x10\x12\x0c\n\x08Overlaps\x10\x11\x12\n\n\x06\x42uffer\x10\x12\x12\x0c\n\x08\x44istance\x10\x13\x12\x10\n\x0cIntersection\x10\x14\x12\x08\n\x04\x43lip\x10\x15\x12\x07\n\x03\x43ut\x10\x16\x12\x13\n\x0f\x44\x65nsifyByLength\x10\x17\x12\x12\n\x0e\x44\x65nsifyByAngle\x10\x18\x12\x0e\n\nLabelPoint\x10\x19\x12\x12\n\x0eGeodesicBuffer\x10\x1a\x12\x1b\n\x17GeodeticDensifyByLength\x10\x1b\x12\x1a\n\x16ShapePreservingDensify\x10\x1c\x12\x12\n\x0eGeodeticLength\x10\x1d\x12\x10\n\x0cGeodeticArea\x10\x1e\x12\x0c\n\x08Simplify\x10\x1f\x12\x0f\n\x0bSimplifyOGC\x10 \x12\n\n\x06Offset\x10!\x12\x0e\n\nGeneralize\x10\"\x12\x14\n\x10GeneralizeByArea\x10#\x12\x0f\n\x0b\x45xportToWkb\x10$\x12\x11\n\rImportFromWkb\x10%\x12\x0f\n\x0b\x45xportToWkt\x10&\x12\x11\n\rImportFromWkt\x10\'\x12\x15\n\x11ImportFromGeoJson\x10(\x12\x13\n\x0f\x45xportToGeoJson\x10)\x12\x17\n\x13SymmetricDifference\x10*\x12\x0e\n\nConvexHull\x10+\x12\x0c\n\x08\x42oundary\x10,\x12\x10\n\x0cRandomPoints\x10-\x12\x13\n\x0f\x45nclosingCircle\x10.2[\n\x10ImageryOperators\x12G\n\x0eMetadataSearch\x12\x18.imagery.MetadataRequest\x1a\x17.imagery.MetadataResult\"\x00\x30\x01\x42%\n\x0f\x63om.epl.imageryB\nEPLImageryP\x01\xa2\x02\x03RTGb\x06proto3')
+  serialized_pb=_b('\n\x15\x65pl_imagery_api.proto\x12\x07imagery\x1a\x1fgoogle/protobuf/timestamp.proto\"\x8c\x02\n\x0eImageryRequest\x12)\n\x08metadata\x18\x01 \x03(\x0b\x32\x17.imagery.MetadataResult\x12\x31\n\x10\x62\x61nd_definitions\x18\x02 \x03(\x0b\x32\x17.imagery.BandDefinition\x12\x0e\n\x06\x65xtent\x18\x04 \x03(\x02\x12\x33\n\textent_cs\x18\x05 \x01(\x0b\x32 .imagery.ServiceSpatialReference\x12&\n\x0boutput_type\x18\x06 \x01(\x0e\x32\x11.imagery.DataType\x12\x0c\n\x04xRes\x18\x07 \x01(\x02\x12\x0c\n\x04yRes\x18\x08 \x01(\x02\x12\x13\n\x0b\x63utline_wkb\x18\t \x03(\x0c\"\xcf\x01\n\rNDArrayResult\x12\x12\n\ndata_float\x18\x01 \x03(\x02\x12\x12\n\ndata_int32\x18\x02 \x03(\x05\x12\x12\n\ndata_int64\x18\x03 \x03(\x03\x12\x13\n\x0b\x64\x61ta_uint32\x18\x04 \x03(\r\x12\x13\n\x0b\x64\x61ta_uint64\x18\x05 \x03(\x04\x12\x12\n\ndata_bytes\x18\x06 \x03(\x0c\x12\x13\n\x0b\x64\x61ta_double\x18\x07 \x03(\x01\x12 \n\x05\x64type\x18\x08 \x01(\x0e\x32\x11.imagery.DataType\x12\r\n\x05shape\x18\t \x03(\x05\"\x12\n\x10RawImageryResult\"\x92\x01\n\x0e\x42\x61ndDefinition\x12\x13\n\x0b\x62\x61nd_number\x18\x01 \x01(\x05\x12 \n\tband_type\x18\x02 \x01(\x0e\x32\r.imagery.Band\x12\x33\n\rband_function\x18\x03 \x01(\x0b\x32\x1c.imagery.BandFunctionDetails\x12\x14\n\x0cscale_params\x18\x04 \x03(\x02\"\xa6\x02\n\x13\x42\x61ndFunctionDetails\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x31\n\x10\x62\x61nd_definitions\x18\x02 \x03(\x0b\x32\x17.imagery.BandDefinition\x12$\n\tdata_type\x18\x03 \x01(\x0e\x32\x11.imagery.DataType\x12\x0c\n\x04\x63ode\x18\x04 \x01(\t\x12>\n\targuments\x18\x05 \x03(\x0b\x32+.imagery.BandFunctionDetails.ArgumentsEntry\x12(\n\rtransfer_type\x18\x06 \x01(\x0e\x32\x11.imagery.DataType\x1a\x30\n\x0e\x41rgumentsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"\xe7\x01\n\x0fMetadataRequest\x12+\n\x0csatellite_id\x18\x01 \x01(\x0e\x32\x15.imagery.SpacecraftID\x12\x14\n\x0c\x62ounding_box\x18\x02 \x03(\x02\x12.\n\nstart_date\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12,\n\x08\x65nd_date\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0f\n\x07sort_by\x18\x05 \x01(\t\x12\r\n\x05limit\x18\x06 \x01(\x05\x12\x13\n\x0bsql_filters\x18\x07 \x03(\t\"\xfd\x03\n\x0eMetadataResult\x12\x10\n\x08scene_id\x18\x01 \x01(\t\x12\x12\n\nproduct_id\x18\x02 \x01(\t\x12,\n\rspacecraft_id\x18\x03 \x01(\x0e\x32\x15.imagery.SpacecraftID\x12\x11\n\tsensor_id\x18\x04 \x01(\t\x12\x15\n\rdate_acquired\x18\x05 \x01(\t\x12\x14\n\x0csensing_time\x18\x06 \x01(\t\x12\x19\n\x11\x63ollection_number\x18\x07 \x01(\t\x12\x1b\n\x13\x63ollection_category\x18\x08 \x01(\t\x12\x11\n\tdata_type\x18\t \x01(\t\x12\x10\n\x08wrs_path\x18\n \x01(\x05\x12\x0f\n\x07wrs_row\x18\x0b \x01(\x05\x12\x13\n\x0b\x63loud_cover\x18\x0c \x01(\x02\x12\x11\n\tnorth_lat\x18\r \x01(\x02\x12\x11\n\tsouth_lat\x18\x0e \x01(\x02\x12\x10\n\x08west_lon\x18\x0f \x01(\x02\x12\x10\n\x08\x65\x61st_lon\x18\x10 \x01(\x02\x12\x12\n\ntotal_size\x18\x11 \x01(\x05\x12\x10\n\x08\x62\x61se_url\x18\x12 \x01(\t\x12\x0b\n\x03\x64oy\x18\x13 \x01(\x05\x12\x15\n\rutm_epsg_code\x18\x14 \x01(\x05\x12\x0e\n\x06\x62ounds\x18\x15 \x03(\x02\x12\x17\n\x0fwrs_polygon_wkb\x18\x16 \x03(\x0c\x12\x17\n\x0f\x66ull_mount_path\x18\x17 \x01(\t\"\xd4\x01\n\x0fServiceGeometry\x12\x13\n\x0bgeometry_id\x18\x01 \x03(\x03\x12=\n\x16geometry_encoding_type\x18\x02 \x01(\x0e\x32\x1d.imagery.GeometryEncodingType\x12\x17\n\x0fgeometry_string\x18\x03 \x03(\t\x12\x17\n\x0fgeometry_binary\x18\x04 \x03(\x0c\x12;\n\x11spatial_reference\x18\x05 \x01(\x0b\x32 .imagery.ServiceSpatialReference\"H\n\x17ServiceSpatialReference\x12\r\n\x05proj4\x18\x04 \x01(\t\x12\x10\n\x08\x65sri_wkt\x18\x05 \x01(\t\x12\x0c\n\x04wkid\x18\x06 \x01(\x05\"\xda\x01\n\x0eOperatorResult\x12*\n\x08geometry\x18\x01 \x01(\x0b\x32\x18.imagery.ServiceGeometry\x12\x1c\n\x14spatial_relationship\x18\x02 \x01(\x08\x12\x10\n\x08\x64istance\x18\x03 \x01(\x01\x12:\n\nrelate_map\x18\x04 \x03(\x0b\x32&.imagery.OperatorResult.RelateMapEntry\x1a\x30\n\x0eRelateMapEntry\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12\r\n\x05value\x18\x02 \x01(\x08:\x02\x38\x01\"\xaf\x08\n\x0fOperatorRequest\x12/\n\rleft_geometry\x18\x01 \x01(\x0b\x32\x18.imagery.ServiceGeometry\x12\x30\n\x0eright_geometry\x18\x02 \x01(\x0b\x32\x18.imagery.ServiceGeometry\x12-\n\x0bleft_cursor\x18\x03 \x01(\x0b\x32\x18.imagery.OperatorRequest\x12.\n\x0cright_cursor\x18\x04 \x01(\x0b\x32\x18.imagery.OperatorRequest\x12\x33\n\roperator_type\x18\x05 \x01(\x0e\x32\x1c.imagery.ServiceOperatorType\x12\x30\n\x15results_encoding_type\x18\x06 \x01(\x0e\x32\x11.imagery.DataType\x12\x45\n\x1boperation_spatial_reference\x18\x07 \x01(\x0b\x32 .imagery.ServiceSpatialReference\x12\x42\n\x18result_spatial_reference\x18\x08 \x01(\x0b\x32 .imagery.ServiceSpatialReference\x12\x19\n\x11\x63onvex_hull_merge\x18\t \x01(\x08\x12\x18\n\x10\x62uffer_distances\x18\n \x03(\x01\x12\x1d\n\x15\x62uffer_max_deviations\x18\x1c \x03(\x01\x12\x1b\n\x13\x62uffer_union_result\x18\x0b \x01(\x08\x12#\n\x1bintersection_dimension_mask\x18\x0c \x01(\x05\x12\x31\n\rclip_envelope\x18\r \x01(\x0b\x32\x1a.imagery.ServiceEnvelope2D\x12\x1a\n\x12\x63ut_consider_touch\x18\x0e \x01(\x08\x12\x1a\n\x12\x64\x65nsify_max_length\x18\x0f \x01(\x01\x12\x16\n\x0esimplify_force\x18\x10 \x01(\x08\x12\x17\n\x0foffset_distance\x18\x11 \x01(\x01\x12\x18\n\x10offset_join_type\x18\x12 \x01(\t\x12\x1a\n\x12offset_bevel_ratio\x18\x13 \x01(\x01\x12\x1c\n\x14offset_flatten_error\x18\x14 \x01(\x01\x12 \n\x18generalize_max_deviation\x18\x15 \x01(\x01\x12%\n\x1dgeneralize_remove_degenerates\x18\x16 \x01(\x08\x12#\n\x1bmax_vertices_in_full_circle\x18\x17 \x01(\x05\x12\x18\n\x10generic_booleans\x18\x18 \x03(\x08\x12\x17\n\x0fgeneric_doubles\x18\x19 \x03(\x01\x12\x18\n\x10generic_integers\x18\x1a \x03(\x05\x12\x17\n\x0fgeneric_strings\x18\x1b \x03(\t\x12\x0e\n\x06\x64\x65_9im\x18\x1d \x01(\t\"K\n\x11ServiceEnvelope2D\x12\x0c\n\x04xmin\x18\x01 \x01(\x01\x12\x0c\n\x04ymin\x18\x02 \x01(\x01\x12\x0c\n\x04xmax\x18\x03 \x01(\x01\x12\x0c\n\x04ymax\x18\x04 \x01(\x01*x\n\x08\x44\x61taType\x12\x08\n\x04\x42YTE\x10\x00\x12\t\n\x05INT16\x10\x01\x12\n\n\x06UINT16\x10\x02\x12\t\n\x05INT32\x10\x03\x12\n\n\x06UINT32\x10\x04\x12\x0b\n\x07\x46LOAT32\x10\x05\x12\x0b\n\x07\x46LOAT64\x10\x06\x12\x0c\n\x08\x43\x46LOAT32\x10\x07\x12\x0c\n\x08\x43\x46LOAT64\x10\x08*\xde\x01\n\x04\x42\x61nd\x12\x10\n\x0cUNKNOWN_BAND\x10\x00\x12\x0f\n\nULTRA_BLUE\x10\xe9\x07\x12\t\n\x04\x42LUE\x10\xea\x07\x12\n\n\x05GREEN\x10\xeb\x07\x12\x08\n\x03RED\x10\xec\x07\x12\x08\n\x03NIR\x10\xed\x07\x12\n\n\x05SWIR1\x10\xee\x07\x12\x0c\n\x07THERMAL\x10\xef\x07\x12\n\n\x05SWIR2\x10\xf0\x07\x12\x11\n\x0cPANCHROMATIC\x10\xf1\x07\x12\x0b\n\x06\x43IRRUS\x10\xf2\x07\x12\n\n\x05TIRS1\x10\xf3\x07\x12\n\n\x05TIRS2\x10\xf4\x07\x12\x0e\n\tINFRARED2\x10\xf5\x07\x12\x0e\n\tINFRARED1\x10\xf6\x07\x12\n\n\x05\x41LPHA\x10\xf7\x07*\x86\x02\n\x0cSpacecraftID\x12\x16\n\x12UNKNOWN_SPACECRAFT\x10\x00\x12\x11\n\rLANDSAT_1_MSS\x10\x01\x12\x11\n\rLANDSAT_2_MSS\x10\x02\x12\x11\n\rLANDSAT_3_MSS\x10\x04\x12\x13\n\x0fLANDSAT_123_MSS\x10\x07\x12\x11\n\rLANDSAT_4_MSS\x10\x08\x12\x11\n\rLANDSAT_5_MSS\x10\x10\x12\x12\n\x0eLANDSAT_45_MSS\x10\x18\x12\r\n\tLANDSAT_4\x10 \x12\r\n\tLANDSAT_5\x10@\x12\x0e\n\nLANDSAT_45\x10`\x12\x0e\n\tLANDSAT_7\x10\x80\x01\x12\x0e\n\tLANDSAT_8\x10\x80\x02\x12\x08\n\x03\x41LL\x10\x80\x04*Q\n\x14GeometryEncodingType\x12\x0b\n\x07unknown\x10\x00\x12\x07\n\x03wkb\x10\x01\x12\x07\n\x03wkt\x10\x02\x12\x0b\n\x07geojson\x10\x03\x12\r\n\tesrishape\x10\x04*\xc9\x06\n\x13ServiceOperatorType\x12\x0b\n\x07Project\x10\x00\x12\x10\n\x0c\x45xportToJson\x10\x01\x12\x12\n\x0eImportFromJson\x10\x02\x12\x1d\n\x19ImportMapGeometryFromJson\x10\x03\x12\x15\n\x11\x45xportToESRIShape\x10\x04\x12\x17\n\x13ImportFromESRIShape\x10\x05\x12\t\n\x05Union\x10\x06\x12\x0e\n\nDifference\x10\x07\x12\x0f\n\x0bProximity2D\x10\x08\x12\n\n\x06Relate\x10\t\x12\n\n\x06\x45quals\x10\n\x12\x0c\n\x08\x44isjoint\x10\x0b\x12\x0e\n\nIntersects\x10\x0c\x12\n\n\x06Within\x10\r\x12\x0c\n\x08\x43ontains\x10\x0e\x12\x0b\n\x07\x43rosses\x10\x0f\x12\x0b\n\x07Touches\x10\x10\x12\x0c\n\x08Overlaps\x10\x11\x12\n\n\x06\x42uffer\x10\x12\x12\x0c\n\x08\x44istance\x10\x13\x12\x10\n\x0cIntersection\x10\x14\x12\x08\n\x04\x43lip\x10\x15\x12\x07\n\x03\x43ut\x10\x16\x12\x13\n\x0f\x44\x65nsifyByLength\x10\x17\x12\x12\n\x0e\x44\x65nsifyByAngle\x10\x18\x12\x0e\n\nLabelPoint\x10\x19\x12\x12\n\x0eGeodesicBuffer\x10\x1a\x12\x1b\n\x17GeodeticDensifyByLength\x10\x1b\x12\x1a\n\x16ShapePreservingDensify\x10\x1c\x12\x12\n\x0eGeodeticLength\x10\x1d\x12\x10\n\x0cGeodeticArea\x10\x1e\x12\x0c\n\x08Simplify\x10\x1f\x12\x0f\n\x0bSimplifyOGC\x10 \x12\n\n\x06Offset\x10!\x12\x0e\n\nGeneralize\x10\"\x12\x14\n\x10GeneralizeByArea\x10#\x12\x0f\n\x0b\x45xportToWkb\x10$\x12\x11\n\rImportFromWkb\x10%\x12\x0f\n\x0b\x45xportToWkt\x10&\x12\x11\n\rImportFromWkt\x10\'\x12\x15\n\x11ImportFromGeoJson\x10(\x12\x13\n\x0f\x45xportToGeoJson\x10)\x12\x17\n\x13SymmetricDifference\x10*\x12\x0e\n\nConvexHull\x10+\x12\x0c\n\x08\x42oundary\x10,\x12\x10\n\x0cRandomPoints\x10-\x12\x13\n\x0f\x45nclosingCircle\x10.2\xa5\x01\n\x10ImageryOperators\x12G\n\x0eMetadataSearch\x12\x18.imagery.MetadataRequest\x1a\x17.imagery.MetadataResult\"\x00\x30\x01\x12H\n\x13ImagerySearchNArray\x12\x17.imagery.ImageryRequest\x1a\x16.imagery.NDArrayResult\"\x00\x42%\n\x0f\x63om.epl.imageryB\nEPLImageryP\x01\xa2\x02\x03RTGb\x06proto3')
   ,
   dependencies=[google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,])
 
@@ -70,8 +70,8 @@ _DATATYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=2412,
-  serialized_end=2532,
+  serialized_start=3421,
+  serialized_end=3541,
 )
 _sym_db.RegisterEnumDescriptor(_DATATYPE)
 
@@ -149,8 +149,8 @@ _BAND = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=2535,
-  serialized_end=2757,
+  serialized_start=3544,
+  serialized_end=3766,
 )
 _sym_db.RegisterEnumDescriptor(_BAND)
 
@@ -220,12 +220,47 @@ _SPACECRAFTID = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=2760,
-  serialized_end=3022,
+  serialized_start=3769,
+  serialized_end=4031,
 )
 _sym_db.RegisterEnumDescriptor(_SPACECRAFTID)
 
 SpacecraftID = enum_type_wrapper.EnumTypeWrapper(_SPACECRAFTID)
+_GEOMETRYENCODINGTYPE = _descriptor.EnumDescriptor(
+  name='GeometryEncodingType',
+  full_name='imagery.GeometryEncodingType',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='unknown', index=0, number=0,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='wkb', index=1, number=1,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='wkt', index=2, number=2,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='geojson', index=3, number=3,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='esrishape', index=4, number=4,
+      options=None,
+      type=None),
+  ],
+  containing_type=None,
+  options=None,
+  serialized_start=4033,
+  serialized_end=4114,
+)
+_sym_db.RegisterEnumDescriptor(_GEOMETRYENCODINGTYPE)
+
+GeometryEncodingType = enum_type_wrapper.EnumTypeWrapper(_GEOMETRYENCODINGTYPE)
 _SERVICEOPERATORTYPE = _descriptor.EnumDescriptor(
   name='ServiceOperatorType',
   full_name='imagery.ServiceOperatorType',
@@ -423,8 +458,8 @@ _SERVICEOPERATORTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=3025,
-  serialized_end=3866,
+  serialized_start=4117,
+  serialized_end=4958,
 )
 _sym_db.RegisterEnumDescriptor(_SERVICEOPERATORTYPE)
 
@@ -468,6 +503,11 @@ LANDSAT_45 = 96
 LANDSAT_7 = 128
 LANDSAT_8 = 256
 ALL = 512
+unknown = 0
+wkb = 1
+wkt = 2
+geojson = 3
+esrishape = 4
 Project = 0
 ExportToJson = 1
 ImportFromJson = 2
@@ -516,6 +556,352 @@ Boundary = 44
 RandomPoints = 45
 EnclosingCircle = 46
 
+
+
+_IMAGERYREQUEST = _descriptor.Descriptor(
+  name='ImageryRequest',
+  full_name='imagery.ImageryRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='metadata', full_name='imagery.ImageryRequest.metadata', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='band_definitions', full_name='imagery.ImageryRequest.band_definitions', index=1,
+      number=2, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='extent', full_name='imagery.ImageryRequest.extent', index=2,
+      number=4, type=2, cpp_type=6, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='extent_cs', full_name='imagery.ImageryRequest.extent_cs', index=3,
+      number=5, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='output_type', full_name='imagery.ImageryRequest.output_type', index=4,
+      number=6, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='xRes', full_name='imagery.ImageryRequest.xRes', index=5,
+      number=7, type=2, cpp_type=6, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='yRes', full_name='imagery.ImageryRequest.yRes', index=6,
+      number=8, type=2, cpp_type=6, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='cutline_wkb', full_name='imagery.ImageryRequest.cutline_wkb', index=7,
+      number=9, type=12, cpp_type=9, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=68,
+  serialized_end=336,
+)
+
+
+_NDARRAYRESULT = _descriptor.Descriptor(
+  name='NDArrayResult',
+  full_name='imagery.NDArrayResult',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='data_float', full_name='imagery.NDArrayResult.data_float', index=0,
+      number=1, type=2, cpp_type=6, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='data_int32', full_name='imagery.NDArrayResult.data_int32', index=1,
+      number=2, type=5, cpp_type=1, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='data_int64', full_name='imagery.NDArrayResult.data_int64', index=2,
+      number=3, type=3, cpp_type=2, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='data_uint32', full_name='imagery.NDArrayResult.data_uint32', index=3,
+      number=4, type=13, cpp_type=3, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='data_uint64', full_name='imagery.NDArrayResult.data_uint64', index=4,
+      number=5, type=4, cpp_type=4, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='data_bytes', full_name='imagery.NDArrayResult.data_bytes', index=5,
+      number=6, type=12, cpp_type=9, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='data_double', full_name='imagery.NDArrayResult.data_double', index=6,
+      number=7, type=1, cpp_type=5, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='dtype', full_name='imagery.NDArrayResult.dtype', index=7,
+      number=8, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='shape', full_name='imagery.NDArrayResult.shape', index=8,
+      number=9, type=5, cpp_type=1, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=339,
+  serialized_end=546,
+)
+
+
+_RAWIMAGERYRESULT = _descriptor.Descriptor(
+  name='RawImageryResult',
+  full_name='imagery.RawImageryResult',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=548,
+  serialized_end=566,
+)
+
+
+_BANDDEFINITION = _descriptor.Descriptor(
+  name='BandDefinition',
+  full_name='imagery.BandDefinition',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='band_number', full_name='imagery.BandDefinition.band_number', index=0,
+      number=1, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='band_type', full_name='imagery.BandDefinition.band_type', index=1,
+      number=2, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='band_function', full_name='imagery.BandDefinition.band_function', index=2,
+      number=3, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='scale_params', full_name='imagery.BandDefinition.scale_params', index=3,
+      number=4, type=2, cpp_type=6, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=569,
+  serialized_end=715,
+)
+
+
+_BANDFUNCTIONDETAILS_ARGUMENTSENTRY = _descriptor.Descriptor(
+  name='ArgumentsEntry',
+  full_name='imagery.BandFunctionDetails.ArgumentsEntry',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='imagery.BandFunctionDetails.ArgumentsEntry.key', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='imagery.BandFunctionDetails.ArgumentsEntry.value', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=_descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001')),
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=964,
+  serialized_end=1012,
+)
+
+_BANDFUNCTIONDETAILS = _descriptor.Descriptor(
+  name='BandFunctionDetails',
+  full_name='imagery.BandFunctionDetails',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='name', full_name='imagery.BandFunctionDetails.name', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='band_definitions', full_name='imagery.BandFunctionDetails.band_definitions', index=1,
+      number=2, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='data_type', full_name='imagery.BandFunctionDetails.data_type', index=2,
+      number=3, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='code', full_name='imagery.BandFunctionDetails.code', index=3,
+      number=4, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='arguments', full_name='imagery.BandFunctionDetails.arguments', index=4,
+      number=5, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='transfer_type', full_name='imagery.BandFunctionDetails.transfer_type', index=5,
+      number=6, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[_BANDFUNCTIONDETAILS_ARGUMENTSENTRY, ],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=718,
+  serialized_end=1012,
+)
 
 
 _METADATAREQUEST = _descriptor.Descriptor(
@@ -586,8 +972,8 @@ _METADATAREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=68,
-  serialized_end=299,
+  serialized_start=1015,
+  serialized_end=1246,
 )
 
 
@@ -745,6 +1131,20 @@ _METADATARESULT = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='wrs_polygon_wkb', full_name='imagery.MetadataResult.wrs_polygon_wkb', index=21,
+      number=22, type=12, cpp_type=9, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='full_mount_path', full_name='imagery.MetadataResult.full_mount_path', index=22,
+      number=23, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -757,8 +1157,8 @@ _METADATARESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=302,
-  serialized_end=761,
+  serialized_start=1249,
+  serialized_end=1758,
 )
 
 
@@ -816,8 +1216,8 @@ _SERVICEGEOMETRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=764,
-  serialized_end=964,
+  serialized_start=1761,
+  serialized_end=1973,
 )
 
 
@@ -861,8 +1261,8 @@ _SERVICESPATIALREFERENCE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=966,
-  serialized_end=1038,
+  serialized_start=1975,
+  serialized_end=2047,
 )
 
 
@@ -899,8 +1299,8 @@ _OPERATORRESULT_RELATEMAPENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1211,
-  serialized_end=1259,
+  serialized_start=2220,
+  serialized_end=2268,
 )
 
 _OPERATORRESULT = _descriptor.Descriptor(
@@ -950,8 +1350,8 @@ _OPERATORRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1041,
-  serialized_end=1259,
+  serialized_start=2050,
+  serialized_end=2268,
 )
 
 
@@ -1177,8 +1577,8 @@ _OPERATORREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1262,
-  serialized_end=2333,
+  serialized_start=2271,
+  serialized_end=3342,
 )
 
 
@@ -1229,15 +1629,27 @@ _SERVICEENVELOPE2D = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2335,
-  serialized_end=2410,
+  serialized_start=3344,
+  serialized_end=3419,
 )
 
+_IMAGERYREQUEST.fields_by_name['metadata'].message_type = _METADATARESULT
+_IMAGERYREQUEST.fields_by_name['band_definitions'].message_type = _BANDDEFINITION
+_IMAGERYREQUEST.fields_by_name['extent_cs'].message_type = _SERVICESPATIALREFERENCE
+_IMAGERYREQUEST.fields_by_name['output_type'].enum_type = _DATATYPE
+_NDARRAYRESULT.fields_by_name['dtype'].enum_type = _DATATYPE
+_BANDDEFINITION.fields_by_name['band_type'].enum_type = _BAND
+_BANDDEFINITION.fields_by_name['band_function'].message_type = _BANDFUNCTIONDETAILS
+_BANDFUNCTIONDETAILS_ARGUMENTSENTRY.containing_type = _BANDFUNCTIONDETAILS
+_BANDFUNCTIONDETAILS.fields_by_name['band_definitions'].message_type = _BANDDEFINITION
+_BANDFUNCTIONDETAILS.fields_by_name['data_type'].enum_type = _DATATYPE
+_BANDFUNCTIONDETAILS.fields_by_name['arguments'].message_type = _BANDFUNCTIONDETAILS_ARGUMENTSENTRY
+_BANDFUNCTIONDETAILS.fields_by_name['transfer_type'].enum_type = _DATATYPE
 _METADATAREQUEST.fields_by_name['satellite_id'].enum_type = _SPACECRAFTID
 _METADATAREQUEST.fields_by_name['start_date'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
 _METADATAREQUEST.fields_by_name['end_date'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
 _METADATARESULT.fields_by_name['spacecraft_id'].enum_type = _SPACECRAFTID
-_SERVICEGEOMETRY.fields_by_name['geometry_encoding_type'].enum_type = _DATATYPE
+_SERVICEGEOMETRY.fields_by_name['geometry_encoding_type'].enum_type = _GEOMETRYENCODINGTYPE
 _SERVICEGEOMETRY.fields_by_name['spatial_reference'].message_type = _SERVICESPATIALREFERENCE
 _OPERATORRESULT_RELATEMAPENTRY.containing_type = _OPERATORRESULT
 _OPERATORRESULT.fields_by_name['geometry'].message_type = _SERVICEGEOMETRY
@@ -1251,6 +1663,11 @@ _OPERATORREQUEST.fields_by_name['results_encoding_type'].enum_type = _DATATYPE
 _OPERATORREQUEST.fields_by_name['operation_spatial_reference'].message_type = _SERVICESPATIALREFERENCE
 _OPERATORREQUEST.fields_by_name['result_spatial_reference'].message_type = _SERVICESPATIALREFERENCE
 _OPERATORREQUEST.fields_by_name['clip_envelope'].message_type = _SERVICEENVELOPE2D
+DESCRIPTOR.message_types_by_name['ImageryRequest'] = _IMAGERYREQUEST
+DESCRIPTOR.message_types_by_name['NDArrayResult'] = _NDARRAYRESULT
+DESCRIPTOR.message_types_by_name['RawImageryResult'] = _RAWIMAGERYRESULT
+DESCRIPTOR.message_types_by_name['BandDefinition'] = _BANDDEFINITION
+DESCRIPTOR.message_types_by_name['BandFunctionDetails'] = _BANDFUNCTIONDETAILS
 DESCRIPTOR.message_types_by_name['MetadataRequest'] = _METADATAREQUEST
 DESCRIPTOR.message_types_by_name['MetadataResult'] = _METADATARESULT
 DESCRIPTOR.message_types_by_name['ServiceGeometry'] = _SERVICEGEOMETRY
@@ -1261,8 +1678,52 @@ DESCRIPTOR.message_types_by_name['ServiceEnvelope2D'] = _SERVICEENVELOPE2D
 DESCRIPTOR.enum_types_by_name['DataType'] = _DATATYPE
 DESCRIPTOR.enum_types_by_name['Band'] = _BAND
 DESCRIPTOR.enum_types_by_name['SpacecraftID'] = _SPACECRAFTID
+DESCRIPTOR.enum_types_by_name['GeometryEncodingType'] = _GEOMETRYENCODINGTYPE
 DESCRIPTOR.enum_types_by_name['ServiceOperatorType'] = _SERVICEOPERATORTYPE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
+
+ImageryRequest = _reflection.GeneratedProtocolMessageType('ImageryRequest', (_message.Message,), dict(
+  DESCRIPTOR = _IMAGERYREQUEST,
+  __module__ = 'epl_imagery_api_pb2'
+  # @@protoc_insertion_point(class_scope:imagery.ImageryRequest)
+  ))
+_sym_db.RegisterMessage(ImageryRequest)
+
+NDArrayResult = _reflection.GeneratedProtocolMessageType('NDArrayResult', (_message.Message,), dict(
+  DESCRIPTOR = _NDARRAYRESULT,
+  __module__ = 'epl_imagery_api_pb2'
+  # @@protoc_insertion_point(class_scope:imagery.NDArrayResult)
+  ))
+_sym_db.RegisterMessage(NDArrayResult)
+
+RawImageryResult = _reflection.GeneratedProtocolMessageType('RawImageryResult', (_message.Message,), dict(
+  DESCRIPTOR = _RAWIMAGERYRESULT,
+  __module__ = 'epl_imagery_api_pb2'
+  # @@protoc_insertion_point(class_scope:imagery.RawImageryResult)
+  ))
+_sym_db.RegisterMessage(RawImageryResult)
+
+BandDefinition = _reflection.GeneratedProtocolMessageType('BandDefinition', (_message.Message,), dict(
+  DESCRIPTOR = _BANDDEFINITION,
+  __module__ = 'epl_imagery_api_pb2'
+  # @@protoc_insertion_point(class_scope:imagery.BandDefinition)
+  ))
+_sym_db.RegisterMessage(BandDefinition)
+
+BandFunctionDetails = _reflection.GeneratedProtocolMessageType('BandFunctionDetails', (_message.Message,), dict(
+
+  ArgumentsEntry = _reflection.GeneratedProtocolMessageType('ArgumentsEntry', (_message.Message,), dict(
+    DESCRIPTOR = _BANDFUNCTIONDETAILS_ARGUMENTSENTRY,
+    __module__ = 'epl_imagery_api_pb2'
+    # @@protoc_insertion_point(class_scope:imagery.BandFunctionDetails.ArgumentsEntry)
+    ))
+  ,
+  DESCRIPTOR = _BANDFUNCTIONDETAILS,
+  __module__ = 'epl_imagery_api_pb2'
+  # @@protoc_insertion_point(class_scope:imagery.BandFunctionDetails)
+  ))
+_sym_db.RegisterMessage(BandFunctionDetails)
+_sym_db.RegisterMessage(BandFunctionDetails.ArgumentsEntry)
 
 MetadataRequest = _reflection.GeneratedProtocolMessageType('MetadataRequest', (_message.Message,), dict(
   DESCRIPTOR = _METADATAREQUEST,
@@ -1324,6 +1785,8 @@ _sym_db.RegisterMessage(ServiceEnvelope2D)
 
 DESCRIPTOR.has_options = True
 DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('\n\017com.epl.imageryB\nEPLImageryP\001\242\002\003RTG'))
+_BANDFUNCTIONDETAILS_ARGUMENTSENTRY.has_options = True
+_BANDFUNCTIONDETAILS_ARGUMENTSENTRY._options = _descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001'))
 _OPERATORRESULT_RELATEMAPENTRY.has_options = True
 _OPERATORRESULT_RELATEMAPENTRY._options = _descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001'))
 
@@ -1333,8 +1796,8 @@ _IMAGERYOPERATORS = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   options=None,
-  serialized_start=3868,
-  serialized_end=3959,
+  serialized_start=4961,
+  serialized_end=5126,
   methods=[
   _descriptor.MethodDescriptor(
     name='MetadataSearch',
@@ -1343,6 +1806,15 @@ _IMAGERYOPERATORS = _descriptor.ServiceDescriptor(
     containing_service=None,
     input_type=_METADATAREQUEST,
     output_type=_METADATARESULT,
+    options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='ImagerySearchNArray',
+    full_name='imagery.ImageryOperators.ImagerySearchNArray',
+    index=1,
+    containing_service=None,
+    input_type=_IMAGERYREQUEST,
+    output_type=_NDARRAYRESULT,
     options=None,
   ),
 ])
@@ -1376,6 +1848,11 @@ try:
           request_serializer=MetadataRequest.SerializeToString,
           response_deserializer=MetadataResult.FromString,
           )
+      self.ImagerySearchNArray = channel.unary_unary(
+          '/imagery.ImageryOperators/ImagerySearchNArray',
+          request_serializer=ImageryRequest.SerializeToString,
+          response_deserializer=NDArrayResult.FromString,
+          )
 
 
   class ImageryOperatorsServicer(object):
@@ -1390,6 +1867,13 @@ try:
       context.set_details('Method not implemented!')
       raise NotImplementedError('Method not implemented!')
 
+    def ImagerySearchNArray(self, request, context):
+      """TODO maybe this should be separated into different rpcs for each result type
+      """
+      context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+      context.set_details('Method not implemented!')
+      raise NotImplementedError('Method not implemented!')
+
 
   def add_ImageryOperatorsServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -1397,6 +1881,11 @@ try:
             servicer.MetadataSearch,
             request_deserializer=MetadataRequest.FromString,
             response_serializer=MetadataResult.SerializeToString,
+        ),
+        'ImagerySearchNArray': grpc.unary_unary_rpc_method_handler(
+            servicer.ImagerySearchNArray,
+            request_deserializer=ImageryRequest.FromString,
+            response_serializer=NDArrayResult.SerializeToString,
         ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -1417,6 +1906,10 @@ try:
       """Execute a single geometry operation
       """
       context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
+    def ImagerySearchNArray(self, request, context):
+      """TODO maybe this should be separated into different rpcs for each result type
+      """
+      context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
 
 
   class BetaImageryOperatorsStub(object):
@@ -1432,6 +1925,11 @@ try:
       """Execute a single geometry operation
       """
       raise NotImplementedError()
+    def ImagerySearchNArray(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
+      """TODO maybe this should be separated into different rpcs for each result type
+      """
+      raise NotImplementedError()
+    ImagerySearchNArray.future = None
 
 
   def beta_create_ImageryOperators_server(servicer, pool=None, pool_size=None, default_timeout=None, maximum_timeout=None):
@@ -1441,12 +1939,15 @@ try:
     file not marked beta) for all further purposes. This function was
     generated only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0"""
     request_deserializers = {
+      ('imagery.ImageryOperators', 'ImagerySearchNArray'): ImageryRequest.FromString,
       ('imagery.ImageryOperators', 'MetadataSearch'): MetadataRequest.FromString,
     }
     response_serializers = {
+      ('imagery.ImageryOperators', 'ImagerySearchNArray'): NDArrayResult.SerializeToString,
       ('imagery.ImageryOperators', 'MetadataSearch'): MetadataResult.SerializeToString,
     }
     method_implementations = {
+      ('imagery.ImageryOperators', 'ImagerySearchNArray'): face_utilities.unary_unary_inline(servicer.ImagerySearchNArray),
       ('imagery.ImageryOperators', 'MetadataSearch'): face_utilities.unary_stream_inline(servicer.MetadataSearch),
     }
     server_options = beta_implementations.server_options(request_deserializers=request_deserializers, response_serializers=response_serializers, thread_pool=pool, thread_pool_size=pool_size, default_timeout=default_timeout, maximum_timeout=maximum_timeout)
@@ -1460,12 +1961,15 @@ try:
     file not marked beta) for all further purposes. This function was
     generated only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0"""
     request_serializers = {
+      ('imagery.ImageryOperators', 'ImagerySearchNArray'): ImageryRequest.SerializeToString,
       ('imagery.ImageryOperators', 'MetadataSearch'): MetadataRequest.SerializeToString,
     }
     response_deserializers = {
+      ('imagery.ImageryOperators', 'ImagerySearchNArray'): NDArrayResult.FromString,
       ('imagery.ImageryOperators', 'MetadataSearch'): MetadataResult.FromString,
     }
     cardinalities = {
+      'ImagerySearchNArray': cardinality.Cardinality.UNARY_UNARY,
       'MetadataSearch': cardinality.Cardinality.UNARY_STREAM,
     }
     stub_options = beta_implementations.stub_options(host=host, metadata_transformer=metadata_transformer, request_serializers=request_serializers, response_deserializers=response_deserializers, thread_pool=pool, thread_pool_size=pool_size)

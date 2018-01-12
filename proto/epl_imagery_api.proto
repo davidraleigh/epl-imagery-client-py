@@ -28,6 +28,34 @@ option objc_class_prefix = "RTG";
 package imagery;
 import "google/protobuf/timestamp.proto";
 
+/*
+  Type of imagery pixel encoding
+*/
+/*
+    BYTE = (gdal.GDT_Byte, "Byte", 0, 255)
+    INT16 = (gdal.GDT_Int16, "Int16", -32768, 32767)
+    UINT16 = (gdal.GDT_UInt16, "UInt16", 0, 65535)
+    INT32 = (gdal.GDT_Int32, "Int32", -2147483648, 2147483647)
+    UINT32 = (gdal.GDT_UInt32, "UInt32", 0, 4294967295)
+    FLOAT32 = (gdal.GDT_Float32, "Float32", -3.4E+38, 3.4E+38)
+    FLOAT64 = (gdal.GDT_Float64, "Float64", -1.7E+308, 1.7E+308)
+
+    # TODO this seem to be swapped
+    CFLOAT32 = (gdal.GDT_CFloat32, "CFloat32", -3.4E+38, 3.4E+38)
+    CFLOAT64 = (gdal.GDT_CFloat64, "CFloat64", -1.7E+308, 1.7E+308)
+*/
+
+enum DataType {
+    BYTE = 0;
+    INT16 = 1;
+    UINT16 = 2;
+    INT32 = 3;
+    UINT32 = 4;
+    FLOAT32 = 5;
+    FLOAT64 = 6;
+    CFLOAT32 = 7;
+    CFLOAT64 = 8;
+}
 
 /*
  gRPC Interfaces for working with geometry operators
@@ -36,9 +64,76 @@ service ImageryOperators {
     // Execute a single geometry operation
     rpc MetadataSearch(MetadataRequest) returns (stream MetadataResult) {}
 
+    // TODO maybe this should be separated into different rpcs for each result type
+    rpc ImagerySearchNArray(ImageryRequest) returns (NDArrayResult) {}
 //    rpc StreamOperations(stream OperatorRequest) returns (stream OperatorResult) {}
 }
 
+// TODO reorder to match fetch_imagery_array
+message ImageryRequest {
+    repeated MetadataResult metadata = 1;
+    repeated BandDefinition band_definitions = 2;
+
+    // TODO rename extent to bounding_box
+    repeated float extent = 4;
+    ServiceSpatialReference extent_cs = 5;
+    DataType output_type = 6;
+
+    // TODO rename to something more clear
+    float xRes = 7;
+
+    // TODO rename to something more clear
+    float yRes = 8;
+
+    repeated bytes cutline_wkb = 9;
+}
+
+// TODO maybe this should be separated into different messages for each result type
+message NDArrayResult {
+    repeated float data_float = 1;
+    repeated int32 data_int32 = 2;
+    repeated int64 data_int64 = 3;
+    repeated uint32 data_uint32 = 4;
+    repeated uint64 data_uint64 = 5;
+    repeated bytes data_bytes = 6;
+    repeated double data_double = 7;
+    DataType dtype = 8;
+    repeated int32 shape = 9;
+}
+//dtype	Data-type of the array’s elements.
+//flags	Information about the memory layout of the array.
+//flat	A 1-D iterator over the array.
+//imag	The imaginary part of the array.
+//real	The real part of the array.
+//size	Number of elements in the array.
+//itemsize	Length of one array element in bytes.
+//nbytes	Total bytes consumed by the elements of the array.
+//ndim	Number of array dimensions.
+//shape	Tuple of array dimensions.
+//strides	Tuple of bytes to step in each dimension when traversing an array.
+//ctypes	An object to simplify the interaction of the array with the ctypes module.
+//base	Base object if memory is from some other object.
+
+
+message RawImageryResult {
+
+}
+
+message BandDefinition {
+    int32 band_number = 1;
+    Band band_type = 2;
+    BandFunctionDetails band_function = 3;
+    repeated float scale_params = 4;
+}
+
+message BandFunctionDetails {
+    string name = 1;
+    repeated BandDefinition band_definitions = 2;
+    DataType data_type = 3;
+    string code = 4;
+    map<string, string> arguments = 5;
+    DataType transfer_type = 6;
+}
 
 message MetadataRequest {
     SpacecraftID satellite_id = 1;
@@ -51,6 +146,7 @@ message MetadataRequest {
     repeated string sql_filters = 7;
 }
 
+// TODO rename to Metadata
 message MetadataResult {
 
     //  # STRING	REQUIRED   Unique identifier for a particular Landsat image downlinked to
@@ -99,25 +195,13 @@ message MetadataResult {
 
     //  (minx, miny, maxx, maxy)
     repeated float bounds = 21;
+    repeated bytes wrs_polygon_wkb = 22;
 //    ServiceEnvelope2D bounds = 21;
+    string full_mount_path = 23;
 }
 
 
 
-/*
-  Type of imagery pixel encoding
-*/
-enum DataType {
-    BYTE = 0;
-    INT16 = 1;
-    UINT16 = 2;
-    INT32 = 3;
-    UINT32 = 4;
-    FLOAT32 = 5;
-    FLOAT64 = 6;
-    CFLOAT32 = 7;
-    CFLOAT64 = 8;
-}
 
 enum Band {
     // Crazy Values so that the Band.<ENUM>.value isn't used for anything
@@ -154,6 +238,17 @@ enum SpacecraftID {
     LANDSAT_7 = 128;
     LANDSAT_8 = 256;
     ALL = 512;
+}
+
+/*
+  Type of geometry encoding
+*/
+enum GeometryEncodingType {
+    unknown = 0;
+    wkb = 1; // well-known binary
+    wkt = 2; // well-known text
+    geojson = 3; // geojson
+    esrishape = 4; // esri shape binary
 }
 
 enum ServiceOperatorType {
@@ -221,7 +316,7 @@ message ServiceGeometry {
 
     // TODO review esri encoding typename (this is for the esri shape binary format)
     // type can be 'wkt', 'wkb', 'geojson', or 'esri'
-    DataType geometry_encoding_type = 2;
+    GeometryEncodingType geometry_encoding_type = 2;
 
     // the geometry encoded as base64 (wkb or esri) or as a string (wkt or geojson)
     repeated string geometry_string = 3;

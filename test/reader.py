@@ -16,9 +16,8 @@ from lxml import etree
 from shapely.geometry import shape
 from shapely.geometry import box
 from shapely.wkt import loads
-
 from datetime import date
-from epl.imagery_client.reader import MetadataService, Landsat, Storage, SpacecraftID, Metadata, BandMap, Band, WRSGeometries, RasterBandMetadata, RasterMetadata, DataType, FunctionDetails
+from epl.imagery_client.reader import MetadataService, Landsat, Storage, SpacecraftID, Band, BandMap, WRSGeometries, RasterBandMetadata, RasterMetadata, DataType, FunctionDetails
 
 
 class TestMetaDataSQL(unittest.TestCase):
@@ -323,76 +322,76 @@ class TestMetaDataSQL(unittest.TestCase):
 #     #         break
 #
 #
-# class TestLandsat(unittest.TestCase):
-#     base_mount_path = '/imagery'
-#     metadata_service = None
-#     metadata_set = []
-#     r = requests.get("https://raw.githubusercontent.com/johan/world.geo.json/master/countries/USA/NM/Taos.geo.json")
-#     taos_geom = r.json()
-#     taos_shape = shapely.geometry.shape(taos_geom['features'][0]['geometry'])
-#
-#     def setUp(self):
-#         d_start = date(2017, 3, 12)  # 2017-03-12
-#         d_end = date(2017, 3, 19)  # 2017-03-20, epl api is inclusive
-#
-#         self.metadata_service = MetadataService()
-#
-#         sql_filters = ['collection_number="PRE"']
-#         metadata_rows = self.metadata_service.search(
-#             SpacecraftID.LANDSAT_8,
-#             start_date=d_start,
-#             end_date=d_end,
-#             bounding_box=self.taos_shape.bounds,
-#             limit=10,
-#             sql_filters=sql_filters)
-#
-#         # mounted directory in docker container
-#         base_mount_path = '/imagery'
-#
-#         for row in metadata_rows:
-#             self.metadata_set.append(row)
-#
-#     def test_gdal_info(self):
-#         d_start = date(2015, 6, 24)
-#         d_end = date(2016, 6, 24)
-#         bounding_box = (-115.927734375, 34.52466147177172, -78.31054687499999, 44.84029065139799)
-#         rows = self.metadata_service.search(SpacecraftID.LANDSAT_8, start_date=d_start, end_date=d_end,
-#                                             bounding_box=bounding_box,
-#                                             limit=1)
-#         rows = list(rows)
-#         metadata = rows[0]
-#         storage = Storage(metadata.bucket_name)
-#
-#         b_mounted = storage.mount_sub_folder(metadata, "generic")
-#         self.assertTrue(b_mounted)
-#         b_deleted = storage.unmount_sub_folder(metadata, "generic")
-#         self.assertTrue(b_deleted)
-#
-#     # TODO test PRE rejection
-#     # TODO test date range rejection
-#     # TODO test Satellite Rejection
-#
-#     def test_vrt_not_pre(self):
-#         d_start = date(2017, 6, 24)
-#         d_end = date(2017, 9, 24)
-#         bounding_box = (-115.927734375, 34.52466147177172, -78.31054687499999, 44.84029065139799)
-#         sql_filters = ['collection_number!="PRE"']
-#         rows = self.metadata_service.search(SpacecraftID.LANDSAT_8,
-#                                             start_date=d_start,
-#                                             end_date=d_end,
-#                                             bounding_box=bounding_box,
-#                                             limit=1,
-#                                             sql_filters=sql_filters)
-#
-#         rows = list(rows)
-#         metadata = rows[0]
-#
-#         landsat = Landsat(metadata)
-#         self.assertIsNotNone(landsat)
-#         vrt = landsat.get_vrt([4, 3, 2])
-#         self.assertIsNotNone(vrt)
-#         dataset = landsat.get_dataset([4, 3, 2], DataType.UINT16)
-#         self.assertIsNotNone(dataset)
+class TestLandsat(unittest.TestCase):
+    base_mount_path = '/imagery'
+    metadata_service = None
+    metadata_set = []
+    r = requests.get("https://raw.githubusercontent.com/johan/world.geo.json/master/countries/USA/NM/Taos.geo.json")
+    taos_geom = r.json()
+    taos_shape = shapely.geometry.shape(taos_geom['features'][0]['geometry'])
+
+    def setUp(self):
+        d_start = date(2017, 3, 12)  # 2017-03-12
+        d_end = date(2017, 3, 19)  # 2017-03-20, epl api is inclusive
+
+        self.metadata_service = MetadataService()
+
+        sql_filters = ['collection_number="PRE"']
+        metadata_rows = self.metadata_service.search(
+            SpacecraftID.LANDSAT_8,
+            start_date=d_start,
+            end_date=d_end,
+            bounding_box=self.taos_shape.bounds,
+            limit=10,
+            sql_filters=sql_filters)
+
+        # mounted directory in docker container
+        base_mount_path = '/imagery'
+
+        for row in metadata_rows:
+            self.metadata_set.append(row)
+
+    # def test_gdal_info(self):
+    #     d_start = date(2015, 6, 24)
+    #     d_end = date(2016, 6, 24)
+    #     bounding_box = (-115.927734375, 34.52466147177172, -78.31054687499999, 44.84029065139799)
+    #     rows = self.metadata_service.search(SpacecraftID.LANDSAT_8, start_date=d_start, end_date=d_end,
+    #                                         bounding_box=bounding_box,
+    #                                         limit=1)
+    #     rows = list(rows)
+    #     metadata = rows[0]
+    #     storage = Storage(metadata.bucket_name)
+    #
+    #     b_mounted = storage.mount_sub_folder(metadata, "generic")
+    #     self.assertTrue(b_mounted)
+    #     b_deleted = storage.unmount_sub_folder(metadata, "generic")
+    #     self.assertTrue(b_deleted)
+
+    # TODO test PRE rejection
+    # TODO test date range rejection
+    # TODO test Satellite Rejection
+
+    def test_vrt_not_pre(self):
+        d_start = date(2017, 6, 24)
+        d_end = date(2017, 9, 24)
+        bounding_box = (-115.927734375, 34.52466147177172, -78.31054687499999, 44.84029065139799)
+        sql_filters = ['collection_number!="PRE"']
+        rows = self.metadata_service.search(SpacecraftID.LANDSAT_8,
+                                            start_date=d_start,
+                                            end_date=d_end,
+                                            bounding_box=bounding_box,
+                                            limit=1,
+                                            sql_filters=sql_filters)
+
+        rows = list(rows)
+        metadata = rows[0]
+
+        landsat = Landsat(metadata)
+        self.assertIsNotNone(landsat)
+        vrt = landsat.get_vrt([4, 3, 2])
+        self.assertIsNotNone(vrt)
+        dataset = landsat.get_dataset([4, 3, 2], DataType.UINT16)
+        self.assertIsNotNone(dataset)
 #
 #     def test_pixel_function_vrt_1(self):
 #         utah_box = (-112.66342163085938, 37.738141282210385, -111.79824829101562, 38.44821130413263)
@@ -465,22 +464,34 @@ class TestMetaDataSQL(unittest.TestCase):
 #
 #     # @unittest.skip("failing???")
 #
-#     def test_band_enum(self):
-#         self.assertTrue(True)
-#         d_start = date(2016, 7, 20)
-#         d_end = date(2016, 7, 28)
-#         rows = self.metadata_service.search(SpacecraftID.LANDSAT_8, start_date=d_start, end_date=d_end, limit=1,
-#                                             sql_filters=['scene_id="LC80390332016208LGN00"'])
-#         rows = list(rows)
-#         metadata = rows[0]
-#         landsat = Landsat(metadata)
-#         scale_params = [[0.0, 65535], [0.0, 65535], [0.0, 65535]]
-#         # nda = landsat.__get_ndarray(band_numbers, metadata, scale_params)
-#         nda = landsat.fetch_imagery_array([Band.RED, Band.GREEN, Band.BLUE], scale_params, xRes=240, yRes=240)
-#         self.assertIsNotNone(nda)
-#         nda2 = landsat.fetch_imagery_array([4, 3, 2], scale_params, xRes=240, yRes=240)
-#         np.testing.assert_almost_equal(nda, nda2)
-#         # 'scene_id': 'LC80390332016208LGN00'
+
+    def test_band_enum(self):
+        self.assertTrue(True)
+        d_start = date(2016, 7, 20)
+        d_end = date(2016, 7, 28)
+        rows = self.metadata_service.search(SpacecraftID.LANDSAT_8,
+                                            start_date=d_start,
+                                            end_date=d_end,
+                                            limit=1,
+                                            sql_filters=['scene_id="LC80390332016208LGN00"'])
+        rows = list(rows)
+        metadata = rows[0]
+        landsat = Landsat(metadata)
+        scale_params = [[0.0, 65535], [0.0, 65535], [0.0, 65535]]
+        # nda = landsat.__get_ndarray(band_numbers, metadata, scale_params)
+        nda = landsat.fetch_imagery_array(
+            [Band.RED, Band.GREEN, Band.BLUE],
+            scale_params,
+            xRes=240,
+            yRes=240)
+        self.assertIsNotNone(nda)
+        nda2 = landsat.fetch_imagery_array(
+            [4, 3, 2],
+            scale_params,
+            xRes=240,
+            yRes=240)
+        np.testing.assert_almost_equal(nda, nda2)
+        # 'scene_id': 'LC80390332016208LGN00'
 #
 #     def test_vrt_extent(self):
 #         # GDAL helper functions for generating VRT
