@@ -491,6 +491,12 @@ class TestLandsat(unittest.TestCase):
             xRes=240,
             yRes=240)
         np.testing.assert_almost_equal(nda, nda2)
+        # nda = nda.flatten()
+        # nda2 = nda2.flatten()
+        # for i in range(0, len(nda)):
+        #     self.assertEquals(nda[i], nda2[i], "failure at index{0}")
+
+
         # 'scene_id': 'LC80390332016208LGN00'
 #
 #     def test_vrt_extent(self):

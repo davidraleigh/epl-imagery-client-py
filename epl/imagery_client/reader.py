@@ -141,7 +141,7 @@ class Landsat:
         if cutline_wkb:
             request.cutline_wkb.extend(cutline_wkb)
         result = stub.ImagerySearchNArray(request)
-        nd_array = np.ndarray(shape=result.shape, dtype=np.uint8, order='C')
+        nd_array = np.ndarray(buffer=np.array(result.data_uint32), shape=result.shape, dtype=np.uint8, order='F')
         return nd_array
 
     def get_dataset(self,
