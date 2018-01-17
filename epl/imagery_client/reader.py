@@ -42,6 +42,53 @@ class _DateType(Enum):
     END_DATE = 1
 
 
+class DataType(Enum):
+    # Byte, UInt16, Int16, UInt32, Int32, Float32, Float64, CInt16, CInt32, CFloat32 or CFloat64
+    """enum DataType {
+    BYTE = 0;
+    INT16 = 1;
+    UINT16 = 2;
+    INT32 = 3;
+    UINT32 = 4;
+    FLOAT32 = 5;
+    FLOAT64 = 6;
+    CFLOAT32 = 7;
+    CFLOAT64 = 8;
+}
+    """
+    BYTE = ("Byte", 0, 255, 0, np.uint8)
+    INT16 = ("Int16", -32768, 32767, 1, np.int16)
+    UINT16 = ("UInt16", 0, 65535, 2, np.uint16)
+    INT32 = ("Int32", -2147483648, 2147483647, 3, np.int32)
+    UINT32 = ("UInt32", 0, 4294967295, 4, np.uint32)
+    FLOAT32 = ("Float32", -3.4E+38, 3.4E+38, 5, np.float)
+    FLOAT64 = ("Float64", -1.7E+308, 1.7E+308, 6, np.float64)
+
+    CFLOAT32 = ("CFloat32", -1.7E+308, 1.7E+308, 7, np.complex64)
+    CFLOAT64 = ("CFloat64", -3.4E+38, 3.4E+38, 8, np.complex64)
+
+    def __init__(self, name, range_min, range_max, grpc_num, numpy_type):
+        self.__name = name
+        self.range_min = range_min
+        self.range_max = range_max
+        self.__grpc_num = grpc_num
+        self.__numpy_type = numpy_type
+
+    def __or__(self, other):
+        return self.__grpc_num | other.__grpc_num
+
+    def __and__(self, other):
+        return self.__grpc_num & other.__grpc_num
+
+    @property
+    def name(self):
+        return self.__name
+
+    @property
+    def numpy_type(self):
+        return self.__numpy_type
+
+
 class MetadataService:
     @staticmethod
     def __prep_date(date_input, date_type: _DateType) -> timestamp_pb2.Timestamp:
@@ -115,7 +162,7 @@ class Landsat:
                             cutline_wkb: bytes = None,
                             extent: tuple = None,
                             extent_cs: pyproj.Proj = None,
-                            output_type: epl_imagery_api_pb2.DataType = None,
+                            output_type: DataType = DataType.BYTE,
                             xRes=60,
                             yRes=60) -> np.ndarray:
         MB = 1024 * 1024
@@ -139,14 +186,29 @@ class Landsat:
         request.band_definitions.extend(grpc_band_definitions)
         request.metadata.extend(self.__metadata)
         if cutline_wkb:
-            request.cutline_wkb.extend(cutline_wkb)
+            request.cutline_wkb = cutline_wkb
+
+        if extent:
+            request.extent.extend(extent)
         result = stub.ImagerySearchNArray(request)
-        nd_array = np.ndarray(buffer=np.array(result.data_uint32), shape=result.shape, dtype=np.uint8, order='F')
+
+        if output_type == DataType.BYTE or output_type == DataType.UINT16 or output_type == DataType.UINT32:
+            nd_array = np.ndarray(buffer=np.array(result.data_uint32), shape=result.shape, dtype=output_type.numpy_type,
+                                  order='F')
+        elif output_type == DataType.INT16 or output_type == DataType.INT32:
+            nd_array = np.ndarray(buffer=np.array(result.data_int32), shape=result.shape, dtype=output_type.numpy_type,
+                                  order='F')
+        elif output_type == DataType.FLOAT32:
+            nd_array = np.ndarray(buffer=np.array(result.data_float), shape=result.shape, dtype=output_type.numpy_type,
+                                  order='F')
+        elif output_type == DataType.FLOAT64:
+            nd_array = np.ndarray(buffer=np.array(result.data_double), shape=result.shape, dtype=output_type.numpy_type,
+                                  order='F')
         return nd_array
 
     def get_dataset(self,
                     band_definitions,
-                    output_type: epl_imagery_api_pb2.DataType,
+                    output_type: DataType = DataType.BYTE,
                     scale_params=None,
                     extent: tuple = None,
                     cutline_wkb: bytes = None,
@@ -189,9 +251,6 @@ class RasterBandMetadata:
     temp = None
 
 class RasterMetadata:
-    temp = None
-
-class DataType:
     temp = None
 
 class FunctionDetails:

@@ -17,7 +17,7 @@ from shapely.geometry import shape
 from shapely.geometry import box
 from shapely.wkt import loads
 from datetime import date
-from epl.imagery_client.reader import MetadataService, Landsat, Storage, SpacecraftID, Band, BandMap, WRSGeometries, RasterBandMetadata, RasterMetadata, DataType, FunctionDetails
+from epl.imagery_client.reader import MetadataService, Landsat, SpacecraftID, Band, BandMap, DataType, FunctionDetails
 
 
 class TestMetaDataSQL(unittest.TestCase):
@@ -371,27 +371,27 @@ class TestLandsat(unittest.TestCase):
     # TODO test date range rejection
     # TODO test Satellite Rejection
 
-    def test_vrt_not_pre(self):
-        d_start = date(2017, 6, 24)
-        d_end = date(2017, 9, 24)
-        bounding_box = (-115.927734375, 34.52466147177172, -78.31054687499999, 44.84029065139799)
-        sql_filters = ['collection_number!="PRE"']
-        rows = self.metadata_service.search(SpacecraftID.LANDSAT_8,
-                                            start_date=d_start,
-                                            end_date=d_end,
-                                            bounding_box=bounding_box,
-                                            limit=1,
-                                            sql_filters=sql_filters)
-
-        rows = list(rows)
-        metadata = rows[0]
-
-        landsat = Landsat(metadata)
-        self.assertIsNotNone(landsat)
-        vrt = landsat.get_vrt([4, 3, 2])
-        self.assertIsNotNone(vrt)
-        dataset = landsat.get_dataset([4, 3, 2], DataType.UINT16)
-        self.assertIsNotNone(dataset)
+    # def test_vrt_not_pre(self):
+    #     d_start = date(2017, 6, 24)
+    #     d_end = date(2017, 9, 24)
+    #     bounding_box = (-115.927734375, 34.52466147177172, -78.31054687499999, 44.84029065139799)
+    #     sql_filters = ['collection_number!="PRE"']
+    #     rows = self.metadata_service.search(SpacecraftID.LANDSAT_8,
+    #                                         start_date=d_start,
+    #                                         end_date=d_end,
+    #                                         bounding_box=bounding_box,
+    #                                         limit=1,
+    #                                         sql_filters=sql_filters)
+    #
+    #     rows = list(rows)
+    #     metadata = rows[0]
+    #
+    #     landsat = Landsat(metadata)
+    #     self.assertIsNotNone(landsat)
+    #     # vrt = landsat.get_vrt([4, 3, 2])
+    #     # self.assertIsNotNone(vrt)
+    #     dataset = landsat.get_dataset([4, 3, 2], DataType.UINT16)
+    #     self.assertIsNotNone(dataset)
 #
 #     def test_pixel_function_vrt_1(self):
 #         utah_box = (-112.66342163085938, 37.738141282210385, -111.79824829101562, 38.44821130413263)
@@ -481,13 +481,13 @@ class TestLandsat(unittest.TestCase):
         # nda = landsat.__get_ndarray(band_numbers, metadata, scale_params)
         nda = landsat.fetch_imagery_array(
             [Band.RED, Band.GREEN, Band.BLUE],
-            scale_params,
+            scale_params=scale_params,
             xRes=240,
             yRes=240)
         self.assertIsNotNone(nda)
         nda2 = landsat.fetch_imagery_array(
             [4, 3, 2],
-            scale_params,
+            scale_params=scale_params,
             xRes=240,
             yRes=240)
         np.testing.assert_almost_equal(nda, nda2)
@@ -510,111 +510,111 @@ class TestLandsat(unittest.TestCase):
 #
 #         self.assertIsNotNone(vrt)
 #
-#     def test_cutline(self):
-#         # GDAL helper functions for generating VRT
-#         landsat = Landsat(self.metadata_set[0])
-#
-#         # get a numpy.ndarray from bands for specified imagery
-#         band_numbers = [Band.RED, Band.GREEN, Band.BLUE]
-#         scale_params = [[0.0, 65535], [0.0, 65535], [0.0, 65535]]
-#         nda = landsat.fetch_imagery_array(band_numbers, scale_params, self.taos_shape.wkb, xRes=480, yRes=480)
-#         self.assertIsNotNone(nda)
-#
-#         # TODO needs shape test
-#
-#     def test_mosaic(self):
-#         # GDAL helper functions for generating VRT
-#         landsat = Landsat(self.metadata_set)
-#
-#         # get a numpy.ndarray from bands for specified imagery
-#         band_numbers = [Band.RED, Band.GREEN, Band.BLUE]
-#         scale_params = [[0.0, 65535], [0.0, 65535], [0.0, 65535]]
-#         nda = landsat.fetch_imagery_array(band_numbers, scale_params, extent=self.taos_shape.bounds)
-#         self.assertIsNotNone(nda)
-#         self.assertEqual((1804, 1295, 3), nda.shape)
-#
-#         # TODO needs shape test
-#
-#     def test_mosaic_cutline(self):
-#         # GDAL helper functions for generating VRT
-#         landsat = Landsat(self.metadata_set)
-#
-#         # get a numpy.ndarray from bands for specified imagery
-#         # 'nir', 'swir1', 'swir2'
-#         band_numbers = [Band.NIR, Band.SWIR1, Band.SWIR2]
-#         scaleParams = [[0.0, 40000.0], [0.0, 40000.0], [0.0, 40000.0]]
-#         nda = landsat.fetch_imagery_array(band_numbers, scaleParams, cutline_wkb=self.taos_shape.wkb)
-#         self.assertIsNotNone(nda)
-#         self.assertEqual((1804, 1295, 3), nda.shape)
-#
-#     def test_mosaic_mem_error(self):
-#         landsat = Landsat(self.metadata_set)
-#
-#         # get a numpy.ndarray from bands for specified imagery
-#         band_numbers = [Band.RED, Band.GREEN, Band.BLUE]
-#         scaleParams = [[0.0, 40000], [0.0, 40000], [0.0, 40000]]
-#         nda = landsat.fetch_imagery_array(band_numbers, scaleParams, extent=self.taos_shape.bounds)
-#
-#         self.assertIsNotNone(nda)
-#         # GDAL helper functions for generating VRT
-#         landsat = Landsat(self.metadata_set)
-#         self.assertEqual((1804, 1295, 3), nda.shape)
-#
-#         # get a numpy.ndarray from bands for specified imagery
-#         # 'nir', 'swir1', 'swir2'
-#         band_numbers = [Band.NIR, Band.SWIR1, Band.SWIR2]
-#         scaleParams = [[0.0, 40000.0], [0.0, 40000.0], [0.0, 40000.0]]
-#         nda = landsat.fetch_imagery_array(band_numbers, scaleParams, cutline_wkb=self.taos_shape.wkb)
-#         self.assertIsNotNone(nda)
-#         self.assertEqual((1804, 1295, 3), nda.shape)
-#
-#     def test_datatypes(self):
-#         landsat = Landsat(self.metadata_set)
-#
-#         # get a numpy.ndarray from bands for specified imagery
-#         band_numbers = [Band.RED, Band.GREEN, Band.BLUE]
-#         scaleParams = [[0.0, 40000], [0.0, 40000], [0.0, 40000]]
-#
-#         for data_type in DataType:
-#             nda = landsat.fetch_imagery_array(band_numbers, scaleParams, extent=self.taos_shape.bounds,
-#                                               output_type=data_type, yRes=240, xRes=240)
-#             self.assertIsNotNone(nda)
-#             self.assertGreaterEqual(data_type.range_max, nda.max())
-#             self.assertLessEqual(data_type.range_min, nda.min())
-#
-#     def test_vrt_with_alpha(self):
-#         landsat = Landsat(self.metadata_set)
-#
-#         # get a numpy.ndarray from bands for specified imagery
-#         band_numbers = [Band.RED, Band.GREEN, Band.BLUE, Band.ALPHA]
-#         scaleParams = [[0.0, 40000], [0.0, 40000], [0.0, 40000]]
-#
-#         nda = landsat.fetch_imagery_array(band_numbers,
-#                                           scaleParams,
-#                                           extent=self.taos_shape.bounds,
-#                                           output_type=DataType.UINT16,
-#                                           xRes=120, yRes=120)
-#         self.assertIsNotNone(nda)
-#
-#     def test_rastermetadata_cache(self):
-#         # GDAL helper functions for generating VRT
-#         landsat = Landsat(self.metadata_set)
-#
-#         # get a numpy.ndarray from bands for specified imagery
-#         # 'nir', 'swir1', 'swir2'
-#         band_numbers = [Band.NIR, Band.SWIR1, Band.SWIR2]
-#         scaleParams = [[0.0, 40000.0], [0.0, 40000.0], [0.0, 40000.0]]
-#         nda = landsat.fetch_imagery_array(band_numbers, scaleParams, cutline_wkb=self.taos_shape.wkb, xRes=120, yRes=120)
-#         self.assertIsNotNone(nda)
-#         self.assertEqual((902, 648, 3), nda.shape)
-#
-#         band_numbers = [Band.RED, Band.BLUE, Band.GREEN]
-#         nda = landsat.fetch_imagery_array(band_numbers, scaleParams, cutline_wkb=self.taos_shape.wkb, xRes=120, yRes=120)
-#         self.assertIsNotNone(nda)
-#         self.assertEqual((902, 648, 3), nda.shape)
-#
-#         band_numbers = [Band.RED, Band.BLUE, Band.GREEN]
-#         nda = landsat.fetch_imagery_array(band_numbers, scaleParams, xRes=120, yRes=120)
-#         self.assertIsNotNone(nda)
-#         self.assertNotEqual((902, 648, 3), nda.shape)
+    def test_cutline(self):
+        # GDAL helper functions for generating VRT
+        landsat = Landsat(self.metadata_set[0])
+
+        # get a numpy.ndarray from bands for specified imagery
+        band_numbers = [Band.RED, Band.GREEN, Band.BLUE]
+        scale_params = [[0.0, 65535], [0.0, 65535], [0.0, 65535]]
+        nda = landsat.fetch_imagery_array(band_numbers, scale_params, self.taos_shape.wkb, xRes=480, yRes=480)
+        self.assertIsNotNone(nda)
+
+        # TODO needs shape test
+
+    def test_mosaic(self):
+        # GDAL helper functions for generating VRT
+        landsat = Landsat(self.metadata_set)
+
+        # get a numpy.ndarray from bands for specified imagery
+        band_numbers = [Band.RED, Band.GREEN, Band.BLUE]
+        scale_params = [[0.0, 65535], [0.0, 65535], [0.0, 65535]]
+        nda = landsat.fetch_imagery_array(band_numbers, scale_params, extent=self.taos_shape.bounds)
+        self.assertIsNotNone(nda)
+        self.assertEqual((1804, 1295, 3), nda.shape)
+
+        # TODO needs shape test
+
+    def test_mosaic_cutline(self):
+        # GDAL helper functions for generating VRT
+        landsat = Landsat(self.metadata_set)
+
+        # get a numpy.ndarray from bands for specified imagery
+        # 'nir', 'swir1', 'swir2'
+        band_numbers = [Band.NIR, Band.SWIR1, Band.SWIR2]
+        scaleParams = [[0.0, 40000.0], [0.0, 40000.0], [0.0, 40000.0]]
+        nda = landsat.fetch_imagery_array(band_numbers, scaleParams, cutline_wkb=self.taos_shape.wkb)
+        self.assertIsNotNone(nda)
+        self.assertEqual((1804, 1295, 3), nda.shape)
+
+    def test_mosaic_mem_error(self):
+        landsat = Landsat(self.metadata_set)
+
+        # get a numpy.ndarray from bands for specified imagery
+        band_numbers = [Band.RED, Band.GREEN, Band.BLUE]
+        scaleParams = [[0.0, 40000], [0.0, 40000], [0.0, 40000]]
+        nda = landsat.fetch_imagery_array(band_numbers, scaleParams, extent=self.taos_shape.bounds)
+
+        self.assertIsNotNone(nda)
+        # GDAL helper functions for generating VRT
+        landsat = Landsat(self.metadata_set)
+        self.assertEqual((1804, 1295, 3), nda.shape)
+
+        # get a numpy.ndarray from bands for specified imagery
+        # 'nir', 'swir1', 'swir2'
+        band_numbers = [Band.NIR, Band.SWIR1, Band.SWIR2]
+        scaleParams = [[0.0, 40000.0], [0.0, 40000.0], [0.0, 40000.0]]
+        nda = landsat.fetch_imagery_array(band_numbers, scaleParams, cutline_wkb=self.taos_shape.wkb)
+        self.assertIsNotNone(nda)
+        self.assertEqual((1804, 1295, 3), nda.shape)
+
+    def test_datatypes(self):
+        landsat = Landsat(self.metadata_set)
+
+        # get a numpy.ndarray from bands for specified imagery
+        band_numbers = [Band.RED, Band.GREEN, Band.BLUE]
+        scaleParams = [[0.0, 40000], [0.0, 40000], [0.0, 40000]]
+
+        for data_type in DataType:
+            nda = landsat.fetch_imagery_array(band_numbers, scaleParams, extent=self.taos_shape.bounds,
+                                              output_type=data_type, yRes=240, xRes=240)
+            self.assertIsNotNone(nda)
+            self.assertGreaterEqual(data_type.range_max, nda.max())
+            self.assertLessEqual(data_type.range_min, nda.min())
+
+    def test_vrt_with_alpha(self):
+        landsat = Landsat(self.metadata_set)
+
+        # get a numpy.ndarray from bands for specified imagery
+        band_numbers = [Band.RED, Band.GREEN, Band.BLUE, Band.ALPHA]
+        scaleParams = [[0.0, 40000], [0.0, 40000], [0.0, 40000]]
+
+        nda = landsat.fetch_imagery_array(band_numbers,
+                                          scaleParams,
+                                          extent=self.taos_shape.bounds,
+                                          output_type=DataType.UINT16,
+                                          xRes=120, yRes=120)
+        self.assertIsNotNone(nda)
+
+    def test_rastermetadata_cache(self):
+        # GDAL helper functions for generating VRT
+        landsat = Landsat(self.metadata_set)
+
+        # get a numpy.ndarray from bands for specified imagery
+        # 'nir', 'swir1', 'swir2'
+        band_numbers = [Band.NIR, Band.SWIR1, Band.SWIR2]
+        scaleParams = [[0.0, 40000.0], [0.0, 40000.0], [0.0, 40000.0]]
+        nda = landsat.fetch_imagery_array(band_numbers, scaleParams, cutline_wkb=self.taos_shape.wkb, xRes=120, yRes=120)
+        self.assertIsNotNone(nda)
+        self.assertEqual((902, 648, 3), nda.shape)
+
+        band_numbers = [Band.RED, Band.BLUE, Band.GREEN]
+        nda = landsat.fetch_imagery_array(band_numbers, scaleParams, cutline_wkb=self.taos_shape.wkb, xRes=120, yRes=120)
+        self.assertIsNotNone(nda)
+        self.assertEqual((902, 648, 3), nda.shape)
+
+        band_numbers = [Band.RED, Band.BLUE, Band.GREEN]
+        nda = landsat.fetch_imagery_array(band_numbers, scaleParams, xRes=120, yRes=120)
+        self.assertIsNotNone(nda)
+        self.assertNotEqual((902, 648, 3), nda.shape)
 
