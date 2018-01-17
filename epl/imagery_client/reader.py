@@ -190,8 +190,14 @@ class Landsat:
 
         if extent:
             request.extent.extend(extent)
+
+        request.output_type = epl_imagery_api_pb2.GDALDataType.Value(output_type.name.upper())
         result = stub.ImagerySearchNArray(request)
 
+        # TODO eventually prevent copy by implementing PyArray_SimpleNewFromData
+        # https://docs.scipy.org/doc/numpy/reference/c-api.array.html#c.PyArray_SimpleNewFromData
+        # https://stackoverflow.com/questions/7543675/how-to-convert-pointer-to-c-array-to-python-array
+        # https://stackoverflow.com/questions/33478046/binding-c-array-to-numpy-array-without-copying
         if output_type == DataType.BYTE or output_type == DataType.UINT16 or output_type == DataType.UINT32:
             nd_array = np.ndarray(buffer=np.array(result.data_uint32), shape=result.shape, dtype=output_type.numpy_type,
                                   order='F')

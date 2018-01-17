@@ -576,6 +576,9 @@ class TestLandsat(unittest.TestCase):
         scaleParams = [[0.0, 40000], [0.0, 40000], [0.0, 40000]]
 
         for data_type in DataType:
+            if data_type == DataType.CFLOAT32 or data_type == DataType.CFLOAT64:
+                continue
+
             nda = landsat.fetch_imagery_array(band_numbers, scaleParams, extent=self.taos_shape.bounds,
                                               output_type=data_type, yRes=240, xRes=240)
             self.assertIsNotNone(nda)
