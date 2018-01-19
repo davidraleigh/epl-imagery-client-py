@@ -21,7 +21,7 @@ email: info@echoparklabs.io
 syntax = "proto3";
 
 option java_multiple_files = true;
-option java_package = "com.epl.imagery";
+option java_package = "com.epl.client";
 option java_outer_classname = "EPLImagery";
 option objc_class_prefix = "RTG";
 
@@ -29,21 +29,18 @@ package imagery;
 import "google/protobuf/timestamp.proto";
 
 /*
-  Type of imagery pixel encoding
+ gRPC Interfaces for working with client operators
 */
-/*
-    BYTE = (gdal.GDT_Byte, "Byte", 0, 255)
-    INT16 = (gdal.GDT_Int16, "Int16", -32768, 32767)
-    UINT16 = (gdal.GDT_UInt16, "UInt16", 0, 65535)
-    INT32 = (gdal.GDT_Int32, "Int32", -2147483648, 2147483647)
-    UINT32 = (gdal.GDT_UInt32, "UInt32", 0, 4294967295)
-    FLOAT32 = (gdal.GDT_Float32, "Float32", -3.4E+38, 3.4E+38)
-    FLOAT64 = (gdal.GDT_Float64, "Float64", -1.7E+308, 1.7E+308)
+service ImageryOperators {
+    // Execute a single geometry operation
+    rpc MetadataSearch(MetadataRequest) returns (stream MetadataResult) {}
 
-    # TODO this seem to be swapped
-    CFLOAT32 = (gdal.GDT_CFloat32, "CFloat32", -3.4E+38, 3.4E+38)
-    CFLOAT64 = (gdal.GDT_CFloat64, "CFloat64", -1.7E+308, 1.7E+308)
-*/
+    // TODO maybe this should be separated into different rpcs for each result type
+    rpc ImagerySearchNArray(ImageryRequest) returns (NDArrayResult) {}
+
+    rpc ImageryCompleteFile(ImageryFileRequest) returns (BigFileResult) {}
+//    rpc StreamOperations(stream OperatorRequest) returns (stream OperatorResult) {}
+}
 
 enum GDALDataType {
     BYTE = 0;
@@ -53,20 +50,58 @@ enum GDALDataType {
     UINT32 = 4;
     FLOAT32 = 5;
     FLOAT64 = 6;
-    CFLOAT32 = 7;
-    CFLOAT64 = 8;
+//    CFLOAT32 = 7;
+//    CFLOAT64 = 8;
 }
 
-/*
- gRPC Interfaces for working with geometry operators
-*/
-service ImageryOperators {
-    // Execute a single geometry operation
-    rpc MetadataSearch(MetadataRequest) returns (stream MetadataResult) {}
+enum ImageryFileType {
+    UNKNOWN = 0;
+    PNG = 1;
+    JPEG = 2;
+    GEOTIFF = 3;
+}
 
-    // TODO maybe this should be separated into different rpcs for each result type
-    rpc ImagerySearchNArray(ImageryRequest) returns (NDArrayResult) {}
-//    rpc StreamOperations(stream OperatorRequest) returns (stream OperatorResult) {}
+enum Band {
+    // Crazy Values so that the Band.<ENUM>.value isn't used for anything
+    UNKNOWN_BAND = 0;
+    ULTRA_BLUE = 1001;
+    BLUE = 1002;
+    GREEN = 1003;
+    RED = 1004;
+    NIR = 1005;
+    SWIR1 = 1006;
+    THERMAL = 1007;
+    SWIR2 = 1008;
+    PANCHROMATIC = 1009;
+    CIRRUS = 1010;
+    TIRS1 = 1011;
+    TIRS2 = 1012;
+    INFRARED2 = 1013;
+    INFRARED1 = 1014;
+    ALPHA = 1015;
+}
+
+enum SpacecraftID {
+    UNKNOWN_SPACECRAFT = 0;
+    LANDSAT_1_MSS = 1;
+    LANDSAT_2_MSS = 2;
+    LANDSAT_3_MSS = 4;
+    LANDSAT_123_MSS = 7;
+    LANDSAT_4_MSS = 8;
+    LANDSAT_5_MSS = 16;
+    LANDSAT_45_MSS = 24;
+    LANDSAT_4 = 32;
+    LANDSAT_5 = 64;
+    LANDSAT_45 = 96;
+    LANDSAT_7 = 128;
+    LANDSAT_8 = 256;
+    ALL = 512;
+}
+
+message ImageryFileRequest {
+    ImageryRequest imagery_request = 1;
+    ImageryFileType file_type = 2;
+    uint64 max_file_size = 3;
 }
 
 // TODO reorder to match fetch_imagery_array
@@ -75,50 +110,12 @@ message ImageryRequest {
     repeated BandDefinition band_definitions = 2;
 
     // TODO rename extent to bounding_box
-    repeated float extent = 4;
-    ServiceSpatialReference extent_cs = 5;
-    GDALDataType output_type = 6;
+    repeated float envelope_boundary = 4;
+    ServiceSpatialReference boundary_cs = 5;
+    bytes polygon_boundary_wkb = 6;
 
-    // TODO rename to something more clear
-    float xRes = 7;
-
-    // TODO rename to something more clear
-    float yRes = 8;
-
-    bytes cutline_wkb = 9;
-}
-
-// TODO maybe this should be separated into different messages for each result type
-message NDArrayResult {
-    repeated float data_float = 1;
-    repeated int32 data_int32 = 2;
-    repeated int64 data_int64 = 3;
-    repeated uint32 data_uint32 = 4;
-    repeated uint64 data_uint64 = 5;
-    repeated bytes data_bytes = 6;
-    repeated double data_double = 7;
-
-    GDALDataType dtype = 8;
-
-    repeated int32 shape = 9;
-}
-//dtype	Data-type of the array’s elements.
-//flags	Information about the memory layout of the array.
-//flat	A 1-D iterator over the array.
-//imag	The imaginary part of the array.
-//real	The real part of the array.
-//size	Number of elements in the array.
-//itemsize	Length of one array element in bytes.
-//nbytes	Total bytes consumed by the elements of the array.
-//ndim	Number of array dimensions.
-//shape	Tuple of array dimensions.
-//strides	Tuple of bytes to step in each dimension when traversing an array.
-//ctypes	An object to simplify the interaction of the array with the ctypes module.
-//base	Base object if memory is from some other object.
-
-
-message RawImageryResult {
-
+    GDALDataType output_type = 7;
+    float spatial_resolution_m = 8;
 }
 
 message BandDefinition {
@@ -146,6 +143,24 @@ message MetadataRequest {
     string sort_by= 5;
     int32 limit = 6;
     repeated string sql_filters = 7;
+}
+
+message BigFileResult {
+    bytes data = 1;
+    ImageryFileType file_type = 2;
+    uint64 file_size = 3;
+}
+
+// TODO maybe this should be separated into different messages for each result type
+message NDArrayResult {
+    repeated float data_float = 1;
+    repeated int32 data_int32 = 2;
+    repeated uint32 data_uint32 = 3;
+    repeated double data_double = 5;
+
+    GDALDataType dtype = 8;
+
+    repeated int32 shape = 9;
 }
 
 // TODO rename to Metadata
@@ -202,45 +217,6 @@ message MetadataResult {
     string full_mount_path = 23;
 }
 
-
-
-
-enum Band {
-    // Crazy Values so that the Band.<ENUM>.value isn't used for anything
-    UNKNOWN_BAND = 0;
-    ULTRA_BLUE = 1001;
-    BLUE = 1002;
-    GREEN = 1003;
-    RED = 1004;
-    NIR = 1005;
-    SWIR1 = 1006;
-    THERMAL = 1007;
-    SWIR2 = 1008;
-    PANCHROMATIC = 1009;
-    CIRRUS = 1010;
-    TIRS1 = 1011;
-    TIRS2 = 1012;
-    INFRARED2 = 1013;
-    INFRARED1 = 1014;
-    ALPHA = 1015;
-}
-
-enum SpacecraftID {
-    UNKNOWN_SPACECRAFT = 0;
-    LANDSAT_1_MSS = 1;
-    LANDSAT_2_MSS = 2;
-    LANDSAT_3_MSS = 4;
-    LANDSAT_123_MSS = 7;
-    LANDSAT_4_MSS = 8;
-    LANDSAT_5_MSS = 16;
-    LANDSAT_45_MSS = 24;
-    LANDSAT_4 = 32;
-    LANDSAT_5 = 64;
-    LANDSAT_45 = 96;
-    LANDSAT_7 = 128;
-    LANDSAT_8 = 256;
-    ALL = 512;
-}
 
 /*
   Type of geometry encoding
@@ -334,65 +310,6 @@ message ServiceSpatialReference {
 
     // type is either 'wkid', 'esri_wkt'
     int32 wkid = 6;
-}
-
-message OperatorResult {
-    ServiceGeometry geometry = 1;
-
-    bool spatial_relationship = 2;
-
-    double distance = 3;
-
-    map<int32, bool> relate_map = 4;
-}
-
-message OperatorRequest {
-    ServiceGeometry left_geometry = 1;
-    ServiceGeometry right_geometry = 2;
-
-    OperatorRequest left_cursor = 3;
-    OperatorRequest right_cursor = 4;
-
-    ServiceOperatorType operator_type = 5;
-
-    GDALDataType results_encoding_type = 6;
-
-    ServiceSpatialReference operation_spatial_reference = 7;
-
-    ServiceSpatialReference result_spatial_reference = 8;
-
-
-    bool convex_hull_merge = 9;
-
-    repeated double buffer_distances = 10;
-    repeated double buffer_max_deviations = 28;
-    bool buffer_union_result = 11;
-
-    int32 intersection_dimension_mask = 12;
-
-    ServiceEnvelope2D clip_envelope = 13;
-
-    bool cut_consider_touch = 14;
-
-    double densify_max_length = 15;
-
-    bool simplify_force = 16;
-
-    double offset_distance = 17;
-    //TODO replace with Enum
-    string offset_join_type = 18;
-    double offset_bevel_ratio = 19;
-    double offset_flatten_error = 20;
-
-    double generalize_max_deviation = 21;
-    bool generalize_remove_degenerates = 22;
-    int32 max_vertices_in_full_circle = 23;
-
-    repeated bool generic_booleans = 24;
-    repeated double generic_doubles = 25;
-    repeated int32 generic_integers = 26;
-    repeated string generic_strings = 27;
-    string de_9im = 29;
 }
 
 message ServiceEnvelope2D {

@@ -1,7 +1,6 @@
-import pyproj
-
 import os
 import grpc
+import tempfile
 
 import numpy as np
 
@@ -12,13 +11,15 @@ from typing import List
 from enum import Enum, IntEnum
 
 
-import epl.service.imagery.epl_imagery_api_pb2 as epl_imagery_api_pb2
-import epl.service.imagery.epl_imagery_api_pb2_grpc as epl_imagery_api_pb2_grpc
+import epl.client.imagery.epl_imagery_pb2 as epl_imagery_api_pb2
 from google.protobuf import timestamp_pb2
 
 # EPL_IMAGERY_API_KEY = os.environ['EPL_IMAGERY_API_KEY']
 # EPL_IMAGERY_API_SECRET = os.environ['EPL_IMAGERY_API_SECRET']
-
+MB = 1024 * 1024
+GRPC_CHANNEL_OPTIONS = [('grpc.max_message_length', 64 * MB), ('grpc.max_receive_message_length', 64 * MB)]
+GRPC_SERVICE_PORT = os.getenv('GRPC_SERVICE_PORT', 50051)
+GRPC_SERVICE_HOST = os.getenv('GRPC_SERVICE_HOST', 'localhost')
 
 class SpacecraftID(IntEnum):
     UNKNOWN_SPACECRAFT = 0
@@ -107,10 +108,9 @@ class MetadataService:
             return None
 
         timestamp_message = timestamp_pb2.Timestamp()
-        # not necessary at this time to support decimal seconds for imagery
+        # not necessary at this time to support decimal seconds for client
         timestamp_message.FromJsonString(date_input.strftime("%Y-%m-%dT%H:%M:%SZ"))
         return timestamp_message
-
 
     def search_aws(mount_base_path,
                    wrs_path,
@@ -129,7 +129,7 @@ class MetadataService:
             limit=10,
             sql_filters=None):
         channel = grpc.insecure_channel('localhost:50051')
-        stub = epl_imagery_api_pb2_grpc.ImageryOperatorsStub(channel)
+        stub = epl_imagery_api_pb2.ImageryOperatorsStub(channel)
 
         request = epl_imagery_api_pb2.MetadataRequest(satellite_id=satellite_id,
                                                       bounding_box=bounding_box,
@@ -156,21 +156,16 @@ class Landsat:
         else:
             self.__metadata = [metadata]
 
-    def fetch_imagery_array(self,
+    def make_imagery_request(self,
                             band_definitions,
-                            scale_params=None,
-                            cutline_wkb: bytes = None,
-                            extent: tuple = None,
-                            extent_cs: pyproj.Proj = None,
+                            scale_params: List[List[float]] = None,
+                            polygon_boundary_wkb: bytes = None,
+                            envelope_boundary: tuple = None,
+                            boundary_cs = 4326,
                             output_type: DataType = DataType.BYTE,
-                            xRes=60,
-                            yRes=60) -> np.ndarray:
-        MB = 1024 * 1024
-        GRPC_CHANNEL_OPTIONS = [('grpc.max_message_length', 64 * MB), ('grpc.max_receive_message_length', 64 * MB)]
-        channel = grpc.insecure_channel('localhost:50051', options=GRPC_CHANNEL_OPTIONS)
-        stub = epl_imagery_api_pb2_grpc.ImageryOperatorsStub(channel)
-        request = epl_imagery_api_pb2.ImageryRequest(xRes=xRes,
-                                                     yRes=yRes)
+                            pixel_dimensions: tuple = None,
+                            spatial_resolution_m=60) -> epl_imagery_api_pb2.ImageryRequest:
+        request = epl_imagery_api_pb2.ImageryRequest(spatial_resolution_m=spatial_resolution_m)
         grpc_band_definitions = []
         for index, band_def in enumerate(band_definitions):
             if isinstance(band_def, IntEnum):
@@ -185,14 +180,96 @@ class Landsat:
 
         request.band_definitions.extend(grpc_band_definitions)
         request.metadata.extend(self.__metadata)
-        if cutline_wkb:
-            request.cutline_wkb = cutline_wkb
+        if polygon_boundary_wkb:
+            request.polygon_boundary_wkb = polygon_boundary_wkb
 
-        if extent:
-            request.extent.extend(extent)
+        if envelope_boundary:
+            request.envelope_boundary.extend(envelope_boundary)
+
+        if not envelope_boundary or not polygon_boundary_wkb:
+            spatial_reference = epl_imagery_api_pb2.ServiceSpatialReference()
+            if isinstance(boundary_cs, int):
+                spatial_reference.wkid = boundary_cs
+            elif "[" in boundary_cs:
+                spatial_reference.esri_wkt = boundary_cs
+            else:
+                spatial_reference.proj4 = boundary_cs
 
         request.output_type = epl_imagery_api_pb2.GDALDataType.Value(output_type.name.upper())
-        result = stub.ImagerySearchNArray(request)
+
+        return request
+
+    def fetch_file(self,
+                   band_definitions,
+                   scale_params: List[List[float]] = None,
+                   polygon_boundary_wkb: bytes = None,
+                   envelope_boundary: tuple = None,
+                   boundary_cs=4326,
+                   output_type: DataType = DataType.BYTE,
+                   pixel_dimensions: tuple = None,
+                   spatial_resolution_m=60,
+                   directory=None):
+        channel = grpc.insecure_channel('localhost:50051', options=GRPC_CHANNEL_OPTIONS)
+        stub = epl_imagery_api_pb2.ImageryOperatorsStub(channel)
+        imagery_request = self.make_imagery_request(band_definitions,
+                                                    scale_params,
+                                                    polygon_boundary_wkb,
+                                                    envelope_boundary,
+                                                    boundary_cs,
+                                                    output_type,
+                                                    pixel_dimensions,
+                                                    spatial_resolution_m)
+
+        imagery_file_request = epl_imagery_api_pb2.ImageryFileRequest(file_type=epl_imagery_api_pb2.JPEG)
+        imagery_file_request.imagery_request.CopyFrom(imagery_request)
+
+        big_file_result = stub.ImageryCompleteFile(imagery_file_request)
+
+        temp = tempfile.NamedTemporaryFile(suffix="jpg")
+        with open(temp.name, "wb") as outfile:
+            outfile.write(big_file_result.data)
+        return temp.name
+
+    def fetch_imagery_array(self,
+                            band_definitions,
+                            scale_params: List[List[float]] = None,
+                            polygon_boundary_wkb: bytes = None,
+                            envelope_boundary: tuple = None,
+                            boundary_cs = 4326,
+                            output_type: DataType = DataType.BYTE,
+                            pixel_dimensions: tuple = None,
+                            spatial_resolution_m=60) -> np.ndarray:
+
+        # https://github.com/grpc/grpc/issues/7927
+        # https://github.com/grpc/grpc/issues/11014
+        # https://stackoverflow.com/questions/42629047/how-to-increase-message-size-in-grpc-using-python
+        # http://nanxiao.me/en/message-length-setting-in-grpc/
+        # https://stackoverflow.com/questions/11784329/python-memory-usage-of-numpy-arrays
+        # https://stackoverflow.com/questions/21312231/efficiently-converting-java-list-to-matlab-matrix
+        # https://stackoverflow.com/questions/31280024/how-to-get-google-protobuf-working-in-matlab
+        # https://stackoverflow.com/questions/10440590/using-protocol-buffer-java-bindings-in-matlab
+        # https://www.mathworks.com/matlabcentral/answers/27524-compiled-matlab-executables-not-working-correctly-with-java-archives
+        # https://stackoverflow.com/a/44576289/445372
+        # https://stackoverflow.com/questions/34969446/grpc-image-upload
+        # https://jbrandhorst.com/post/grpc-binary-blob-stream/
+        # https://ops.tips/blog/sending-files-via-grpc/
+        # https://stackoverflow.com/questions/8659471/multi-theaded-numpy-inserts
+        # https://stackoverflow.com/questions/40690248/copy-numpy-array-into-part-of-another-array
+
+        channel = grpc.insecure_channel('localhost:50051', options=GRPC_CHANNEL_OPTIONS)
+        stub = epl_imagery_api_pb2.ImageryOperatorsStub(channel)
+
+        imagery_request = self.make_imagery_request(band_definitions,
+                                                    scale_params,
+                                                    polygon_boundary_wkb,
+                                                    envelope_boundary,
+                                                    boundary_cs,
+                                                    output_type,
+                                                    pixel_dimensions,
+                                                    spatial_resolution_m)
+        # TODO chunk array and stream results instead of block for one large result
+        # https://stackoverflow.com/questions/40690248/copy-numpy-array-into-part-of-another-array
+        result = stub.ImagerySearchNArray(imagery_request)
 
         # TODO eventually prevent copy by implementing PyArray_SimpleNewFromData
         # https://docs.scipy.org/doc/numpy/reference/c-api.array.html#c.PyArray_SimpleNewFromData
@@ -211,16 +288,6 @@ class Landsat:
             nd_array = np.ndarray(buffer=np.array(result.data_double), shape=result.shape, dtype=output_type.numpy_type,
                                   order='F')
         return nd_array
-
-    def get_dataset(self,
-                    band_definitions,
-                    output_type: DataType = DataType.BYTE,
-                    scale_params=None,
-                    extent: tuple = None,
-                    cutline_wkb: bytes = None,
-                    xRes=60,
-                    yRes=60):
-        return None
 
 
 class Storage:
@@ -248,15 +315,6 @@ class Band(IntEnum):
 
 
 class BandMap:
-    temp = None
-
-class WRSGeometries:
-    temp = None
-
-class RasterBandMetadata:
-    temp = None
-
-class RasterMetadata:
     temp = None
 
 class FunctionDetails:
