@@ -27,4 +27,11 @@ clssfrs = [
     "Programming Language :: Python :: 3.5",
     "Programming Language :: Python :: 3.6",
 ]
+
 kwargs['classifiers'] = clssfrs
+
+try:
+    setup(**kwargs)
+finally:
+    del sys.path[0]
+    os.chdir(old_path)

@@ -31,7 +31,7 @@ WORKDIR /opt/src/epl-imagery-api
 
 COPY --from=builder /opt/src/epl-imagery-api /opt/src/epl-imagery-api
 
-RUN python setup.py install
+RUN python3 setup.py install
 
 ARG GRPC_SERVICE_PORT=50051
 ARG GRPC_SERVICE_HOST=localhost
