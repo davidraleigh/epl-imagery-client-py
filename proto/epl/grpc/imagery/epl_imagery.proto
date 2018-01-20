@@ -25,7 +25,7 @@ option java_package = "com.epl.grpc.imagery";
 option java_outer_classname = "EPLImagery";
 option objc_class_prefix = "RTG";
 
-package epl.client.imagery;
+package epl.grpc.imagery;
 import "google/protobuf/timestamp.proto";
 
 /*
