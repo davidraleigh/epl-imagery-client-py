@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+
+  imagery-service:
+    image: 495706002520.dkr.ecr.us-west-2.amazonaws.com/aws-imagery-service:latest
+    ports:
+      - "50051"
+
+  geometry-client:
+    image: 495706002520.dkr.ecr.us-west-2.amazonaws.com/aws-imagery-client-python:latest
+    environment:
+      IMAGERY_SERVICE: imagery-service:50051
+
+    command: ["/bin/bash", "-c", "pip3 install pytest; cd test; pytest --verbose --junitxml=./testresults.xml sample.py; ls; cd ../"]

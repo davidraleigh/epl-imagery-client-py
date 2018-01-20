@@ -1,15 +1,11 @@
 import unittest
 import datetime
-from datetime import datetime
-
 import requests
 import shapely.geometry
 
 import numpy as np
 
-# from osgeo import gdal
-
-
+from datetime import datetime
 from datetime import date
 from epl.client.imagery.reader import MetadataService, Landsat, SpacecraftID, Band, DataType
 
@@ -365,8 +361,5 @@ class TestLandsat(unittest.TestCase):
         band_numbers = [Band.RED, Band.GREEN, Band.BLUE]
         scale_params = [[0.0, 65535], [0.0, 65535], [0.0, 65535]]
         file_name = landsat.fetch_file(band_numbers, scale_params, self.taos_shape.wkb, spatial_resolution_m=480)
-        with open(file_name, "rb") as binary_file:
-            # Read the whole file at once
-            data = binary_file.read()
-            self.assertGreater(len(data), 0)
+        self.assertGreater(len(file_name), 0)
 

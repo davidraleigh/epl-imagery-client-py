@@ -4,14 +4,13 @@ import tempfile
 
 import numpy as np
 
-
 from datetime import datetime
 from datetime import date
 from typing import List
 from enum import Enum, IntEnum
 
 
-import epl.client.imagery.epl_imagery_pb2 as epl_imagery_api_pb2
+import epl.client.imagery.epl_imagery_pb2 as epl_imagery_pb2
 from google.protobuf import timestamp_pb2
 
 # EPL_IMAGERY_API_KEY = os.environ['EPL_IMAGERY_API_KEY']
@@ -20,6 +19,8 @@ MB = 1024 * 1024
 GRPC_CHANNEL_OPTIONS = [('grpc.max_message_length', 64 * MB), ('grpc.max_receive_message_length', 64 * MB)]
 GRPC_SERVICE_PORT = os.getenv('GRPC_SERVICE_PORT', 50051)
 GRPC_SERVICE_HOST = os.getenv('GRPC_SERVICE_HOST', 'localhost')
+IMAGERY_SERVICE = os.getenv('IMAGERY_SERVICE', "{0}:{1}".format(GRPC_SERVICE_HOST, GRPC_SERVICE_PORT))
+
 
 class SpacecraftID(IntEnum):
     UNKNOWN_SPACECRAFT = 0
@@ -128,14 +129,14 @@ class MetadataService:
             sort_by=None,
             limit=10,
             sql_filters=None):
-        channel = grpc.insecure_channel('localhost:50051')
-        stub = epl_imagery_api_pb2.ImageryOperatorsStub(channel)
+        channel = grpc.insecure_channel(IMAGERY_SERVICE)
+        stub = epl_imagery_pb2.ImageryOperatorsStub(channel)
 
-        request = epl_imagery_api_pb2.MetadataRequest(satellite_id=satellite_id,
-                                                      bounding_box=bounding_box,
-                                                      sort_by=sort_by,
-                                                      limit=limit,
-                                                      sql_filters=sql_filters)
+        request = epl_imagery_pb2.MetadataRequest(satellite_id=satellite_id,
+                                                  bounding_box=bounding_box,
+                                                  sort_by=sort_by,
+                                                  limit=limit,
+                                                  sql_filters=sql_filters)
 
         if start_date:
             request.start_date.CopyFrom(MetadataService.__prep_date(start_date, _DateType.START_DATE))
@@ -157,21 +158,21 @@ class Landsat:
             self.__metadata = [metadata]
 
     def make_imagery_request(self,
-                            band_definitions,
-                            scale_params: List[List[float]] = None,
-                            polygon_boundary_wkb: bytes = None,
-                            envelope_boundary: tuple = None,
-                            boundary_cs = 4326,
-                            output_type: DataType = DataType.BYTE,
-                            pixel_dimensions: tuple = None,
-                            spatial_resolution_m=60) -> epl_imagery_api_pb2.ImageryRequest:
-        request = epl_imagery_api_pb2.ImageryRequest(spatial_resolution_m=spatial_resolution_m)
+                             band_definitions,
+                             scale_params: List[List[float]] = None,
+                             polygon_boundary_wkb: bytes = None,
+                             envelope_boundary: tuple = None,
+                             boundary_cs = 4326,
+                             output_type: DataType = DataType.BYTE,
+                             pixel_dimensions: tuple = None,
+                             spatial_resolution_m=60) -> epl_imagery_pb2.ImageryRequest:
+        request = epl_imagery_pb2.ImageryRequest(spatial_resolution_m=spatial_resolution_m)
         grpc_band_definitions = []
         for index, band_def in enumerate(band_definitions):
             if isinstance(band_def, IntEnum):
-                grpc_band_def = epl_imagery_api_pb2.BandDefinition(band_type=band_def)
+                grpc_band_def = epl_imagery_pb2.BandDefinition(band_type=band_def)
             elif isinstance(band_def, int):
-                grpc_band_def = epl_imagery_api_pb2.BandDefinition(band_number=band_def)
+                grpc_band_def = epl_imagery_pb2.BandDefinition(band_number=band_def)
             elif isinstance(band_def, FunctionDetails):
                 print("this is becoming problematic")
             if scale_params and len(scale_params) > index:
@@ -187,7 +188,7 @@ class Landsat:
             request.envelope_boundary.extend(envelope_boundary)
 
         if not envelope_boundary or not polygon_boundary_wkb:
-            spatial_reference = epl_imagery_api_pb2.ServiceSpatialReference()
+            spatial_reference = epl_imagery_pb2.ServiceSpatialReference()
             if isinstance(boundary_cs, int):
                 spatial_reference.wkid = boundary_cs
             elif "[" in boundary_cs:
@@ -195,7 +196,7 @@ class Landsat:
             else:
                 spatial_reference.proj4 = boundary_cs
 
-        request.output_type = epl_imagery_api_pb2.GDALDataType.Value(output_type.name.upper())
+        request.output_type = epl_imagery_pb2.GDALDataType.Value(output_type.name.upper())
 
         return request
 
@@ -208,9 +209,9 @@ class Landsat:
                    output_type: DataType = DataType.BYTE,
                    pixel_dimensions: tuple = None,
                    spatial_resolution_m=60,
-                   directory=None):
-        channel = grpc.insecure_channel('localhost:50051', options=GRPC_CHANNEL_OPTIONS)
-        stub = epl_imagery_api_pb2.ImageryOperatorsStub(channel)
+                   filename=None):
+        channel = grpc.insecure_channel(IMAGERY_SERVICE, options=GRPC_CHANNEL_OPTIONS)
+        stub = epl_imagery_pb2.ImageryOperatorsStub(channel)
         imagery_request = self.make_imagery_request(band_definitions,
                                                     scale_params,
                                                     polygon_boundary_wkb,
@@ -220,24 +221,27 @@ class Landsat:
                                                     pixel_dimensions,
                                                     spatial_resolution_m)
 
-        imagery_file_request = epl_imagery_api_pb2.ImageryFileRequest(file_type=epl_imagery_api_pb2.JPEG)
+        imagery_file_request = epl_imagery_pb2.ImageryFileRequest(file_type=epl_imagery_pb2.JPEG)
         imagery_file_request.imagery_request.CopyFrom(imagery_request)
 
         big_file_result = stub.ImageryCompleteFile(imagery_file_request)
 
         temp = tempfile.NamedTemporaryFile(suffix="jpg")
-        with open(temp.name, "wb") as outfile:
-            outfile.write(big_file_result.data)
-        return temp.name
+
+        if filename:
+            with open(filename, "wb") as f:
+                f.write(big_file_result.data)
+
+        return big_file_result.data
 
     def fetch_imagery_array(self,
                             band_definitions,
-                            scale_params: List[List[float]] = None,
-                            polygon_boundary_wkb: bytes = None,
-                            envelope_boundary: tuple = None,
-                            boundary_cs = 4326,
-                            output_type: DataType = DataType.BYTE,
-                            pixel_dimensions: tuple = None,
+                            scale_params: List[List[float]]=None,
+                            polygon_boundary_wkb: bytes=None,
+                            envelope_boundary: tuple=None,
+                            boundary_cs=4326,
+                            output_type: DataType=DataType.BYTE,
+                            pixel_dimensions: tuple=None,
                             spatial_resolution_m=60) -> np.ndarray:
 
         # https://github.com/grpc/grpc/issues/7927
@@ -256,8 +260,8 @@ class Landsat:
         # https://stackoverflow.com/questions/8659471/multi-theaded-numpy-inserts
         # https://stackoverflow.com/questions/40690248/copy-numpy-array-into-part-of-another-array
 
-        channel = grpc.insecure_channel('localhost:50051', options=GRPC_CHANNEL_OPTIONS)
-        stub = epl_imagery_api_pb2.ImageryOperatorsStub(channel)
+        channel = grpc.insecure_channel(IMAGERY_SERVICE, options=GRPC_CHANNEL_OPTIONS)
+        stub = epl_imagery_pb2.ImageryOperatorsStub(channel)
 
         imagery_request = self.make_imagery_request(band_definitions,
                                                     scale_params,
@@ -287,11 +291,8 @@ class Landsat:
         elif output_type == DataType.FLOAT64:
             nd_array = np.ndarray(buffer=np.array(result.data_double), shape=result.shape, dtype=output_type.numpy_type,
                                   order='F')
+
         return nd_array
-
-
-class Storage:
-    temp = None
 
 
 class Band(IntEnum):
@@ -312,10 +313,3 @@ class Band(IntEnum):
     INFRARED2 = 1013
     INFRARED1 = 1014
     ALPHA = 1015
-
-
-class BandMap:
-    temp = None
-
-class FunctionDetails:
-    temp = None
