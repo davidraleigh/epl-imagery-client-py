@@ -12,4 +12,4 @@ services:
     environment:
       IMAGERY_SERVICE: imagery-service:50051
 
-    command: ["/bin/bash", "-c", "pip3 install pytest; pip3 install shapely; cd test; pytest --verbose --junitxml=./testresults.xml reader.py; ls; cd ../"]
+    command: ["/bin/bash", "-c", "pip3 install pytest; pip3 install requests; pip3 install shapely; cd test; pytest --verbose --junitxml=./testresults.xml reader.py; ls; cd ../"]
