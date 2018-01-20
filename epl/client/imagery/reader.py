@@ -10,8 +10,8 @@ from typing import List
 from enum import Enum, IntEnum
 
 
-import epl.client.imagery.epl_imagery_pb2 as epl_imagery_pb2
-import epl.client.imagery.epl_imagery_pb2_grpc as epl_imagery_pb2_grpc
+import epl.grpc.imagery.epl_imagery_pb2 as epl_imagery_pb2
+import epl.grpc.imagery.epl_imagery_pb2_grpc as epl_imagery_pb2_grpc
 from google.protobuf import timestamp_pb2
 
 # EPL_IMAGERY_API_KEY = os.environ['EPL_IMAGERY_API_KEY']
@@ -110,7 +110,7 @@ class MetadataService:
             return None
 
         timestamp_message = timestamp_pb2.Timestamp()
-        # not necessary at this time to support decimal seconds for client
+        # not necessary at this time to support decimal seconds for grpc
         timestamp_message.FromJsonString(date_input.strftime("%Y-%m-%dT%H:%M:%SZ"))
         return timestamp_message
 

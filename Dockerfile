@@ -11,7 +11,8 @@ WORKDIR /opt/src/epl-imagery-api
 
 COPY ./ ./
 
-RUN python3 -mgrpc_tools.protoc -I=./proto/ --python_out=./epl/client/imagery --grpc_python_out=./epl/client/imagery ./proto/epl_imagery.proto
+# firgured out the package defintin by looking at comments in this issue https://github.com/google/protobuf/issues/2283
+RUN python3 -mgrpc_tools.protoc -I=./proto/ --python_out=./ --grpc_python_out=./ ./proto/epl/grpc/imagery/epl_imagery.proto
 
 
 

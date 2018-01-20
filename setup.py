@@ -9,7 +9,7 @@ os.chdir(src_path)
 sys.path.insert(0, src_path)
 
 kwargs = {
-    'name': 'epl-imagery-client',
+    'name': 'epl-imagery-grpc',
     'description': 'Echo Park Labs Imagery Client',
     'long_description': open('README.md').read(),
     'author': 'Echo Park Labs',
@@ -33,5 +33,4 @@ kwargs['classifiers'] = clssfrs
 try:
     setup(**kwargs)
 finally:
-    del sys.path[0]
     os.chdir(old_path)

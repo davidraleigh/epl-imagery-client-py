@@ -133,7 +133,7 @@ class TestMetaDataSQL(unittest.TestCase):
 
 
 class TestLandsat(unittest.TestCase):
-    base_mount_path = '/client'
+    base_mount_path = '/grpc'
     metadata_service = None
     metadata_set = []
     r = requests.get("https://raw.githubusercontent.com/johan/world.geo.json/master/countries/USA/NM/Taos.geo.json")
@@ -156,7 +156,7 @@ class TestLandsat(unittest.TestCase):
             sql_filters=sql_filters)
 
         # mounted directory in docker container
-        base_mount_path = '/client'
+        base_mount_path = '/grpc'
 
         for row in metadata_rows:
             self.metadata_set.append(row)
@@ -202,7 +202,7 @@ class TestLandsat(unittest.TestCase):
         # GDAL helper functions for generating VRT
         landsat = Landsat([metadata])
 
-        # get a numpy.ndarray from bands for specified client
+        # get a numpy.ndarray from bands for specified grpc
         band_numbers = [4, 3, 2]
         scale_params = [[0.0, 65535], [0.0, 65535], [0.0, 65535]]
         nda = landsat.fetch_imagery_array(band_numbers, scale_params)
@@ -244,7 +244,7 @@ class TestLandsat(unittest.TestCase):
         # GDAL helper functions for generating VRT
         landsat = Landsat(self.metadata_set[0])
 
-        # get a numpy.ndarray from bands for specified client
+        # get a numpy.ndarray from bands for specified grpc
         band_numbers = [Band.RED, Band.GREEN, Band.BLUE]
         scale_params = [[0.0, 65535], [0.0, 65535], [0.0, 65535]]
         nda = landsat.fetch_imagery_array(band_numbers, scale_params, self.taos_shape.wkb, spatial_resolution_m=480)
@@ -256,7 +256,7 @@ class TestLandsat(unittest.TestCase):
         # GDAL helper functions for generating VRT
         landsat = Landsat(self.metadata_set)
 
-        # get a numpy.ndarray from bands for specified client
+        # get a numpy.ndarray from bands for specified grpc
         band_numbers = [Band.RED, Band.GREEN, Band.BLUE]
         scale_params = [[0.0, 65535], [0.0, 65535], [0.0, 65535]]
         nda = landsat.fetch_imagery_array(band_numbers, scale_params, envelope_boundary=self.taos_shape.bounds)
@@ -269,7 +269,7 @@ class TestLandsat(unittest.TestCase):
         # GDAL helper functions for generating VRT
         landsat = Landsat(self.metadata_set)
 
-        # get a numpy.ndarray from bands for specified client
+        # get a numpy.ndarray from bands for specified grpc
         # 'nir', 'swir1', 'swir2'
         band_numbers = [Band.NIR, Band.SWIR1, Band.SWIR2]
         scaleParams = [[0.0, 40000.0], [0.0, 40000.0], [0.0, 40000.0]]
@@ -280,7 +280,7 @@ class TestLandsat(unittest.TestCase):
     def test_mosaic_mem_error(self):
         landsat = Landsat(self.metadata_set)
 
-        # get a numpy.ndarray from bands for specified client
+        # get a numpy.ndarray from bands for specified grpc
         band_numbers = [Band.RED, Band.GREEN, Band.BLUE]
         scaleParams = [[0.0, 40000], [0.0, 40000], [0.0, 40000]]
         nda = landsat.fetch_imagery_array(band_numbers, scaleParams, envelope_boundary=self.taos_shape.bounds)
@@ -290,7 +290,7 @@ class TestLandsat(unittest.TestCase):
         landsat = Landsat(self.metadata_set)
         self.assertEqual((1804, 1295, 3), nda.shape)
 
-        # get a numpy.ndarray from bands for specified client
+        # get a numpy.ndarray from bands for specified grpc
         # 'nir', 'swir1', 'swir2'
         band_numbers = [Band.NIR, Band.SWIR1, Band.SWIR2]
         scaleParams = [[0.0, 40000.0], [0.0, 40000.0], [0.0, 40000.0]]
@@ -301,7 +301,7 @@ class TestLandsat(unittest.TestCase):
     def test_datatypes(self):
         landsat = Landsat(self.metadata_set)
 
-        # get a numpy.ndarray from bands for specified client
+        # get a numpy.ndarray from bands for specified grpc
         band_numbers = [Band.RED, Band.GREEN, Band.BLUE]
         scaleParams = [[0.0, 40000], [0.0, 40000], [0.0, 40000]]
 
@@ -321,7 +321,7 @@ class TestLandsat(unittest.TestCase):
     def test_vrt_with_alpha(self):
         landsat = Landsat(self.metadata_set)
 
-        # get a numpy.ndarray from bands for specified client
+        # get a numpy.ndarray from bands for specified grpc
         band_numbers = [Band.RED, Band.GREEN, Band.BLUE, Band.ALPHA]
         scaleParams = [[0.0, 40000], [0.0, 40000], [0.0, 40000]]
 
@@ -336,7 +336,7 @@ class TestLandsat(unittest.TestCase):
         # GDAL helper functions for generating VRT
         landsat = Landsat(self.metadata_set)
 
-        # get a numpy.ndarray from bands for specified client
+        # get a numpy.ndarray from bands for specified grpc
         # 'nir', 'swir1', 'swir2'
         band_numbers = [Band.NIR, Band.SWIR1, Band.SWIR2]
         scaleParams = [[0.0, 40000.0], [0.0, 40000.0], [0.0, 40000.0]]
@@ -357,7 +357,7 @@ class TestLandsat(unittest.TestCase):
     def test_file_creation(self):
         landsat = Landsat(self.metadata_set[0])
 
-        # get a numpy.ndarray from bands for specified client
+        # get a numpy.ndarray from bands for specified grpc
         band_numbers = [Band.RED, Band.GREEN, Band.BLUE]
         scale_params = [[0.0, 65535], [0.0, 65535], [0.0, 65535]]
         file_name = landsat.fetch_file(band_numbers, scale_params, self.taos_shape.wkb, spatial_resolution_m=480)
