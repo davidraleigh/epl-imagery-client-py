@@ -6,7 +6,7 @@ import epl_imagery_pb2 as epl__imagery__pb2
 
 class ImageryOperatorsStub(object):
   """
-  gRPC Interfaces for working with client operators
+  gRPC Interfaces for working with imagery operators
   """
 
   def __init__(self, channel):
@@ -34,7 +34,7 @@ class ImageryOperatorsStub(object):
 
 class ImageryOperatorsServicer(object):
   """
-  gRPC Interfaces for working with client operators
+  gRPC Interfaces for working with imagery operators
   """
 
   def MetadataSearch(self, request, context):

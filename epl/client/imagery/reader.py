@@ -11,6 +11,7 @@ from enum import Enum, IntEnum
 
 
 import epl.client.imagery.epl_imagery_pb2 as epl_imagery_pb2
+import epl.client.imagery.epl_imagery_pb2_grpc as epl_imagery_pb2_grpc
 from google.protobuf import timestamp_pb2
 
 # EPL_IMAGERY_API_KEY = os.environ['EPL_IMAGERY_API_KEY']
@@ -130,7 +131,7 @@ class MetadataService:
             limit=10,
             sql_filters=None):
         channel = grpc.insecure_channel(IMAGERY_SERVICE)
-        stub = epl_imagery_pb2.ImageryOperatorsStub(channel)
+        stub = epl_imagery_pb2_grpc.ImageryOperatorsStub(channel)
 
         request = epl_imagery_pb2.MetadataRequest(satellite_id=satellite_id,
                                                   bounding_box=bounding_box,
@@ -211,7 +212,7 @@ class Landsat:
                    spatial_resolution_m=60,
                    filename=None):
         channel = grpc.insecure_channel(IMAGERY_SERVICE, options=GRPC_CHANNEL_OPTIONS)
-        stub = epl_imagery_pb2.ImageryOperatorsStub(channel)
+        stub = epl_imagery_pb2_grpc.ImageryOperatorsStub(channel)
         imagery_request = self.make_imagery_request(band_definitions,
                                                     scale_params,
                                                     polygon_boundary_wkb,
@@ -261,7 +262,7 @@ class Landsat:
         # https://stackoverflow.com/questions/40690248/copy-numpy-array-into-part-of-another-array
 
         channel = grpc.insecure_channel(IMAGERY_SERVICE, options=GRPC_CHANNEL_OPTIONS)
-        stub = epl_imagery_pb2.ImageryOperatorsStub(channel)
+        stub = epl_imagery_pb2_grpc.ImageryOperatorsStub(channel)
 
         imagery_request = self.make_imagery_request(band_definitions,
                                                     scale_params,

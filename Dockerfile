@@ -22,7 +22,12 @@ MAINTAINER David Raleigh <david@echoparklabs.io>
 RUN apt update
 
 RUN pip3 install --upgrade pip && \
-    pip3 install grpcio
+    pip3 install grpcio && \
+    pip3 install numpy
+
+# TODO only for testing install
+
+WORKDIR /opt/src/epl-imagery-api
 
 COPY --from=builder /opt/src/epl-imagery-api /opt/src/epl-imagery-api
 

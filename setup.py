@@ -9,8 +9,8 @@ os.chdir(src_path)
 sys.path.insert(0, src_path)
 
 kwargs = {
-    'name': 'epl',
-    'description': 'Echo Park Labs Imagery Service',
+    'name': 'epl-imagery-client',
+    'description': 'Echo Park Labs Imagery Client',
     'long_description': open('README.md').read(),
     'author': 'Echo Park Labs',
     'author_email': 'david@echoparklabs.com',
