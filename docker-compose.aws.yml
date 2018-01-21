@@ -3,6 +3,7 @@ version: '3'
 services:
 
   imagery-service:
+    privileged: true
     image: 495706002520.dkr.ecr.us-west-2.amazonaws.com/aws-imagery-service:latest
     ports:
       - "50051"

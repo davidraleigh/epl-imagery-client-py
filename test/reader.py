@@ -155,9 +155,6 @@ class TestLandsat(unittest.TestCase):
             limit=10,
             sql_filters=sql_filters)
 
-        # mounted directory in docker container
-        base_mount_path = '/grpc'
-
         for row in metadata_rows:
             self.metadata_set.append(row)
 
