@@ -4,12 +4,12 @@ services:
 
   imagery-service:
     privileged: true
-    image: 495706002520.dkr.ecr.us-west-2.amazonaws.com/aws-imagery-service:latest
+    image: us.gcr.io/echoparklabs/gcp-imagery-service:latest
     ports:
       - "50051"
 
   imagery-client:
-    image: 495706002520.dkr.ecr.us-west-2.amazonaws.com/aws-grpc-imagery-python:latest
+    image: us.gcr.io/echoparklabs/gcp-grpc-imagery-python:latest
     environment:
       IMAGERY_SERVICE: imagery-service:50051
 
