@@ -104,7 +104,7 @@ class TestMetaDataSQL(unittest.TestCase):
 
     def test_cloud_cover(self):
         metadata_service = MetadataService()
-        sql_filters = ['cloud_cover=0']
+        # sql_filters = ['cloud_cover=0']
         d_start = date(2015, 6, 24)
         d_end = date(2016, 6, 24)
         bounding_box = (-115.927734375, 34.52466147177172, -78.31054687499999, 44.84029065139799)
@@ -113,7 +113,7 @@ class TestMetaDataSQL(unittest.TestCase):
             start_date=d_start,
             end_date=d_end,
             bounding_box=bounding_box,
-            sql_filters=sql_filters)
+            cloud_cover=[0])
 
         rows = list(rows)
 

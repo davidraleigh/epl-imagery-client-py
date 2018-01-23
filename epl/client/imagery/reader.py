@@ -6,7 +6,7 @@ import numpy as np
 
 from datetime import datetime
 from datetime import date
-from typing import List
+from typing import List, Tuple
 from enum import Enum, IntEnum
 
 
@@ -130,6 +130,7 @@ class MetadataService:
             end_date: datetime=None,
             sort_by=None,
             limit=10,
+            cloud_cover: Tuple[float]=None,
             sql_filters=None):
         channel = grpc.insecure_channel(IMAGERY_SERVICE)
         stub = epl_imagery_pb2_grpc.ImageryOperatorsStub(channel)
@@ -139,6 +140,9 @@ class MetadataService:
                                                   sort_by=sort_by,
                                                   limit=limit,
                                                   sql_filters=sql_filters)
+
+        if cloud_cover:
+            request.cloud_cover.extend(cloud_cover)
 
         if start_date:
             request.start_date.CopyFrom(MetadataService.__prep_date(start_date, _DateType.START_DATE))
