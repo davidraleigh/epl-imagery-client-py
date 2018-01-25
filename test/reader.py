@@ -184,9 +184,13 @@ class TestLandsat(unittest.TestCase):
         d_start = date(2016, 7, 20)
         d_end = date(2016, 7, 28)
 
-        rows = self.metadata_service.search(SpacecraftID.LANDSAT_8, start_date=d_start, end_date=d_end,
+        rows = self.metadata_service.search(SpacecraftID.LANDSAT_8,
+                                            start_date=d_start,
+                                            end_date=d_end,
                                             bounding_box=utah_box,
-                                            limit=10, sql_filters=['collection_number=="PRE"', "cloud_cover<=5"])
+                                            limit=10,
+                                            cloud_cover=5,
+                                            sql_filters=['collection_number=="PRE"'])
         rows = list(rows)
         self.assertEqual(len(rows), 1)
 

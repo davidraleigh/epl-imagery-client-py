@@ -142,6 +142,8 @@ class MetadataService:
                                                   sql_filters=sql_filters)
 
         if cloud_cover:
+            if not isinstance(cloud_cover, list):
+                cloud_cover = [cloud_cover]
             request.cloud_cover.extend(cloud_cover)
 
         if start_date:
@@ -168,7 +170,7 @@ class Landsat:
                              scale_params: List[List[float]] = None,
                              polygon_boundary_wkb: bytes = None,
                              envelope_boundary: tuple = None,
-                             boundary_cs = 4326,
+                             boundary_cs=4326,
                              output_type: DataType = DataType.BYTE,
                              pixel_dimensions: tuple = None,
                              spatial_resolution_m=60) -> epl_imagery_pb2.ImageryRequest:
