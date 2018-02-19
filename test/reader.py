@@ -4,11 +4,70 @@ import requests
 import shapely.geometry
 
 import numpy as np
-
+from osgeo import gdal
+from shapely.wkt import loads
+from lxml import etree
 from datetime import datetime
 from datetime import date
-from epl.client.imagery.reader import MetadataService, Landsat, SpacecraftID, Band, DataType
+from epl.client.imagery.reader import MetadataService, Landsat, SpacecraftID, Band, DataType, FunctionDetails
 
+from math import isclose
+
+
+def text_compare(t1, t2, tolerance=None):
+    if not t1 and not t2:
+        return True
+    if t1 == '*' or t2 == '*':
+        return True
+    if tolerance:
+        try:
+            t1_float = list(map(float, t1.split(",")))
+            t2_float = list(map(float, t2.split(",")))
+            if len(t1_float) != len(t2_float):
+                return False
+
+            for idx, val_1 in enumerate(t1_float):
+                if not isclose(val_1, t2_float[idx], rel_tol=tolerance):
+                    return False
+
+            return True
+
+        except:
+            return False
+    return (t1 or '').strip() == (t2 or '').strip()
+
+
+# https://bitbucket.org/ianb/formencode/src/tip/formencode/doctest_xml_compare.py?fileviewer=file-view-default#cl-70
+def xml_compare(x1, x2, tag_tolerances={}):
+    tolerance = tag_tolerances[x1.tag] if x1.tag in tag_tolerances else None
+    if x1.tag != x2.tag:
+        return False, '\nTags do not match: %s and %s' % (x1.tag, x2.tag)
+    for name, value in x1.attrib.items():
+        tolerance = tag_tolerances[name] if name in tag_tolerances else None
+        if not text_compare(x2.attrib.get(name), value, tolerance):
+        # if x2.attrib.get(name) != value:
+            return False, '\nAttributes do not match: %s=%r, %s=%r' % (name, value, name, x2.attrib.get(name))
+    for name in x2.attrib.keys():
+        if name not in x1.attrib:
+            return False, '\nx2 has an attribute x1 is missing: %s' % name
+    if not text_compare(x1.text, x2.text, tolerance):
+        return False, '\ntext: %r != %r, for tag %s' % (x1.text, x2.text, x1.tag)
+    if not text_compare(x1.tail, x2.tail):
+        return False, '\ntail: %r != %r' % (x1.tail, x2.tail)
+    cl1 = sorted(x1.getchildren(), key=lambda x: x.tag)
+    cl2 = sorted(x2.getchildren(), key=lambda x: x.tag)
+    if len(cl1) != len(cl2):
+        expected_tags = "\n".join(map(lambda x: x.tag, cl1)) + '\n'
+        actual_tags = "\n".join(map(lambda x: x.tag, cl2)) + '\n'
+        return False, '\nchildren length differs, %{0} != {1}\nexpected tags:\n{2}\nactual tags:\n{3}'.format(len(cl1), len(cl2), expected_tags, actual_tags)
+    i = 0
+    for c1, c2 in zip(cl1, cl2):
+        i += 1
+        result, message = xml_compare(c1, c2, tag_tolerances)
+        # if not xml_compare(c1, c2):
+        if not result:
+            return False, '\nthe children %i do not match: %s\n%s' % (i, c1.tag, message)
+    return True, "no errors"
 
 class TestMetaDataSQL(unittest.TestCase):
     def test_scene_id2(self):
@@ -305,4 +364,75 @@ class TestLandsat(unittest.TestCase):
         scale_params = [[0.0, 65535], [0.0, 65535], [0.0, 65535]]
         file_name = landsat.fetch_file(band_numbers, scale_params, self.taos_shape.wkb, spatial_resolution_m=480)
         self.assertGreater(len(file_name), 0)
+
+
+class TestAWSPixelFunctions(unittest.TestCase):
+    m_row_data = None
+    base_mount_path = '/imagery'
+    metadata_service = MetadataService()
+    iowa_polygon = None
+    metadata_set = []
+    r = requests.get("https://raw.githubusercontent.com/johan/world.geo.json/master/countries/USA/NM/Taos.geo.json")
+    taos_geom = r.json()
+    taos_shape = shapely.geometry.shape(taos_geom['features'][0]['geometry'])
+
+    def setUp(self):
+        metadata_service = MetadataService()
+        d_start = date(2015, 6, 24)
+        d_end = date(2016, 6, 24)
+        bounding_box = (-115.927734375, 34.52466147177172, -78.31054687499999, 44.84029065139799)
+        sql_filters = ['scene_id="LC80400312016103LGN00"']
+        rows = metadata_service.search(SpacecraftID.LANDSAT_8,
+                                       start_date=d_start,
+                                       end_date=d_end,
+                                       bounding_box=bounding_box,
+                                       limit=1,
+                                       sql_filters=sql_filters)
+        rows = list(rows)
+        self.m_row_data = rows[0]
+        wkt_iowa = "POLYGON((-93.76075744628906 42.32707774458643,-93.47854614257812 42.32707774458643," \
+                   "-93.47854614257812 42.12674735753131,-93.76075744628906 42.12674735753131," \
+                   "-93.76075744628906 42.32707774458643))"
+        self.iowa_polygon = loads(wkt_iowa)
+        gdal.SetConfigOption('GDAL_VRT_ENABLE_PYTHON', "YES")
+
+        d_start = date(2017, 3, 12)  # 2017-03-12
+        d_end = date(2017, 3, 19)  # 2017-03-20, epl api is inclusive
+
+        sql_filters = ['collection_number="PRE"']
+        rows = self.metadata_service.search(
+            SpacecraftID.LANDSAT_8,
+            start_date=d_start,
+            end_date=d_end,
+            bounding_box=self.taos_shape.bounds,
+            limit=10,
+            sql_filters=sql_filters)
+
+        for row in rows:
+            self.metadata_set.append(row)
+
+    def test_pixel_1(self):
+        metadata = self.m_row_data
+        landsat = Landsat(metadata)  # , gsurl[2])
+
+        code = """import numpy as np
+def multiply_rounded(in_ar, out_ar, xoff, yoff, xsize, ysize, raster_xsize,
+                   raster_ysize, buf_radius, gt, **kwargs):
+    factor = float(kwargs['factor'])
+    out_ar[:] = np.round_(np.clip(in_ar[0] * factor,0,255))"""
+
+        function_arguments = {"factor": "1.5"}
+        pixel_function_details = FunctionDetails(name="multiply_rounded", band_definitions=[2],
+                                                 data_type=DataType.FLOAT32, code=code,
+                                                 arguments=function_arguments)
+
+        vrt = landsat.get_vrt([pixel_function_details, 3, 2])
+
+        with open('pixel_1_aws.vrt', 'r') as myfile:
+            data = myfile.read()
+            expected = etree.XML(data)
+            actual = etree.XML(vrt)
+            result, message = xml_compare(expected, actual, {"GeoTransform": 1e-10})
+            self.assertTrue(result, message)
+
 
