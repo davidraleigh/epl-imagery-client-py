@@ -20,10 +20,9 @@ FROM python:3.5-slim
 
 MAINTAINER David Raleigh <david@echoparklabs.io>
 
-RUN apt update
-
-RUN pip3 install --upgrade pip && \
-    pip3 install grpcio && \
+RUN DEBIAN_FRONTEND=noninteractive apt update && \
+    pip3 install --upgrade pip && \
+    pip3 install grpcio==1.9.0 && \
     pip3 install numpy
 
 # TODO only for testing install

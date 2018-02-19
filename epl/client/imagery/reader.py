@@ -1,6 +1,7 @@
 import os
 import grpc
 import tempfile
+import py_compile
 
 import numpy as np
 
@@ -93,6 +94,45 @@ class DataType(Enum):
         return self.__numpy_type
 
 
+class FunctionDetails:
+    """
+    Make a pixel function
+    """
+    name = None
+    band_definitions = None
+    data_type = None
+    code = None
+    arguments = None
+    transfer_type = None
+
+    def __init__(self,
+                 name: str,
+                 band_definitions: list,
+                 data_type: DataType,
+                 code: str=None,
+                 arguments: dict=None,
+                 transfer_type: DataType=None):
+        self.name = name
+        self.band_definitions = band_definitions
+        self.data_type = data_type
+
+        if code:
+            # TODO, still ugly that I have to use a temporary file: Also, stupid that I can't catch GDAL errors
+            function_file = tempfile.NamedTemporaryFile(prefix=self.name, suffix=".py", delete=True)
+            function_file.write(code.encode())
+            function_file.flush()
+
+            py_compile.compile(function_file.name, doraise=True)
+            # delete file after compiling
+            function_file.close()
+            self.code = code
+
+        # TODO arguments should maybe have some kind of setter
+        if arguments:
+            self.arguments = {k: str(v) for k, v in arguments.items()}
+        self.transfer_type = transfer_type
+
+
 class MetadataService:
     @staticmethod
     def __prep_date(date_input, date_type: _DateType) -> timestamp_pb2.Timestamp:
@@ -132,6 +172,10 @@ class MetadataService:
             limit=10,
             cloud_cover: Tuple[float]=None,
             sql_filters=None):
+
+        # TODO once bug is fixed on Google's side
+        # channel_credentials = grpc.ssl_channel_credentials()
+        # channel = grpc.secure_channel(IMAGERY_SERVICE, credentials=channel_credentials)
         channel = grpc.insecure_channel(IMAGERY_SERVICE)
         stub = epl_imagery_pb2_grpc.ImageryOperatorsStub(channel)
 
@@ -218,7 +262,10 @@ class Landsat:
                    pixel_dimensions: tuple = None,
                    spatial_resolution_m=60,
                    filename=None):
-        channel = grpc.insecure_channel(IMAGERY_SERVICE, options=GRPC_CHANNEL_OPTIONS)
+        # TODO once bug is fixed on Google's side
+        # channel_credentials = grpc.ssl_channel_credentials()
+        # channel = grpc.secure_channel(IMAGERY_SERVICE, credentials=channel_credentials, options=GRPC_CHANNEL_OPTIONS)
+        channel = grpc.insecure_channel(IMAGERY_SERVICE)
         stub = epl_imagery_pb2_grpc.ImageryOperatorsStub(channel)
         imagery_request = self.make_imagery_request(band_definitions,
                                                     scale_params,
@@ -268,7 +315,11 @@ class Landsat:
         # https://stackoverflow.com/questions/8659471/multi-theaded-numpy-inserts
         # https://stackoverflow.com/questions/40690248/copy-numpy-array-into-part-of-another-array
 
-        channel = grpc.insecure_channel(IMAGERY_SERVICE, options=GRPC_CHANNEL_OPTIONS)
+        # TODO once bug is fixed on Google's side
+        # channel_credentials = grpc.ssl_channel_credentials()
+        # channel = grpc.secure_channel(IMAGERY_SERVICE, credentials=channel_credentials, options=GRPC_CHANNEL_OPTIONS)
+        channel = grpc.insecure_channel(IMAGERY_SERVICE)
+
         stub = epl_imagery_pb2_grpc.ImageryOperatorsStub(channel)
 
         imagery_request = self.make_imagery_request(band_definitions,
