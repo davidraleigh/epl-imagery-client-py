@@ -45,7 +45,8 @@ class TestGCP_VRT(unittest.TestCase):
         d_start = date(2016, 7, 20)
         d_end = date(2016, 7, 28)
 
-        rows = self.metadata_service.search(SpacecraftID.LANDSAT_8,
+        metadata_service = MetadataService()
+        rows = metadata_service.search(SpacecraftID.LANDSAT_8,
                                             start_date=d_start,
                                             end_date=d_end,
                                             bounding_box=utah_box,
