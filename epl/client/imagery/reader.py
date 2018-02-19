@@ -176,8 +176,8 @@ class MetadataService:
         # TODO once bug is fixed on Google's side
         # channel_credentials = grpc.ssl_channel_credentials()
         # channel = grpc.secure_channel(IMAGERY_SERVICE, credentials=channel_credentials)
-        channel = grpc.insecure_channel(IMAGERY_SERVICE)
-        stub = epl_imagery_pb2_grpc.ImageryOperatorsStub(channel, options=GRPC_CHANNEL_OPTIONS)
+        channel = grpc.insecure_channel(IMAGERY_SERVICE, options=GRPC_CHANNEL_OPTIONS)
+        stub = epl_imagery_pb2_grpc.ImageryOperatorsStub(channel)
 
         request = epl_imagery_pb2.MetadataRequest(satellite_id=satellite_id,
                                                   bounding_box=bounding_box,
