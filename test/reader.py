@@ -4,7 +4,6 @@ import requests
 import shapely.geometry
 
 import numpy as np
-from osgeo import gdal
 from shapely.wkt import loads
 from lxml import etree
 from datetime import datetime
@@ -394,7 +393,6 @@ class TestAWSPixelFunctions(unittest.TestCase):
                    "-93.47854614257812 42.12674735753131,-93.76075744628906 42.12674735753131," \
                    "-93.76075744628906 42.32707774458643))"
         self.iowa_polygon = loads(wkt_iowa)
-        gdal.SetConfigOption('GDAL_VRT_ENABLE_PYTHON', "YES")
 
         d_start = date(2017, 3, 12)  # 2017-03-12
         d_end = date(2017, 3, 19)  # 2017-03-20, epl api is inclusive
