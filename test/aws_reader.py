@@ -40,11 +40,11 @@ class TestAWSClouds(unittest.TestCase):
         #         (bounding_box[1] < test_box[1] < bounding_box[3]))
 
 
-class TestAWSvrt(unittest.TestCase):
-    def test_pixel_function_vrt_1(self):
-
-        # TODO figure out what's wrong here for AWS
-        self.assertTrue(True)
+# class TestAWSvrt(unittest.TestCase):
+#     def test_pixel_function_vrt_1(self):
+#
+#         # TODO figure out what's wrong here for AWS
+#         self.assertTrue(True)
         # utah_box = (-112.66342163085938, 37.738141282210385, -111.79824829101562, 38.44821130413263)
         # d_start = date(2016, 7, 20)
         # d_end = date(2016, 7, 28)
