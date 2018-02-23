@@ -411,26 +411,26 @@ class TestAWSPixelFunctions(unittest.TestCase):
 
     def test_ndvi_taos(self):
         code = """import numpy as np
-    def ndvi_numpy(in_ar, out_ar, xoff, yoff, xsize, ysize, raster_xsize, raster_ysize, buf_radius, gt, **kwargs):
-        with np.errstate(divide = 'ignore', invalid = 'ignore'):
-            factor = float(kwargs['factor'])
-            output = np.divide((in_ar[1] - in_ar[0]), (in_ar[1] + in_ar[0]))
-            output[np.isnan(output)] = 0.0
-            # shift range from -1.0-1.0 to 0.0-2.0
-            output += 1.0
-            # scale up from 0.0-2.0 to 0 to 255 by multiplying by 255/2
-            # https://stackoverflow.com/a/1735122/445372
-            output *=  factor/2.0
-            # https://stackoverflow.com/a/10622758/445372
-            # in place type conversion
-            out_ar[:] = output.astype(np.int16, copy=False)"""
+def ndvi_numpy(in_ar, out_ar, xoff, yoff, xsize, ysize, raster_xsize, raster_ysize, buf_radius, gt, **kwargs):
+    with np.errstate(divide = 'ignore', invalid = 'ignore'):
+        factor = float(kwargs['factor'])
+        output = np.divide((in_ar[1] - in_ar[0]), (in_ar[1] + in_ar[0]))
+        output[np.isnan(output)] = 0.0
+        # shift range from -1.0-1.0 to 0.0-2.0
+        output += 1.0
+        # scale up from 0.0-2.0 to 0 to 255 by multiplying by 255/2
+        # https://stackoverflow.com/a/1735122/445372
+        output *=  factor/2.0
+        # https://stackoverflow.com/a/10622758/445372
+        # in place type conversion
+        out_ar[:] = output.astype(np.int16, copy=False)"""
 
         code2 = """import numpy as np
-    def ndvi_numpy2(in_ar, out_ar, xoff, yoff, xsize, ysize, raster_xsize, raster_ysize, buf_radius, gt, **kwargs):
-        with np.errstate(divide = 'ignore', invalid = 'ignore'):
-            output = (in_ar[1] - in_ar[0]) / (in_ar[1] + in_ar[0])
-            output[np.isnan(output)] = 0.0
-            out_ar[:] = output"""
+def ndvi_numpy2(in_ar, out_ar, xoff, yoff, xsize, ysize, raster_xsize, raster_ysize, buf_radius, gt, **kwargs):
+    with np.errstate(divide = 'ignore', invalid = 'ignore'):
+        output = (in_ar[1] - in_ar[0]) / (in_ar[1] + in_ar[0])
+        output[np.isnan(output)] = 0.0
+        out_ar[:] = output"""
 
         landsat = Landsat(self.metadata_set)
         scale_params = [[0, DataType.UINT16.range_max, -1.0, 1.0]]
