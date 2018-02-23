@@ -410,7 +410,7 @@ class TestAWSPixelFunctions(unittest.TestCase):
             self.metadata_set.append(row)
 
     def test_ndvi_taos(self):
-            code = """import numpy as np
+        code = """import numpy as np
     def ndvi_numpy(in_ar, out_ar, xoff, yoff, xsize, ysize, raster_xsize, raster_ysize, buf_radius, gt, **kwargs):
         with np.errstate(divide = 'ignore', invalid = 'ignore'):
             factor = float(kwargs['factor'])
@@ -425,41 +425,40 @@ class TestAWSPixelFunctions(unittest.TestCase):
             # in place type conversion
             out_ar[:] = output.astype(np.int16, copy=False)"""
 
-            code2 = """import numpy as np
+        code2 = """import numpy as np
     def ndvi_numpy2(in_ar, out_ar, xoff, yoff, xsize, ysize, raster_xsize, raster_ysize, buf_radius, gt, **kwargs):
         with np.errstate(divide = 'ignore', invalid = 'ignore'):
             output = (in_ar[1] - in_ar[0]) / (in_ar[1] + in_ar[0])
             output[np.isnan(output)] = 0.0
             out_ar[:] = output"""
 
-            landsat = Landsat(self.metadata_set)
+        landsat = Landsat(self.metadata_set)
+        scale_params = [[0, DataType.UINT16.range_max, -1.0, 1.0]]
 
-            scale_params = [[0, DataType.UINT16.range_max, -1.0, 1.0]]
+        pixel_function_details = FunctionDetails(name="ndvi_numpy",
+                                                 band_definitions=[Band.RED, Band.NIR],
+                                                 code=code,
+                                                 arguments={"factor": DataType.UINT16.range_max},
+                                                 data_type=DataType.UINT16)
 
-            pixel_function_details = FunctionDetails(name="ndvi_numpy",
-                                                     band_definitions=[Band.RED, Band.NIR],
-                                                     code=code,
-                                                     arguments={"factor": DataType.UINT16.range_max},
-                                                     data_type=DataType.UINT16)
+        nda = landsat.fetch_imagery_array([pixel_function_details],
+                                          scale_params=scale_params,
+                                          polygon_boundary_wkb=self.taos_shape.wkb,
+                                          output_type=DataType.FLOAT32)
 
-            nda = landsat.fetch_imagery_array([pixel_function_details],
-                                              scale_params=scale_params,
-                                              polygon_boundary_wkb=self.taos_shape.wkb,
-                                              output_type=DataType.FLOAT32)
+        self.assertIsNotNone(nda)
+        self.assertGreaterEqual(1.0, nda.max())
+        self.assertLessEqual(-1.0, nda.min())
 
-            self.assertIsNotNone(nda)
-            self.assertGreaterEqual(1.0, nda.max())
-            self.assertLessEqual(-1.0, nda.min())
+        pixel_function_details = FunctionDetails(name="ndvi_numpy2",
+                                                 band_definitions=[Band.RED, Band.NIR],
+                                                 code=code2,
+                                                 data_type=DataType.FLOAT32)
 
-            pixel_function_details = FunctionDetails(name="ndvi_numpy2",
-                                                     band_definitions=[Band.RED, Band.NIR],
-                                                     code=code2,
-                                                     data_type=DataType.FLOAT32)
+        nda2 = landsat.fetch_imagery_array([pixel_function_details],
+                                           polygon_boundary_wkb=self.taos_shape.wkb,
+                                           output_type=DataType.FLOAT32)
 
-            nda2 = landsat.fetch_imagery_array([pixel_function_details],
-                                               polygon_boundary_wkb=self.taos_shape.wkb,
-                                               output_type=DataType.FLOAT32)
-
-            self.assertIsNotNone(nda2)
-            self.assertGreaterEqual(1.0, nda2.max())
-            self.assertLessEqual(-1.0, nda2.min())
+        self.assertIsNotNone(nda2)
+        self.assertGreaterEqual(1.0, nda2.max())
+        self.assertLessEqual(-1.0, nda2.min())
