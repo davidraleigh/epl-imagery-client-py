@@ -209,6 +209,31 @@ class Landsat:
         else:
             self.__metadata = [metadata]
 
+    @staticmethod
+    def __make_band_definition(band_def):
+        if isinstance(band_def, IntEnum):
+            grpc_band_def = epl_imagery_pb2.BandDefinition(band_type=band_def)
+        elif isinstance(band_def, int):
+            grpc_band_def = epl_imagery_pb2.BandDefinition(band_number=band_def)
+        elif isinstance(band_def, FunctionDetails):
+            grpc_function_details = epl_imagery_pb2.BandFunctionDetails(name=band_def.name,
+                                                                        data_type=epl_imagery_pb2.GDALDataType.Value(band_def.data_type.name.upper()),
+                                                                        code=band_def.code)
+
+            # arguments
+            if band_def.transfer_type:
+                grpc_function_details.transfer_type = epl_imagery_pb2.GDALDataType.Value(band_def.transfer_type.name.upper())
+
+            interior_band_list = []
+            for interior_band_def in band_def.band_definitions:
+                interior_band_list.append(Landsat.__make_band_definition(interior_band_def))
+
+            grpc_function_details.band_definitions.extend(interior_band_list)
+
+            grpc_band_def = epl_imagery_pb2.BandDefinition(band_function=grpc_function_details)
+
+        return grpc_band_def
+
     def make_imagery_request(self,
                              band_definitions,
                              scale_params: List[List[float]] = None,
@@ -221,12 +246,7 @@ class Landsat:
         request = epl_imagery_pb2.ImageryRequest(spatial_resolution_m=spatial_resolution_m)
         grpc_band_definitions = []
         for index, band_def in enumerate(band_definitions):
-            if isinstance(band_def, IntEnum):
-                grpc_band_def = epl_imagery_pb2.BandDefinition(band_type=band_def)
-            elif isinstance(band_def, int):
-                grpc_band_def = epl_imagery_pb2.BandDefinition(band_number=band_def)
-            elif isinstance(band_def, FunctionDetails):
-                print("this is becoming problematic")
+            grpc_band_def = Landsat.__make_band_definition(band_def)
             if scale_params and len(scale_params) > index:
                 grpc_band_def.scale_params.extend(scale_params[index])
             grpc_band_definitions.append(grpc_band_def)
