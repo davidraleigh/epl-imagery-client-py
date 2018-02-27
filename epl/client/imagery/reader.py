@@ -61,16 +61,26 @@ class DataType(Enum):
     CFLOAT64 = 8;
 }
     """
-    BYTE = ("Byte", 0, 255, 0, np.uint8)
-    INT16 = ("Int16", -32768, 32767, 1, np.int16)
-    UINT16 = ("UInt16", 0, 65535, 2, np.uint16)
-    INT32 = ("Int32", -2147483648, 2147483647, 3, np.int32)
-    UINT32 = ("UInt32", 0, 4294967295, 4, np.uint32)
-    FLOAT32 = ("Float32", -3.4E+38, 3.4E+38, 5, np.float)
-    FLOAT64 = ("Float64", -1.7E+308, 1.7E+308, 6, np.float64)
 
-    CFLOAT32 = ("CFloat32", -1.7E+308, 1.7E+308, 7, np.complex64)
-    CFLOAT64 = ("CFloat64", -3.4E+38, 3.4E+38, 8, np.complex64)
+    UNKNOWN_GDAL = ("Unknown",  1,           -1,         0, np.void)
+
+    BYTE         = ("Byte",     0,           255,        1, np.uint8)
+
+    UINT16       = ("UInt16",   0,           65535,      2, np.uint16)
+    INT16        = ("Int16",    -32768,      32767,      3, np.int16)
+
+    UINT32       = ("UInt32",   0,           4294967295, 4, np.uint32)
+    INT32        = ("Int32",    -2147483648, 2147483647, 5, np.int32)
+
+    FLOAT32      = ("Float32",  -3.4E+38,    3.4E+38,    6, np.float)
+    FLOAT64      = ("Float64",  -1.7E+308,   1.7E+308,   7, np.float64)
+
+    # CINT16
+    # CINT32
+    #TODO I think these ranges are reversed CFloat32 and CFloat64
+    CFLOAT32     = ("CFloat32", -1.7E+308,   1.7E+308,   10, np.complex64)
+    CFLOAT64     = ("CFloat64", -3.4E+38,    3.4E+38,    11, np.complex64)
+
 
     def __init__(self, name, range_min, range_max, grpc_num, numpy_type):
         self.__name = name
