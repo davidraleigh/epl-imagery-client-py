@@ -43,13 +43,18 @@ service ImageryOperators {
 }
 
 enum GDALDataType {
-    BYTE = 0;
-    INT16 = 1;
+    UNKNOWN_GDAL = 0;
+
+    BYTE = 1;
+
     UINT16 = 2;
-    INT32 = 3;
+    INT16 = 3;
+
     UINT32 = 4;
-    FLOAT32 = 5;
-    FLOAT64 = 6;
+    INT32 = 5;
+
+    FLOAT32 = 6;
+    FLOAT64 = 7;
 //    CFLOAT32 = 7;
 //    CFLOAT64 = 8;
 }
@@ -138,11 +143,20 @@ message MetadataRequest {
     SpacecraftID satellite_id = 1;
 //    ServiceEnvelope2D bounding_box = 2;
     repeated float bounding_box = 2;
+
     google.protobuf.Timestamp start_date = 3;
     google.protobuf.Timestamp end_date = 4;
+
     string sort_by= 5;
     int32 limit = 6;
+
     repeated string sql_filters = 7;
+    // 1-4 values
+    // 1st value is the maximum cloud cover
+    // 2nd is minimum cloud cover
+    // 3rd value is the maximum land cloud cover
+    // 4tg is minimum land cloud cover
+    repeated float cloud_cover = 8;
 }
 
 message BigFileResult {
@@ -155,6 +169,7 @@ message BigFileResult {
 message NDArrayResult {
     repeated float data_float = 1;
     repeated int32 data_int32 = 2;
+    // bytes goes into uint32 and is compressed by google's proto definitions
     repeated uint32 data_uint32 = 3;
     repeated double data_double = 5;
 
@@ -202,18 +217,12 @@ message MetadataResult {
     // TODO, test some AWS data that is sensed on one date and then processed at another
     int32 doy = 19;
 
-//    Band self.band_map = BandMap(self.spacecraft_id)
-
-    // TODO dateline testing
-//        self.center_lat = (self.north_lat - self.south_lat) / 2 + self.south_lat
-//        self.center_lon = (self.east_lon - self.west_lon) / 2 + self.west_lon
-
     int32 utm_epsg_code = 20;
 
+    //    ServiceEnvelope2D bounds = 21;
     //  (minx, miny, maxx, maxy)
     repeated float bounds = 21;
     repeated bytes wrs_polygon_wkb = 22;
-//    ServiceEnvelope2D bounds = 21;
     string full_mount_path = 23;
 }
 
