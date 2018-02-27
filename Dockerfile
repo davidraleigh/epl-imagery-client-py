@@ -25,13 +25,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt update && \
     pip3 install grpcio && \
     pip3 install numpy
 
-# TEMP for debugging
-RUN pip3 install pytest && \
-    pip3 install lxml && \
-    pip3 install requests && \
-    pip3 install shapely
-# TEMP for debugging
-
 # TODO only for testing install
 
 WORKDIR /opt/src/epl-imagery-api
