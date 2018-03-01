@@ -230,7 +230,9 @@ class Landsat:
                                                                         data_type=epl_imagery_pb2.GDALDataType.Value(band_def.data_type.name.upper()),
                                                                         code=band_def.code)
 
-            # arguments
+            if band_def.arguments:
+                grpc_function_details.arguments = band_def.arguments
+
             if band_def.transfer_type:
                 grpc_function_details.transfer_type = epl_imagery_pb2.GDALDataType.Value(band_def.transfer_type.name.upper())
 

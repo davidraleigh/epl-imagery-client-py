@@ -26,6 +26,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt update && \
     pip3 install numpy
 
 # TODO only for testing install
+RUN pip3 install pytest lxml requests shapely
+# TODO only for testing install
 
 WORKDIR /opt/src/epl-imagery-api
 

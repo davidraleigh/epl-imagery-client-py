@@ -68,6 +68,7 @@ def xml_compare(x1, x2, tag_tolerances={}):
             return False, '\nthe children %i do not match: %s\n%s' % (i, c1.tag, message)
     return True, "no errors"
 
+
 class TestMetaDataSQL(unittest.TestCase):
     def test_scene_id2(self):
         sql_filters = ['scene_id="LC80270312016188LGN00"']
