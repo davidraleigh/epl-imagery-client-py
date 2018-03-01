@@ -231,7 +231,8 @@ class Landsat:
                                                                         code=band_def.code)
 
             if band_def.arguments:
-                grpc_function_details.arguments = band_def.arguments
+                for key in band_def.arguments:
+                    grpc_function_details.arguments[key] = band_def.arguments[key]
 
             if band_def.transfer_type:
                 grpc_function_details.transfer_type = epl_imagery_pb2.GDALDataType.Value(band_def.transfer_type.name.upper())
