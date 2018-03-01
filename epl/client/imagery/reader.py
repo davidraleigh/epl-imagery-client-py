@@ -183,9 +183,9 @@ class MetadataService:
             sql_filters=None):
 
         # TODO once bug is fixed on Google's side
-        # channel_credentials = grpc.ssl_channel_credentials()
-        # channel = grpc.secure_channel(IMAGERY_SERVICE, credentials=channel_credentials)
-        channel = grpc.insecure_channel(IMAGERY_SERVICE, options=GRPC_CHANNEL_OPTIONS)
+        channel_credentials = grpc.ssl_channel_credentials()
+        channel = grpc.secure_channel(IMAGERY_SERVICE, credentials=channel_credentials, options=GRPC_CHANNEL_OPTIONS)
+        # channel = grpc.insecure_channel(IMAGERY_SERVICE, options=GRPC_CHANNEL_OPTIONS)
         stub = epl_imagery_pb2_grpc.ImageryOperatorsStub(channel)
 
         request = epl_imagery_pb2.MetadataRequest(satellite_id=satellite_id,
@@ -296,9 +296,9 @@ class Landsat:
                    spatial_resolution_m=60,
                    filename=None):
         # TODO once bug is fixed on Google's side
-        # channel_credentials = grpc.ssl_channel_credentials()
-        # channel = grpc.secure_channel(IMAGERY_SERVICE, credentials=channel_credentials, options=GRPC_CHANNEL_OPTIONS)
-        channel = grpc.insecure_channel(IMAGERY_SERVICE, options=GRPC_CHANNEL_OPTIONS)
+        channel_credentials = grpc.ssl_channel_credentials()
+        channel = grpc.secure_channel(IMAGERY_SERVICE, credentials=channel_credentials, options=GRPC_CHANNEL_OPTIONS)
+        # channel = grpc.insecure_channel(IMAGERY_SERVICE, options=GRPC_CHANNEL_OPTIONS)
         stub = epl_imagery_pb2_grpc.ImageryOperatorsStub(channel)
         imagery_request = self.make_imagery_request(band_definitions,
                                                     scale_params,
@@ -349,9 +349,9 @@ class Landsat:
         # https://stackoverflow.com/questions/40690248/copy-numpy-array-into-part-of-another-array
 
         # TODO once bug is fixed on Google's side
-        # channel_credentials = grpc.ssl_channel_credentials()
-        # channel = grpc.secure_channel(IMAGERY_SERVICE, credentials=channel_credentials, options=GRPC_CHANNEL_OPTIONS)
-        channel = grpc.insecure_channel(IMAGERY_SERVICE, options=GRPC_CHANNEL_OPTIONS)
+        channel_credentials = grpc.ssl_channel_credentials()
+        channel = grpc.secure_channel(IMAGERY_SERVICE, credentials=channel_credentials, options=GRPC_CHANNEL_OPTIONS)
+        # channel = grpc.insecure_channel(IMAGERY_SERVICE, options=GRPC_CHANNEL_OPTIONS)
 
         stub = epl_imagery_pb2_grpc.ImageryOperatorsStub(channel)
 
