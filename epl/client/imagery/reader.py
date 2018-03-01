@@ -21,7 +21,7 @@ MB = 1024 * 1024
 GRPC_CHANNEL_OPTIONS = [('grpc.max_message_length', 64 * MB), ('grpc.max_receive_message_length', 64 * MB)]
 GRPC_SERVICE_PORT = os.getenv('GRPC_SERVICE_PORT', 50051)
 GRPC_SERVICE_HOST = os.getenv('GRPC_SERVICE_HOST', 'localhost')
-IMAGERY_SERVICE = os.getenv('IMAGERY_SERVICE', "{0}:{1}".format(GRPC_SERVICE_HOST, GRPC_SERVICE_PORT))
+IMAGERY_SERVICE = "{0}:{1}".format(GRPC_SERVICE_HOST, GRPC_SERVICE_PORT)
 print(IMAGERY_SERVICE)
 
 
