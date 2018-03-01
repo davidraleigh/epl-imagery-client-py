@@ -81,7 +81,6 @@ class DataType(Enum):
     CFLOAT32     = ("CFloat32", -1.7E+308,   1.7E+308,   10, np.complex64)
     CFLOAT64     = ("CFloat64", -3.4E+38,    3.4E+38,    11, np.complex64)
 
-
     def __init__(self, name, range_min, range_max, grpc_num, numpy_type):
         self.__name = name
         self.range_min = range_min
@@ -230,6 +229,7 @@ class Landsat:
                                                                         data_type=epl_imagery_pb2.GDALDataType.Value(band_def.data_type.name.upper()),
                                                                         code=band_def.code)
 
+            # https://developers.google.com/protocol-buffers/docs/reference/python-generated#map-fields
             if band_def.arguments:
                 for key in band_def.arguments:
                     grpc_function_details.arguments[key] = band_def.arguments[key]
