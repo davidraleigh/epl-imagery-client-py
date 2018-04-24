@@ -1,4 +1,4 @@
-FROM python:3.5 as builder
+FROM python:3.6.5-stretch as builder
 
 MAINTAINER David Raleigh <david@echoparklabs.io>
 
@@ -16,7 +16,7 @@ RUN python3 -mgrpc_tools.protoc -I=./proto/ --python_out=./ --grpc_python_out=./
 
 
 
-FROM python:3.5-slim
+FROM python:3.6.5-slim-stretch
 
 MAINTAINER David Raleigh <david@echoparklabs.io>
 

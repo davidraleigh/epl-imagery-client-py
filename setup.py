@@ -16,7 +16,8 @@ kwargs = {
     'author_email': 'david@echoparklabs.com',
     'url': 'https://bitbucket.org/davidraleigh/epl-imagery-api',
     'version': open('VERSION').read(),
-    'packages': find_packages('.')
+    'packages': find_packages('.'),
+    'zip_safe': False
 }
 
 clssfrs = [
