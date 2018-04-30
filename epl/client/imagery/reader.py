@@ -390,7 +390,7 @@ class Landsat:
         elif output_type == DataType.FLOAT64:
             nd_array = np.ndarray(buffer=np.array(result.data_double), shape=result.shape, dtype=np.double, order='C')
 
-        return nd_array
+        return nd_array.astype(dtype=output_type.numpy_type)
 
 
 class Band(IntEnum):
