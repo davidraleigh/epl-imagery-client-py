@@ -164,7 +164,7 @@ class MetadataService:
             return None
 
         timestamp_message = timestamp_pb2.Timestamp()
-        # not necessary at this time to support decimal seconds for grpc
+        # not necessary at this time to support decimal seconds for epl_grpc
         timestamp_message.FromJsonString(date_input.strftime("%Y-%m-%dT%H:%M:%SZ"))
         return timestamp_message
 
@@ -335,7 +335,7 @@ class Landsat:
                             scale_params: List[List[float]]=None,
                             polygon_boundary_wkb: bytes=None,
                             envelope_boundary: tuple=None,
-                            boundary_cs=4326,
+                            boundary_cs_wkid=4326,
                             output_type: DataType=DataType.BYTE,
                             pixel_dimensions: tuple=None,
                             spatial_resolution_m=60) -> np.ndarray:
@@ -368,7 +368,7 @@ class Landsat:
                                                     scale_params,
                                                     polygon_boundary_wkb,
                                                     envelope_boundary,
-                                                    boundary_cs,
+                                                    boundary_cs_wkid,
                                                     output_type,
                                                     pixel_dimensions,
                                                     spatial_resolution_m)
@@ -380,18 +380,15 @@ class Landsat:
         # https://docs.scipy.org/doc/numpy/reference/c-api.array.html#c.PyArray_SimpleNewFromData
         # https://stackoverflow.com/questions/7543675/how-to-convert-pointer-to-c-array-to-python-array
         # https://stackoverflow.com/questions/33478046/binding-c-array-to-numpy-array-without-copying
+        nd_array = None
         if output_type == DataType.BYTE or output_type == DataType.UINT16 or output_type == DataType.UINT32:
-            nd_array = np.ndarray(buffer=np.array(result.data_uint32), shape=result.shape, dtype=output_type.numpy_type,
-                                  order='F')
+            nd_array = np.ndarray(buffer=np.array(result.data_uint32), shape=result.shape, dtype=np.uint64, order='C')
         elif output_type == DataType.INT16 or output_type == DataType.INT32:
-            nd_array = np.ndarray(buffer=np.array(result.data_int32), shape=result.shape, dtype=output_type.numpy_type,
-                                  order='F')
+            nd_array = np.ndarray(buffer=np.array(result.data_int32), shape=result.shape, dtype=np.int64, order='C')
         elif output_type == DataType.FLOAT32:
-            nd_array = np.ndarray(buffer=np.array(result.data_float), shape=result.shape, dtype=output_type.numpy_type,
-                                  order='F')
+            nd_array = np.ndarray(buffer=np.array(result.data_float), shape=result.shape, dtype=np.float, order='C')
         elif output_type == DataType.FLOAT64:
-            nd_array = np.ndarray(buffer=np.array(result.data_double), shape=result.shape, dtype=output_type.numpy_type,
-                                  order='F')
+            nd_array = np.ndarray(buffer=np.array(result.data_double), shape=result.shape, dtype=np.double, order='C')
 
         return nd_array
 

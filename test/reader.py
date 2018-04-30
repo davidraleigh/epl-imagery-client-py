@@ -161,6 +161,30 @@ class TestMetaDataSQL(unittest.TestCase):
                 (bounding_box[1] < test_box[3] < bounding_box[3]) or
                 (bounding_box[1] < test_box[1] < bounding_box[3]))
 
+    def test_bounds_repeat_bug(self):
+        # grab the Taos, NM county outline from a geojson hosted on github
+        r = requests.get("https://raw.githubusercontent.com/johan/world.geo.json/master/countries/USA/NM/Taos.geo.json")
+        taos_geom = r.json()
+        taos_shape = shapely.geometry.shape(taos_geom['features'][0]['geometry'])
+        metadata_service = MetadataService()
+
+        d_start = date(2017, 3, 12)  # 2017-03-12
+        d_end = date(2017, 3, 19)  # epl api is inclusive
+
+        # PRE is a collection type that specifies certain QA standards
+        sql_filters = ['collection_number="PRE"']
+        # search the satellite metadata for images of Taos withing the given date range
+        rows = metadata_service.search(
+            SpacecraftID.LANDSAT_8,
+            start_date=d_start,
+            end_date=d_end,
+            bounding_box=taos_shape.bounds,
+            limit=10,
+            sql_filters=sql_filters)
+
+        # group the scenes together in a list
+        for row in rows:
+            self.assertEqual(4, len(row.bounds))
 
 class TestLandsat(unittest.TestCase):
     base_mount_path = '/grpc'
@@ -463,3 +487,5 @@ def ndvi_numpy2(in_ar, out_ar, xoff, yoff, xsize, ysize, raster_xsize, raster_ys
         self.assertIsNotNone(nda2)
         self.assertGreaterEqual(1.0, nda2.max())
         self.assertLessEqual(-1.0, nda2.min())
+
+
