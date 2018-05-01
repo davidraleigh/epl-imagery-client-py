@@ -76,7 +76,7 @@ class DataType(Enum):
     UINT32       = ("UInt32",   0,           4294967295, 4, np.uint32)
     INT32        = ("Int32",    -2147483648, 2147483647, 5, np.int32)
 
-    FLOAT32      = ("Float32",  -3.4E+38,    3.4E+38,    6, np.float)
+    FLOAT32      = ("Float32",  -3.4E+38,    3.4E+38,    6, np.float32)
     FLOAT64      = ("Float64",  -1.7E+308,   1.7E+308,   7, np.float64)
 
     # CINT16
@@ -386,9 +386,13 @@ class Landsat:
         elif output_type == DataType.INT16 or output_type == DataType.INT32:
             nd_array = np.ndarray(buffer=np.array(result.data_int32), shape=result.shape, dtype=np.int64, order='C')
         elif output_type == DataType.FLOAT32:
-            nd_array = np.ndarray(buffer=np.array(result.data_float), shape=result.shape, dtype=np.float, order='C')
+            nd_array = np.ndarray(buffer=np.array(result.data_float), shape=result.shape, dtype=np.float64, order='C')
         elif output_type == DataType.FLOAT64:
-            nd_array = np.ndarray(buffer=np.array(result.data_double), shape=result.shape, dtype=np.double, order='C')
+            nd_array = np.ndarray(buffer=np.array(result.data_double), shape=result.shape, dtype=np.float64, order='C')
+
+        # nd_array = np.frombuffer(result.data_buffer[0], output_type.numpy_type)
+        # nd_array = np.lib.stride_tricks.as_strided(nd_array, result.shape, result.strides)
+        # return nd_array
 
         return nd_array.astype(dtype=output_type.numpy_type)
 
