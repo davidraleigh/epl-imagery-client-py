@@ -14,8 +14,8 @@ from enum import Enum, IntEnum
 
 import epl.grpc.imagery.epl_imagery_pb2 as epl_imagery_pb2
 import epl.grpc.imagery.epl_imagery_pb2_grpc as epl_imagery_pb2_grpc
+from epl.imagery.native.metadata_helpers import LandsatQueryFilters, _RangeQueryParam
 from google.protobuf import timestamp_pb2
-
 
 
 # EPL_IMAGERY_API_KEY = os.environ['EPL_IMAGERY_API_KEY']
@@ -168,6 +168,29 @@ class MetadataService:
         timestamp_message.FromJsonString(date_input.strftime("%Y-%m-%dT%H:%M:%SZ"))
         return timestamp_message
 
+    @staticmethod
+    def _parse_query_params(metadata_filters):
+        data_filters_pb = []
+        for param_name_key, param_obj in metadata_filters.__dict__.items():
+
+            if param_obj.value:
+                range_params = epl_imagery_pb2.RangeQueryParams()
+                range_params.value = str(param_obj.value)
+                range_params.equals = param_obj.equals
+                range_params.param_name = param_obj.param_name
+                data_filters_pb.append(range_params)
+            elif isinstance(param_obj, _RangeQueryParam) and (param_obj.end is not None or param_obj.start is not None):
+                range_params = epl_imagery_pb2.RangeQueryParams()
+                range_params.start = str(param_obj.start)
+                range_params.end = str(param_obj.end)
+                range_params.start_inclusive = param_obj.start_inclusive
+                range_params.end_inclusive = param_obj.end_inclusive
+                range_params.param_name = param_obj.param_name
+                data_filters_pb.append(range_params)
+
+        return data_filters_pb
+
+
     def search_aws(mount_base_path,
                    wrs_path,
                    wrs_row,
@@ -183,8 +206,7 @@ class MetadataService:
             end_date: datetime=None,
             sort_by=None,
             limit=10,
-            cloud_cover: Tuple[float]=None,
-            sql_filters=None):
+            data_filters=None):
 
         if GRPC_SERVICE_HOST == "localhost" or ip_reg.match(GRPC_SERVICE_HOST):
             channel = grpc.insecure_channel(IMAGERY_SERVICE, options=GRPC_CHANNEL_OPTIONS)
@@ -194,25 +216,56 @@ class MetadataService:
         #
         stub = epl_imagery_pb2_grpc.ImageryOperatorsStub(channel)
 
+        data_filters_pb = None
+
+        if data_filters:
+            data_filters_pb = MetadataService._parse_query_params(data_filters)
+
         request = epl_imagery_pb2.MetadataRequest(satellite_id=satellite_id,
                                                   bounding_box=bounding_box,
                                                   sort_by=sort_by,
                                                   limit=limit,
-                                                  sql_filters=sql_filters)
+                                                  data_filters=data_filters_pb)
 
-        if cloud_cover:
-            if not isinstance(cloud_cover, list):
-                cloud_cover = [cloud_cover]
-            request.cloud_cover.extend(cloud_cover)
+        # if cloud_cover:
+        #     if not isinstance(cloud_cover, list):
+        #         cloud_cover = [cloud_cover]
+        #     request.cloud_cover.extend(cloud_cover)
 
         if start_date:
             request.start_date.CopyFrom(MetadataService.__prep_date(start_date, _DateType.START_DATE))
         if end_date:
             request.end_date.CopyFrom(MetadataService.__prep_date(end_date, _DateType.END_DATE))
 
-        result = stub.MetadataSearch(request)
+        results_generator = stub.MetadataSearch(request)
 
-        return result
+        return results_generator
+
+
+class Metadata:
+    __message_result = None
+
+    def __init__(self, metadata_result):
+        self.__message_result = metadata_result
+        # https://stackoverflow.com/a/1325798/445372
+        # for attr, value in vars(self.__message_result).items():
+        #     self.__dict__[key] = value
+
+    def dump_object(self, obj):
+        # https://stackoverflow.com/a/29150312/445372
+        for descriptor in obj.DESCRIPTOR.fields:
+            value = getattr(obj, descriptor.name)
+            if descriptor.type == descriptor.TYPE_MESSAGE:
+                if descriptor.label == descriptor.LABEL_REPEATED:
+                    map(self.dump_object, value)
+                else:
+                    self.dump_object(value)
+            elif descriptor.type == descriptor.TYPE_ENUM:
+                print(descriptor.enum_type.values[value])
+                enum_name = descriptor.enum_type.values[value].name
+                print("{}: {}".format(descriptor.full_name, enum_name))
+            elif value is not None:
+                print("{}: {}".format(descriptor.full_name, value))
 
 
 class Landsat:

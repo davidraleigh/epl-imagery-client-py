@@ -12,7 +12,7 @@ WORKDIR /opt/src/epl-imagery-api
 COPY ./ ./
 
 # firgured out the package defintin by looking at comments in this issue https://github.com/google/protobuf/issues/2283
-RUN python3 -mgrpc_tools.protoc -I=./proto/ --python_out=./ --grpc_python_out=./ ./proto/epl/grpc/imagery/epl_imagery.proto
+RUN python3 -mgrpc_tools.protoc -I=./proto/ --python_out=./epl_grpc/ --grpc_python_out=./epl_grpc/ ./proto/epl/grpc/imagery/epl_imagery.proto
 
 
 
@@ -33,6 +33,11 @@ WORKDIR /opt/src/epl-imagery-api
 
 COPY --from=builder /opt/src/epl-imagery-api /opt/src/epl-imagery-api
 
+WORKDIR /opt/src/epl-imagery-api/epl_native
+RUN python3 setup.py install
+WORKDIR /opt/src/epl-imagery-api/epl_grpc
+RUN python3 setup.py install
+WORKDIR /opt/src/epl-imagery-api/epl_client
 RUN python3 setup.py install
 
 ARG GRPC_SERVICE_HOST=localhost

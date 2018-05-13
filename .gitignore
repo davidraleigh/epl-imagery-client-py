@@ -158,3 +158,6 @@ venv.bak/
 .DS_Store
 
 epl/grpc
+.idea/inspectionProfiles/
+epl_grpc/epl/grpc/imagery/epl_imagery_pb2.py
+epl_grpc/epl/grpc/imagery/epl_imagery_pb2_grpc.py
