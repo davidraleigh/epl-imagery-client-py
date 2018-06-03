@@ -2,7 +2,8 @@ import unittest
 from datetime import date
 from datetime import datetime
 
-from epl.client.imagery.reader import MetadataService, Landsat, SpacecraftID, Band, DataType
+from epl.client.imagery.reader import MetadataService, SpacecraftID
+from epl.native.imagery.metadata_helpers import LandsatQueryFilters
 
 
 class TestClouds(unittest.TestCase):
@@ -14,11 +15,12 @@ class TestClouds(unittest.TestCase):
         d_start = date(2015, 6, 24)
         d_end = date(2016, 6, 24)
         bounding_box = (-115.927734375, 34.52466147177172, -78.31054687499999, 44.84029065139799)
+        landsat_filters = LandsatQueryFilters()
+        landsat_filters.cloud_cover.set_value(0)
+        landsat_filters.acquired.set_range(start=d_start, end=d_end)
+        landsat_filters.bounds.set_bounds(*bounding_box)
         rows = metadata_service.search(SpacecraftID.LANDSAT_8,
-                                       start_date=d_start,
-                                       end_date=d_end,
-                                       bounding_box=bounding_box,
-                                       cloud_cover=[0])
+                                       data_filters=landsat_filters)
 
         rows = list(rows)
 
@@ -64,7 +66,7 @@ class TestClouds(unittest.TestCase):
 #         # GDAL helper functions for generating VRT
 #         landsat = Landsat([metadata])
 #
-#         # get a numpy.ndarray from bands for specified grpc
+#         # get a numpy.ndarray from bands for specified epl_grpc
 #         band_numbers = [4, 3, 2]
 #         scale_params = [[0.0, 65535], [0.0, 65535], [0.0, 65535]]
 #         nda = landsat.fetch_imagery_array(band_numbers, scale_params)
