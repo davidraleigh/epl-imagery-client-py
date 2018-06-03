@@ -8,15 +8,18 @@ old_path = os.getcwd()
 os.chdir(src_path)
 sys.path.insert(0, src_path)
 
+# https://blog.shazam.com/python-microlibs-5be9461ad979
 kwargs = {
-    'name': 'epl-imagery-grpc',
-    'description': 'Echo Park Labs Imagery Client',
-    'long_description': open('README.md').read(),
+    'name': 'epl.client.imagery',
+    'description': 'Echo Park Labs Client Imagery API',
+    'long_description': open('../README.md').read(),
     'author': 'Echo Park Labs',
     'author_email': 'david@echoparklabs.com',
-    'url': 'https://bitbucket.org/davidraleigh/epl-imagery-api',
-    'version': open('VERSION').read(),
-    'packages': find_packages('.'),
+    'url': 'https://bitbucket.org/davidraleigh/imagery_client',
+    'version': open('../VERSION').read(),
+    "namespace_package": ['epl'],
+    'packages': ['epl.client.imagery'],
+    'install_requires': ['epl.grpc.imagery'],
     'zip_safe': False
 }
 
@@ -28,10 +31,6 @@ clssfrs = [
     "Programming Language :: Python :: 3.5",
     "Programming Language :: Python :: 3.6",
 ]
-
 kwargs['classifiers'] = clssfrs
 
-try:
-    setup(**kwargs)
-finally:
-    os.chdir(old_path)
+setup(**kwargs)
