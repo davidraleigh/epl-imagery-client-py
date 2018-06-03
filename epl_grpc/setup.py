@@ -17,8 +17,8 @@ kwargs = {
     'author_email': 'david@echoparklabs.com',
     'url': 'https://bitbucket.org/davidraleigh/imagery_client',
     'version': open('../VERSION').read(),
-    "namespace_package": ['epl'],
-    'packages': ['epl.grpc'],
+    # "namespace_package": ['epl'],
+    # 'packages': ['epl.grpc'],
     # 'install_requires': ['epl.imagery.native'],
     'zip_safe': False
 }

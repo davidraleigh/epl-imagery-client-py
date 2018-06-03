@@ -26,7 +26,9 @@ option java_outer_classname = "EPLImagery";
 option objc_class_prefix = "RTG";
 
 package epl.grpc.imagery;
+
 import "google/protobuf/timestamp.proto";
+import "epl/grpc/geometry/geometry_operators.proto";
 
 /*
  gRPC Interfaces for working with imagery operators
@@ -116,7 +118,7 @@ message ImageryRequest {
 
     // TODO rename extent to bounding_box
     repeated float envelope_boundary = 4;
-    ServiceSpatialReference boundary_cs = 5;
+    epl.grpc.geometry.SpatialReferenceData boundary_cs = 5;
     bytes polygon_boundary_wkb = 6;
 
     GDALDataType output_type = 7;
@@ -150,7 +152,7 @@ message MetadataRequest {
     string sort_by= 5;
     int32 limit = 6;
 
-    repeated RangeQueryParams data_filters = 7;
+    QueryFilter data_filters = 7;
     // 1-4 values
     // 1st value is the maximum cloud cover
     // 2nd is minimum cloud cover
@@ -159,20 +161,31 @@ message MetadataRequest {
     repeated float cloud_cover = 8;
 }
 
-message QueryParams {
-    string param_name = 1;
-    string value = 2;
-    bool equals = 3;
+enum QueryFilterType {
+    UknownDB = 0;
+    LandsatBigQuery = 1;
+    Sentinel2BigQuery = 2;
 }
 
-message RangeQueryParams {
+message QueryFilter {
+    QueryFilterType query_filter_type = 1;
+    map<string, QueryParams> query_filter_map = 2;
+}
+
+message QueryParams {
     string param_name = 1;
-    string value = 2;
-    bool equals = 3;
-    string start = 4;
-    bool start_inclusive = 5;
-    string end = 6;
-    bool end_inclusive = 7;
+    string parent_param_name = 2;
+    repeated string values = 3;
+    repeated string excluded_values = 4;
+
+    string start = 5;
+    bool start_inclusive = 6;
+    string end = 7;
+    bool end_inclusive = 8;
+
+    repeated epl.grpc.geometry.EnvelopeData bounds = 9;
+    epl.grpc.geometry.GeometryBagData geometry_bag = 10;
+    epl.grpc.geometry.OperatorRequest operator_request = 11;
 }
 
 message BigFileResult {
@@ -245,44 +258,44 @@ message MetadataResult {
 }
 
 
-/*
-  Type of geometry encoding
-*/
-enum GeometryEncodingType {
-    unknown = 0;
-    wkb = 1; // well-known binary
-    wkt = 2; // well-known text
-    geojson = 3; // geojson
-    esrishape = 4; // esri shape binary
-}
-
-message ServiceGeometry {
-    // id is usually associated with position in file format or database
-    repeated int64 geometry_id = 1;
-
-    // TODO review esri encoding typename (this is for the esri shape binary format)
-    // type can be 'wkt', 'wkb', 'geojson', or 'esri'
-    GeometryEncodingType geometry_encoding_type = 2;
-
-    // the geometry encoded as base64 (wkb or esri) or as a string (wkt or geojson)
-    repeated string geometry_string = 3;
-    repeated bytes geometry_binary = 4;
-
-    ServiceSpatialReference spatial_reference = 5;
-}
-
-message ServiceSpatialReference {
-    string proj4 = 4;
-    // String that is a wkt, wkid, esri_wkt, or a proj4 string
-    string esri_wkt = 5;
-
-    // type is either 'wkid', 'esri_wkt'
-    int32 wkid = 6;
-}
-
-message ServiceEnvelope2D {
-    double xmin = 1;
-    double ymin = 2;
-    double xmax = 3;
-    double ymax = 4;
-}
+///*
+//  Type of geometry encoding
+//*/
+//enum GeometryEncodingType {
+//    unknown = 0;
+//    wkb = 1; // well-known binary
+//    wkt = 2; // well-known text
+//    geojson = 3; // geojson
+//    esrishape = 4; // esri shape binary
+//}
+//
+//message ServiceGeometry {
+//    // id is usually associated with position in file format or database
+//    repeated int64 geometry_id = 1;
+//
+//    // TODO review esri encoding typename (this is for the esri shape binary format)
+//    // type can be 'wkt', 'wkb', 'geojson', or 'esri'
+//    GeometryEncodingType geometry_encoding_type = 2;
+//
+//    // the geometry encoded as base64 (wkb or esri) or as a string (wkt or geojson)
+//    repeated string geometry_string = 3;
+//    repeated bytes geometry_binary = 4;
+//
+//    ServiceSpatialReference spatial_reference = 5;
+//}
+//
+//message ServiceSpatialReference {
+//    string proj4 = 4;
+//    // String that is a wkt, wkid, esri_wkt, or a proj4 string
+//    string esri_wkt = 5;
+//
+//    // type is either 'wkid', 'esri_wkt'
+//    int32 wkid = 6;
+//}
+//
+//message ServiceEnvelope2D {
+//    double xmin = 1;
+//    double ymin = 2;
+//    double xmax = 3;
+//    double ymax = 4;
+//}

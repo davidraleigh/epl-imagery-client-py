@@ -19,10 +19,12 @@ FROM python:3.6.5-slim-stretch
 
 MAINTAINER David Raleigh <david@echoparklabs.io>
 
+# TODO didn't used to have to install protobuf. check this out
 RUN DEBIAN_FRONTEND=noninteractive apt update && \
-    pip3 install --upgrade pip && \
     pip3 install grpcio && \
-    pip3 install numpy
+    pip3 install protobuf && \
+    pip3 install numpy && \
+    pip3 install peewee
 
 # TODO only for testing install
 RUN pip3 install pytest lxml requests shapely
