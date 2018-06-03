@@ -20,6 +20,7 @@ FROM python:3.6.5-slim-stretch
 MAINTAINER David Raleigh <david@echoparklabs.io>
 
 RUN DEBIAN_FRONTEND=noninteractive apt update && \
+    pip3 install --upgrade pip && \
     pip3 install grpcio && \
     pip3 install numpy
 
