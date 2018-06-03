@@ -19,7 +19,7 @@ kwargs = {
     'version': open('../VERSION').read(),
     "namespace_package": ['epl'],
     'packages': ['epl.grpc.imagery'],
-    'install_requires': ['epl.imagery.native'],
+    # 'install_requires': ['epl.imagery.native'],
     'zip_safe': False
 }
 

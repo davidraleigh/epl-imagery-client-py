@@ -12,8 +12,7 @@ WORKDIR /opt/src/epl-imagery-api
 COPY ./ ./
 
 # firgured out the package defintin by looking at comments in this issue https://github.com/google/protobuf/issues/2283
-RUN python3 -mgrpc_tools.protoc -I=./proto/ --python_out=./epl_grpc/ --grpc_python_out=./epl_grpc/ ./proto/epl/grpc/imagery/epl_imagery.proto
-
+RUN python3 -mgrpc_tools.protoc -I=./proto --python_out=./epl_grpc/ --grpc_python_out=./epl_grpc/ ./proto/epl/grpc/geometry/geometry_operators.proto  ./proto/epl/grpc/imagery/epl_imagery.proto
 
 
 FROM python:3.6.5-slim-stretch
