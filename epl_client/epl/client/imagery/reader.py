@@ -14,7 +14,8 @@ from enum import Enum, IntEnum
 
 import epl.grpc.imagery.epl_imagery_pb2 as epl_imagery_pb2
 import epl.grpc.imagery.epl_imagery_pb2_grpc as epl_imagery_pb2_grpc
-from epl.imagery.native.metadata_helpers import LandsatQueryFilters, _RangeQueryParam
+from epl.grpc.geometry.geometry_operators_pb2 import SpatialReferenceData
+from epl.native.imagery.metadata_helpers import LandsatQueryFilters
 from google.protobuf import timestamp_pb2
 
 
@@ -169,24 +170,28 @@ class MetadataService:
         return timestamp_message
 
     @staticmethod
-    def _parse_query_params(metadata_filters):
+    def _parse_query_params(metadata_filters: LandsatQueryFilters):
         data_filters_pb = []
         for param_name_key, param_obj in metadata_filters.__dict__.items():
 
-            if param_obj.value:
-                range_params = epl_imagery_pb2.RangeQueryParams()
-                range_params.value = str(param_obj.value)
-                range_params.equals = param_obj.equals
-                range_params.param_name = param_obj.param_name
-                data_filters_pb.append(range_params)
-            elif isinstance(param_obj, _RangeQueryParam) and (param_obj.end is not None or param_obj.start is not None):
-                range_params = epl_imagery_pb2.RangeQueryParams()
-                range_params.start = str(param_obj.start)
-                range_params.end = str(param_obj.end)
-                range_params.start_inclusive = param_obj.start_inclusive
-                range_params.end_inclusive = param_obj.end_inclusive
-                range_params.param_name = param_obj.param_name
-                data_filters_pb.append(range_params)
+            query_params = epl_imagery_pb2.QueryParams()
+            query_params.param_name = param_name_key
+            if param_obj.values:
+                query_params.values = [str(v) for v in param_obj.value]
+            if param_obj.not_values:
+                query_params.excluded_values = [str(v) for v in param_obj.not_values]
+
+            # if isinstance(param_obj, _RangeQueryParam) and (param_obj.end is not None or param_obj.start is not None):
+            #     query_params = epl_imagery_pb2.RangeQueryParams()
+            #     query_params.start = str(param_obj.start)
+            #     query_params.end = str(param_obj.end)
+            #     query_params.start_inclusive = param_obj.start_inclusive
+            #     query_params.end_inclusive = param_obj.end_inclusive
+            #
+            # if isinstance(param_obj, _BoundQueryParam):
+            #     query_params.bounds.append(query_params.bounds.bounds)
+
+            data_filters_pb.append(query_params)
 
         return data_filters_pb
 
@@ -206,7 +211,7 @@ class MetadataService:
             end_date: datetime=None,
             sort_by=None,
             limit=10,
-            data_filters=None):
+            data_filters: LandsatQueryFilters=None):
 
         if GRPC_SERVICE_HOST == "localhost" or ip_reg.match(GRPC_SERVICE_HOST):
             channel = grpc.insecure_channel(IMAGERY_SERVICE, options=GRPC_CHANNEL_OPTIONS)
@@ -219,7 +224,7 @@ class MetadataService:
         data_filters_pb = None
 
         if data_filters:
-            data_filters_pb = MetadataService._parse_query_params(data_filters)
+            data_filters_pb = data_filters.get_query_filter()
 
         request = epl_imagery_pb2.MetadataRequest(satellite_id=satellite_id,
                                                   bounding_box=bounding_box,
@@ -332,7 +337,7 @@ class Landsat:
             request.envelope_boundary.extend(envelope_boundary)
 
         if not envelope_boundary or not polygon_boundary_wkb:
-            spatial_reference = epl_imagery_pb2.ServiceSpatialReference()
+            spatial_reference = SpatialReferenceData()
             if isinstance(boundary_cs, int):
                 spatial_reference.wkid = boundary_cs
             elif "[" in boundary_cs:
