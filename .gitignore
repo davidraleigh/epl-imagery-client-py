@@ -158,5 +158,7 @@ venv.bak/
 .DS_Store
 
 .idea/inspectionProfiles/
-epl_grpc/epl/grpc/imagery/epl_imagery_pb2.py
-epl_grpc/epl/grpc/imagery/epl_imagery_pb2_grpc.py
+epl/grpc/geometry/geometry_operators_pb2.py
+epl/grpc/geometry/geometry_operators_pb2_grpc.py
+epl/grpc/imagery/epl_imagery_pb2.py
+epl/grpc/imagery/epl_imagery_pb2_grpc.py

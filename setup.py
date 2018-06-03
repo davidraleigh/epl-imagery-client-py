@@ -12,11 +12,11 @@ sys.path.insert(0, src_path)
 kwargs = {
     'name': 'epl',
     'description': 'Echo Park Labs Client Imagery API',
-    'long_description': open('../README.md').read(),
+    'long_description': open('README.md').read(),
     'author': 'Echo Park Labs',
     'author_email': 'david@echoparklabs.com',
     'url': 'https://bitbucket.org/davidraleigh/imagery_client',
-    'version': open('../VERSION').read(),
+    'version': open('VERSION').read(),
     'packages': find_packages(),
     'zip_safe': False
 }
