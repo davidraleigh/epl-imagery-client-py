@@ -206,10 +206,6 @@ class MetadataService:
     def search(
             self,
             satellite_id: SpacecraftID=None,
-            bounding_box=None,
-            start_date: datetime=None,
-            end_date: datetime=None,
-            sort_by=None,
             limit=10,
             data_filters: LandsatQueryFilters=None):
 
@@ -227,20 +223,8 @@ class MetadataService:
             data_filters_pb = data_filters.get_query_filter()
 
         request = epl_imagery_pb2.MetadataRequest(satellite_id=satellite_id,
-                                                  bounding_box=bounding_box,
-                                                  sort_by=sort_by,
                                                   limit=limit,
                                                   data_filters=data_filters_pb)
-
-        # if cloud_cover:
-        #     if not isinstance(cloud_cover, list):
-        #         cloud_cover = [cloud_cover]
-        #     request.cloud_cover.extend(cloud_cover)
-
-        if start_date:
-            request.start_date.CopyFrom(MetadataService.__prep_date(start_date, _DateType.START_DATE))
-        if end_date:
-            request.end_date.CopyFrom(MetadataService.__prep_date(end_date, _DateType.END_DATE))
 
         results_generator = stub.MetadataSearch(request)
 
