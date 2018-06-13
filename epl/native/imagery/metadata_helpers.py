@@ -11,25 +11,28 @@ from epl.grpc.geometry.geometry_operators_pb2 import GeometryBagData, SpatialRef
 sql_reg = re.compile(r'SELECT[\s\S]+FROM[\s\S]+(AS[\s\S]+)\Z')
 
 
-class _ParamHelpers:
-    def __init__(self, query_params: epl_imagery_pb2.QueryParams=None):
+class _BaseFilter:
+    def __init__(self, metadata_filters, query_params: epl_imagery_pb2.QueryParams=None):
         self.b_initialized = False
+        self.metadata_filters = metadata_filters
         if query_params:
             self.query_params = query_params
             self.b_initialized = True
+            if self.query_params.sort_direction != epl_imagery_pb2.NOT_SORTED:
+                self.metadata_filters.sorted_by = self
         else:
             self.query_params = epl_imagery_pb2.QueryParams()
 
     @staticmethod
-    def _get_date_string(value, time_part: time=None):
+    def _prep_data(value, time_part: time=None):
         if not value:
             return ""
         if type(value) is date and time_part:
             value = datetime.combine(value, time_part)
-        elif type(value) is not datetime:
-            raise ValueError
+        if type(value) is datetime:
+            return '{}'.format(value.isoformat())
 
-        return '{}'.format(value.isoformat())
+        return str(value)
 
     def _set_value(self, value, b_equals):
         self.b_initialized = True
@@ -38,9 +41,9 @@ class _ParamHelpers:
         if value is datetime:
             value = value.isoformat()
 
-        if b_equals:
+        if b_equals and str(value) not in self.query_params.values:
             self.query_params.values.append(str(value))
-        else:
+        elif not b_equals and str(value) not in self.query_params.excluded_values:
             self.query_params.excluded_values.append(str(value))
 
     def get_query_params(self) -> epl_imagery_pb2.QueryParams:
@@ -48,61 +51,127 @@ class _ParamHelpers:
             return self.query_params
         return None
 
+    def append_select(self, p_select: ModelSelect):
+        raise NotImplementedError
 
-class _QueryParam(_ParamHelpers):
+    def sort_by(self, sort_direction: epl_imagery_pb2.SortDirection):
+        """
+        sort the returned results by this field. if you sort by multiple fields your results may not be sorted properly
+        :param sort_direction:
+        :return:
+        """
+        # TODO if you want to sort by multiple parameters, then this class will have to have a pointer to the filter
+        if self.metadata_filters.sorted_by:
+            self.metadata_filters.sorted_by.query_params.sort_direction = epl_imagery_pb2.NOT_SORTED
+
+        self.metadata_filters.sorted_by = self
+
+        # class that contains it, and upon updating this class there is a call back to the container class to insert
+        # this parameter in a list
+        self.query_params.sort_direction = sort_direction
+        self.b_initialized = True
+
+
+class _SingleFieldFilter(_BaseFilter):
     """for now can't handle multiple ranges. set range will clear out a previously designated range"""
-    def __init__(self, field: Field, query_params: epl_imagery_pb2.QueryParams=None):
-        super().__init__(query_params=query_params)
+    def __init__(self, field: Field, metadata_filters, query_params: epl_imagery_pb2.QueryParams=None):
+        super().__init__(metadata_filters, query_params=query_params)
         self.field = field
         if self.b_initialized:
             return
 
         self.query_params.param_name = field.name
-        # self.query_params.parent_param_name =
-
-        self.query_params.start = ""
-        self.query_params.end = ""
-        self.query_params.start_inclusive = True
-        self.query_params.end_inclusive = True
 
     def set_value(self, value):
         if type(value) is date:
-            self.set_range(_QueryParam._get_date_string(datetime.combine(value, datetime.min.time())),
-                           True,
-                           _QueryParam._get_date_string(datetime.combine(value, datetime.max.time())),
-                           True)
+            self.set_range(start=_BaseFilter._prep_data(datetime.combine(value, datetime.min.time())),
+                           start_inclusive=True,
+                           end=_BaseFilter._prep_data(datetime.combine(value, datetime.max.time())),
+                           end_inclusive=True)
         elif type(value) is datetime:
             # TODO is this string conversion a bigquery landsat thing?
-            self.set_value(_QueryParam._get_date_string(value))
+            self.set_value(_SingleFieldFilter._prep_data(value))
         else:
             self._set_value(value, True)
 
-    def set_exclude_value(self, not_value):
-        if type(not_value) is date:
-            self.set_range(_QueryParam._get_date_string(datetime.combine(not_value, datetime.max.time())),
-                           False,
-                           _QueryParam._get_date_string(datetime.combine(not_value, datetime.min.time())),
-                           False)
-        elif type(not_value) is datetime:
-            self.set_exclude_value(_QueryParam._get_date_string(not_value))
+    def set_exclude_value(self, exclude_value):
+        if type(exclude_value) is date:
+            self.set_exclude_range(start=_BaseFilter._prep_data(datetime.combine(exclude_value, datetime.min.time())),
+                                   start_inclusive=True,
+                                   end=_BaseFilter._prep_data(datetime.combine(exclude_value, datetime.max.time())),
+                                   end_inclusive=True)
+        elif type(exclude_value) is datetime:
+            self.set_exclude_value(_SingleFieldFilter._prep_data(exclude_value))
         else:
-            self._set_value(not_value, False)
+            self._set_value(exclude_value, False)
 
     def set_range(self, start="", start_inclusive=True, end="", end_inclusive=True):
-        # TODO set range should be more than one range
         if not start and not end:
             raise ValueError
 
+        if start and end and start > end:
+            raise ValueError("the start of a range must be larger than the end")
+
         self.b_initialized = True
 
-        if isinstance(start, date) or isinstance(start, datetime) or isinstance(end, date) or isinstance(end, datetime):
-            self.set_range(_QueryParam._get_date_string(start, datetime.min.time()), start_inclusive,
-                           _QueryParam._get_date_string(end, datetime.max.time()), end_inclusive)
-        else:
-            self.query_params.start = str(start)
-            self.query_params.end = str(end)
-            self.query_params.start_inclusive = start_inclusive
-            self.query_params.end_inclusive = end_inclusive
+        self.query_params.include_ranges.add(start=_BaseFilter._prep_data(start, datetime.min.time()),
+                                             start_inclusive=start_inclusive,
+                                             end=_BaseFilter._prep_data(end, datetime.max.time()),
+                                             end_inclusive=end_inclusive)
+
+    def set_exclude_range(self, start="", start_inclusive=True, end="", end_inclusive=True):
+        if not start and not end:
+            raise ValueError
+
+        if start and end and start > end:
+            raise ValueError("the start of a range must be larger than the end")
+
+        self.b_initialized = True
+
+        self.query_params.exclude_ranges.add(start=_BaseFilter._prep_data(start, datetime.min.time()),
+                                             start_inclusive=start_inclusive,
+                                             end=_BaseFilter._prep_data(end, datetime.max.time()),
+                                             end_inclusive=end_inclusive)
+
+    def _append_ranges(self, ranges, b_exclude):
+        expression = None
+        for include_range in ranges:
+            start = include_range.start
+            end = include_range.end
+            start_inclusive = include_range.start_inclusive
+            end_inclusive = include_range.end_inclusive
+
+            start_expression = None
+            if start and start_inclusive:
+                start_expression = (self.field >= start)
+            elif start:
+                start_expression = (self.field > start)
+
+            end_expression = None
+            if end and end_inclusive:
+                end_expression = (self.field <= end)
+            elif end:
+                end_expression = (self.field < end)
+
+            expression_part = None
+            if start_expression and end_expression:
+                expression_part = (start_expression & end_expression)
+            elif start_expression:
+                expression_part = start_expression
+            elif end_expression:
+                expression_part = end_expression
+
+            if b_exclude:
+                expression_part = ~expression_part
+
+            if not expression:
+                expression = expression_part
+            elif b_exclude:
+                expression = (expression & expression_part)
+            else:
+                expression = (expression | expression_part)
+
+        return expression
 
     def append_select(self, p_select: ModelSelect):
         if self.query_params.sort_direction == epl_imagery_pb2.ASCENDING:
@@ -117,38 +186,21 @@ class _QueryParam(_ParamHelpers):
             if self.query_params.excluded_values:
                 p_select = p_select.where(~(self.field << list(self.query_params.excluded_values)))
 
-        if self.query_params.start:
-            if self.query_params.start_inclusive:
-                p_select = p_select.where(self.field >= self.query_params.start)
-            else:
-                p_select = p_select.where(self.field > self.query_params.start)
-        if self.query_params.end:
-            if self.query_params.end_inclusive:
-                p_select = p_select.where(self.field <= self.query_params.end)
-            else:
-                p_select = p_select.where(self.field < self.query_params.end)
+        if self.query_params.include_ranges:
+            p_select = p_select.where(self._append_ranges(self.query_params.include_ranges, False))
+        if self.query_params.exclude_ranges:
+            p_select = p_select.where(self._append_ranges(self.query_params.exclude_ranges, True))
 
         return p_select
 
-    def sort_by(self, sort_direction: epl_imagery_pb2.SortDirection):
-        """
-        sort the returned results by this field. if you sort by multiple fields your results may not be sorted properly
-        :param sort_direction:
-        :return:
-        """
-        # TODO if you want to sort by multiple parameters, then this class will have to have a pointer to the filter
-        # class that contains it, and upon updating this class there is a call back to the container class to insert
-        # this parameter in a list
-        self.query_params.sort_direction = sort_direction
-        self.b_initialized = True
 
-
-class _PairQueryParam(_ParamHelpers):
+class _PairFieldFilter(_BaseFilter):
     def __init__(self,
                  left_field: Field,
                  right_field: Field,
+                 metadata_filters,
                  query_params: epl_imagery_pb2.QueryParams=None):
-        super().__init__(query_params)
+        super().__init__(metadata_filters, query_params)
         self.left_field = left_field
         self.right_field = right_field
 
@@ -178,69 +230,92 @@ class _PairQueryParam(_ParamHelpers):
         raise NotImplementedError
 
 
-class _BoundQueryParam(_ParamHelpers):
-    """        north_lat = _QueryParam("north_lat")
-        south_lat = _QueryParam("south_lat")
-        west_lon = _QueryParam("west_lon")
-        east_lon = _QueryParam("east_lon")"""
+class _GeometryFilter(_BaseFilter):
+    """        north_lat = _SingleFieldFilter("north_lat")
+        south_lat = _SingleFieldFilter("south_lat")
+        west_lon = _SingleFieldFilter("west_lon")
+        east_lon = _SingleFieldFilter("east_lon")"""
     def __init__(self,
                  north_field: Field,
                  south_field: Field,
                  west_field: Field,
                  east_field: Field,
+                 metadata_filters,
                  query_params: epl_imagery_pb2.QueryParams=None):
-        super().__init__(query_params)
+        super().__init__(metadata_filters, query_params)
         self.north_field = north_field
         self.south_field = south_field
         self.west_field = west_field
         self.east_field = east_field
 
     def set_bounds(self,
-                   west: float=None,
-                   south: float=None,
-                   east: float=None,
-                   north: float=None,
+                   west: float,
+                   south: float,
+                   east: float,
+                   north: float,
                    spatial_reference: SpatialReferenceData=None):
-        if not west:
-            west = -180
-        if not east:
-            east = 180
-        if not south:
-            south = -90
-        if not north:
-            north = 90
+        # TODO maybe in the future we allow multiple areas of interest to be set for a query?
+        # if self.query_params.geometry_bag.geometry_binaries:
+        #     raise ValueError("geometry aoi already set")
+        # if self.query_params.bounds:
+        #     raise ValueError("bounds aoi already set")
+
         if not spatial_reference:
             spatial_reference = SpatialReferenceData(wkid=4326)
 
         self.b_initialized = True
         self.query_params.bounds.add(xmin=west, ymin=south, xmax=east, ymax=north, spatial_reference=spatial_reference)
 
+    def set_geometry(self, polygon_wkb: bytes, spatial_reference: SpatialReferenceData=None):
+        # TODO maybe in the future we allow multiple areas of interest to be set for a query?
+        # if self.query_params.geometry_bag.geometry_binaries:
+        #     raise ValueError("geometry aoi already set")
+        # if self.query_params.bounds:
+        #     raise ValueError("bounds aoi already set")
+
+        if not spatial_reference:
+            spatial_reference = SpatialReferenceData(wkid=4326)
+
+        self.b_initialized = True
+        self.query_params.geometry_bag.geometry_binaries.append(polygon_wkb)
+        self.query_params.geometry_bag.spatial_reference.CopyFrom(spatial_reference)
+
+    def get_geometry(self, index: int=0) -> (bytes, SpatialReferenceData):
+        if self.query_params.geometry_bag.geometry_binaries:
+            return self.query_params.geometry_bag.geometry_binaries[index], self.query_params.geometry_bag.spatial_reference
+        return None, None
+
     def append_select(self, p_select: ModelSelect):
         if not self.b_initialized:
             return p_select
 
         expression = None
+        # TODO, this needs to be tested with dateline
         for bounds in self.query_params.bounds:
             xmin = bounds.xmin
             ymin = bounds.ymin
             xmax = bounds.xmax
             ymax = bounds.ymax
 
-            a = (xmin <= self.west_field).bin_and((xmax >= self.west_field))
-            b = (xmin >= self.west_field).bin_and((self.east_field >= xmin))
-            ab = a.bin_or(b)
-            c = (self.south_field <= ymin).bin_and((self.north_field >= ymin))
-            d = (self.south_field > ymin).bin_and((ymax >= self.south_field))
-            cd = c.bin_or(d)
-            abcd = ab.bin_and(cd)
+            a = (xmin <= self.west_field) & (xmax >= self.west_field)
+            b = (xmin >= self.west_field) & (self.east_field >= xmin)
+            ab = a | b
+            c = (self.south_field <= ymin) & (self.north_field >= ymin)
+            d = (self.south_field > ymin) & (ymax >= self.south_field)
+            cd = c | d
+            abcd = ab & cd
             expression_part = abcd
 
             if not expression:
                 expression = expression_part
             else:
-                expression.bin_or(expression_part)
+                expression = expression | expression_part
 
-        return p_select.where(expression)
+        # TODO process append_select for geometries:
+        # for polygon_wkb in self.query_params.geometry_bag.geometry_binaries:
+        if expression:
+            return p_select.where(expression)
+        return p_select
 
 
 class MetadataModel(Model):
@@ -275,14 +350,16 @@ class LandsatModel(MetadataModel):
 
 class MetadataFilters:
     def __init__(self):
+        self.sorted_by = None
         self.model = MetadataModel
-        self.cloud_cover = _QueryParam(MetadataModel.cloud_cover)
-        self.acquired = _QueryParam(MetadataModel.acquired)
-        self.bounds = _BoundQueryParam(MetadataModel.north_lat,
-                                       MetadataModel.south_lat,
-                                       MetadataModel.west_lon,
-                                       MetadataModel.east_lon)
-        self.spacecraft_id = _QueryParam(LandsatModel.spacecraft_id)
+
+        self.cloud_cover = _SingleFieldFilter(MetadataModel.cloud_cover, self)
+        self.acquired = _SingleFieldFilter(MetadataModel.acquired, self)
+        self.aoi = _GeometryFilter(MetadataModel.north_lat,
+                                   MetadataModel.south_lat,
+                                   MetadataModel.west_lon,
+                                   MetadataModel.east_lon, self)
+        self.spacecraft_id = _SingleFieldFilter(LandsatModel.spacecraft_id, self)
 
     @staticmethod
     def param_sequence(params):
@@ -292,7 +369,7 @@ class MetadataFilters:
             params[i] = param
         return params
 
-    def get_select(self, model_select: ModelSelect=None):
+    def get_select(self, model_select: ModelSelect=None) -> ModelSelect:
         if not model_select:
             model_select = self.model.select()
 
@@ -300,14 +377,14 @@ class MetadataFilters:
         sorted_keys = sorted(self.__dict__)
         for key in sorted_keys:
             item = self.__dict__[key]
-            if not isinstance(item, _ParamHelpers):
+            if not isinstance(item, _BaseFilter) or key == "sorted_by":
                 continue
 
             model_select = item.append_select(model_select)
 
         return model_select
 
-    def get_sql(self, limit=10, model_select: ModelSelect=None):
+    def get_sql(self, limit=10, model_select: ModelSelect=None) -> str:
 
         select_statement = self.get_select(model_select)
 
@@ -325,22 +402,24 @@ class MetadataFilters:
         # sql_formatted = sql_formatted.replace('"t1".', '')
         return "{} LIMIT {}".format(sql_formatted, limit)
 
-    def get_query_filter(self):
+    def get_query_filter(self) -> epl_imagery_pb2.QueryFilter:
         query_filter = epl_imagery_pb2.QueryFilter()
 
         for key in sorted(self.__dict__):
+            #  TODO if geometry bag and bounds set then throw exception that both can't be set.
+
             item = self.__dict__[key]
-            if not isinstance(item, _ParamHelpers) \
-                    and not isinstance(item, _BoundQueryParam) \
+            if not isinstance(item, _BaseFilter) \
+                    and not isinstance(item, _GeometryFilter) \
                     and not isinstance(item, GeometryBagData):
                 continue
 
-            query_params = None
-            if isinstance(item, GeometryBagData):
-                if item.geometry_binaries or item.geometry_strings:
-                    query_params = epl_imagery_pb2.QueryParams(geometry_bag=item)
-            else:
-                query_params = item.get_query_params()
+            # query_params = None
+            # if isinstance(item, GeometryBagData):
+            #     if item.geometry_binaries or item.geometry_strings:
+            #         query_params = epl_imagery_pb2.QueryParams(geometry_bag=item)
+            # else:
+            query_params = item.get_query_params()
 
             if query_params:
                 query_filter.query_filter_map[key].CopyFrom(query_params)
@@ -354,56 +433,60 @@ class LandsatQueryFilters(MetadataFilters):
         super().__init__()
         self.model = LandsatModel
 
-        self.cloud_cover = _QueryParam(LandsatModel.cloud_cover)
-        self.acquired = _QueryParam(LandsatModel.sensing_time)
+        self.cloud_cover = _SingleFieldFilter(LandsatModel.cloud_cover, self)
+        self.acquired = _SingleFieldFilter(LandsatModel.sensing_time, self)
 
         # These are really only here for sorting. say you want to sort by easter most values or whatever else
-        self.north_lat = _QueryParam(LandsatModel.north_lat)
-        self.south_lat = _QueryParam(LandsatModel.south_lat)
-        self.east_lon = _QueryParam(LandsatModel.east_lon)
-        self.west_lon = _QueryParam(LandsatModel.west_lon)
+        self.north_lat = _SingleFieldFilter(LandsatModel.north_lat, self)
+        self.south_lat = _SingleFieldFilter(LandsatModel.south_lat, self)
+        self.east_lon = _SingleFieldFilter(LandsatModel.east_lon, self)
+        self.west_lon = _SingleFieldFilter(LandsatModel.west_lon, self)
 
-        self.bounds = _BoundQueryParam(LandsatModel.north_lat,
-                                       LandsatModel.south_lat,
-                                       LandsatModel.west_lon,
-                                       LandsatModel.east_lon)
+        self.aoi = _GeometryFilter(LandsatModel.north_lat,
+                                   LandsatModel.south_lat,
+                                   LandsatModel.west_lon,
+                                   LandsatModel.east_lon, self)
 
-        self.spacecraft_id = _QueryParam(LandsatModel.spacecraft_id)
+        self.spacecraft_id = _SingleFieldFilter(LandsatModel.spacecraft_id, self)
 
-        self.scene_id = _QueryParam(LandsatModel.scene_id)
-        self.product_id = _QueryParam(LandsatModel.product_id)
-        self.sensor_id = _QueryParam(LandsatModel.sensor_id)
-        self.collection_number = _QueryParam(LandsatModel.collection_number)
-        self.collection_category = _QueryParam(LandsatModel.collection_category)
-        self.data_type = _QueryParam(LandsatModel.data_type)
-        self.base_url = _QueryParam(LandsatModel.base_url)
+        self.scene_id = _SingleFieldFilter(LandsatModel.scene_id, self)
+        self.product_id = _SingleFieldFilter(LandsatModel.product_id, self)
+        self.sensor_id = _SingleFieldFilter(LandsatModel.sensor_id, self)
+        self.collection_number = _SingleFieldFilter(LandsatModel.collection_number, self)
+        self.collection_category = _SingleFieldFilter(LandsatModel.collection_category, self)
+        self.data_type = _SingleFieldFilter(LandsatModel.data_type, self)
+        self.base_url = _SingleFieldFilter(LandsatModel.base_url, self)
 
-        self.wrs_path = _QueryParam(LandsatModel.wrs_path)
-        self.wrs_row = _QueryParam(LandsatModel.wrs_row)
-        self.wrs_path_row = _PairQueryParam(LandsatModel.wrs_path, LandsatModel.wrs_row)
+        self.wrs_path = _SingleFieldFilter(LandsatModel.wrs_path, self)
+        self.wrs_row = _SingleFieldFilter(LandsatModel.wrs_row, self)
+        self.wrs_path_row = _PairFieldFilter(LandsatModel.wrs_path, LandsatModel.wrs_row, self)
 
-        self.geometry_bag = GeometryBagData()
+        self.total_size = _SingleFieldFilter(LandsatModel.total_size, self)
 
-        self.total_size = _QueryParam(LandsatModel.total_size)
+        # self.geometry_bag = GeometryBagData()
 
+        # TODO if bounds and geometry bag are set that means that geometry bag was set
         if query_filter:
             for key in query_filter.query_filter_map:
                 query_param = query_filter.query_filter_map[key]
-                if key == "bounds":
-                    self.__dict__[key] = _BoundQueryParam(LandsatModel.north_lat,
-                                                          LandsatModel.south_lat,
-                                                          LandsatModel.west_lon,
-                                                          LandsatModel.east_lon,
-                                                          query_params=query_param)
-                elif key == "wrs_path_row":
-                    self.__dict__[key] = _PairQueryParam(LandsatModel.wrs_path,
-                                                         LandsatModel.wrs_row,
+                if key == "aoi":
+                    self.__dict__[key] = _GeometryFilter(LandsatModel.north_lat,
+                                                         LandsatModel.south_lat,
+                                                         LandsatModel.west_lon,
+                                                         LandsatModel.east_lon,
+                                                         metadata_filters=self,
                                                          query_params=query_param)
-                elif key != "geometry_bag":
-                    self.__dict__[key] = _QueryParam(field=LandsatModel.__dict__[query_param.param_name].field,
-                                                     query_params=query_param)
-                else:
-                    self.geometry_bag = query_param
+                elif key == "wrs_path_row":
+                    self.__dict__[key] = _PairFieldFilter(LandsatModel.wrs_path,
+                                                          LandsatModel.wrs_row,
+                                                          metadata_filters=self,
+                                                          query_params=query_param)
+                elif key != "sorted_by":
+                    self.__dict__[key] = _SingleFieldFilter(field=LandsatModel.__dict__[query_param.param_name].field,
+                                                            metadata_filters=self,
+                                                            query_params=query_param)
+                # else:
+                #     self.geometry_bag = query_param
 
 
 

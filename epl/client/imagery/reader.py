@@ -148,54 +148,6 @@ class FunctionDetails:
 
 
 class MetadataService:
-    @staticmethod
-    def __prep_date(date_input, date_type: _DateType) -> timestamp_pb2.Timestamp:
-        if not date_input:
-            return None
-
-        if type(date_input) is date:
-            # TODO, remove this logic. Too much secret help to the user who shouldn't be using api this way.
-            # only in place to pass first set of tests.
-            if date_type == _DateType.START_DATE:
-                date_input = datetime.combine(date_input, datetime.min.time())
-            elif date_type == _DateType.END_DATE:
-                date_input = datetime.combine(date_input, datetime.max.time())
-
-        if type(date_input) is not datetime:
-            return None
-
-        timestamp_message = timestamp_pb2.Timestamp()
-        # not necessary at this time to support decimal seconds for epl_grpc
-        timestamp_message.FromJsonString(date_input.strftime("%Y-%m-%dT%H:%M:%SZ"))
-        return timestamp_message
-
-    @staticmethod
-    def _parse_query_params(metadata_filters: LandsatQueryFilters):
-        data_filters_pb = []
-        for param_name_key, param_obj in metadata_filters.__dict__.items():
-
-            query_params = epl_imagery_pb2.QueryParams()
-            query_params.param_name = param_name_key
-            if param_obj.values:
-                query_params.values = [str(v) for v in param_obj.value]
-            if param_obj.not_values:
-                query_params.excluded_values = [str(v) for v in param_obj.not_values]
-
-            # if isinstance(param_obj, _RangeQueryParam) and (param_obj.end is not None or param_obj.start is not None):
-            #     query_params = epl_imagery_pb2.RangeQueryParams()
-            #     query_params.start = str(param_obj.start)
-            #     query_params.end = str(param_obj.end)
-            #     query_params.start_inclusive = param_obj.start_inclusive
-            #     query_params.end_inclusive = param_obj.end_inclusive
-            #
-            # if isinstance(param_obj, _BoundQueryParam):
-            #     query_params.bounds.append(query_params.bounds.bounds)
-
-            data_filters_pb.append(query_params)
-
-        return data_filters_pb
-
-
     def search_aws(mount_base_path,
                    wrs_path,
                    wrs_row,

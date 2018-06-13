@@ -18,7 +18,7 @@ class TestClouds(unittest.TestCase):
         landsat_filters = LandsatQueryFilters()
         landsat_filters.cloud_cover.set_value(0)
         landsat_filters.acquired.set_range(start=d_start, end=d_end)
-        landsat_filters.bounds.set_bounds(*bounding_box)
+        landsat_filters.aoi.set_bounds(*bounding_box)
         rows = metadata_service.search(SpacecraftID.LANDSAT_8,
                                        data_filters=landsat_filters)
 
